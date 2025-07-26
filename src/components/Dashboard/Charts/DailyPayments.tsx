@@ -91,8 +91,11 @@ const DailyPayments: React.FC = () => {
             labels: {
                 // Formatting for Y-axis labels to match the style if needed,
                 // but keeping default for now as the image's Y-axis labels are unusual.
-                formatter: function () {
-                    return '$' + Highcharts.numberFormat(this.value, 0, '.', ','); // Format with $ and comma
+                formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+                    if (typeof this.value === 'number') {
+                        return '$' + Highcharts.numberFormat(this.value, 0, '.', ',');
+                    }
+                    return '$0';
                 },
                 style: {
                     color: '#333'
@@ -109,7 +112,7 @@ const DailyPayments: React.FC = () => {
 
             column: {
 
-                pointPadding: 0,
+                pointPadding: 0.1,
                 groupPadding: 0.2,
                 borderWidth: 0,
                 dataLabels: {

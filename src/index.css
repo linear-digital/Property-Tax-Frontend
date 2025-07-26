@@ -3,14 +3,28 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-
-  --color-primary: #7267F0; /* A single color */
-  --color-secondary: #FB9F43;
-  --color-accent: #36C76F;
-  --color-error: #EA5455;
+  --color-primary: #7267f0; /* A single color */
+  --color-secondary: #fb9f43;
+  --color-accent: #36c76f;
+  --color-error: #ea5455;
+  --color-dark: #2f3349;
   --color-background-light: #ffffff;
-  --color-background-dark: #1f2937;
+  --color-background-dark: #2f3349;
   --color-text-light: #1f2937;
-  --color-text-dark: #CFD3EC;
+  --color-text-dark: #cfd3ec;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply ring-1 ring-primary;
+  outline: none;
+}
+
+/* Remove focus ring (blue outline/shadow) */
+/* Custom override */
+.no-outline .ant-select-focused .ant-select-selector {
+  box-shadow: none !important;
+  border-color: #e5e7eb !important; /* Tailwind's gray-200 */
 }
 
