@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                         }`}
                     onClick={() => hasChildren && showExpanded && toggleExpanded(item.id)}
                 >
-                    <div className="flex items-center space-x-3 min-w-0">
+                    <div className="flex items-center justify-center space-x-3 min-w-0">
                         {item.icon && (
                             <span className={`flex-shrink-0 ${item.active ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`}>
                                 {item.icon}
@@ -124,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                             </span>
                         }
                     </div>
-                    {hasChildren && showExpanded && (
+                    {hasChildren && isHovered && showExpanded && (
                         <span className="text-gray-400 flex-shrink-0">
                             {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                         </span>
@@ -180,6 +180,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                         </button>
                         <button
                             onClick={() => setIsHovered(!isHovered)}
+                            className='text-gray-600 dark:text-white'
                         >
                             <CircleDot size={20} />
                         </button>

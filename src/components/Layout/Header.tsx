@@ -12,7 +12,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width }) => {
   const { isDark, toggleTheme } = useTheme();
 
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-6 py-3">
+    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[1000] shadow-md rounded-md">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4 flex-1">
           {/* Mobile Menu Button */}
@@ -28,11 +28,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width }) => {
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
-            <input
+            {/* <input
               type="text"
               placeholder="Search (Ctrl+/)"
               className="w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors"
-            />
+            /> */}
           </div>
         </div>
 
