@@ -3,7 +3,7 @@
 import { Button } from "antd";
 import { Date, InputSelect } from "../global/InputFeilds";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileExcel, faFilePdf, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel, faFilePdf, faFilter, faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 
 const ACom_ReportGen = () => {
@@ -36,7 +36,7 @@ const ACom_ReportGen = () => {
                     <FontAwesomeIcon icon={faFilter} />   Filters
                 </Button>
                 <Button danger type="primary" size="large" className="mt-[22px]">
-                    <FontAwesomeIcon icon={faFilter} />   Filters
+                    <FontAwesomeIcon icon={faRefresh} />   Reset
                 </Button>
             </div>
             <div className="flex items-center justify-end gap-x-3">
