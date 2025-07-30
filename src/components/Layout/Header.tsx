@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Search, Menu, Sun, Moon, Grid3X3, User } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -6,11 +6,15 @@ import { useTheme } from '../../contexts/ThemeContext';
 interface HeaderProps {
   onMenuClick: () => void;
   width: number; // Optional prop for width, if needed
+  setIsDarkMode: (isDark: boolean) => void; // Function to set dark mode state
 }
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick, width }) => {
+const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) => {
   const { isDark, toggleTheme } = useTheme();
-
+  useEffect(() => {
+    // Update the dark mode state when the component mounts
+    setIsDarkMode(isDark);
+  }, [isDark]);
   return (
     <header className="sticky top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[1000] shadow-md rounded-md">
       <div className="flex items-center justify-between">

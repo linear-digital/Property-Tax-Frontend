@@ -1,6 +1,9 @@
 @import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+@import 'leaflet-draw/dist/leaflet.draw.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
 
 @theme {
   --color-primary: #7267f0; /* A single color */
@@ -8,6 +11,7 @@
   --color-accent: #36c76f;
   --color-error: #ea5455;
   --color-dark: #2f3349;
+  --color-light: #cfd3ec;
   --color-background-light: #ffffff;
   --color-background-dark: #2f3349;
   --color-text-light: #1f2937;
@@ -28,3 +32,32 @@ select:focus {
   border-color: #e5e7eb !important; /* Tailwind's gray-200 */
 }
 
+.ant-select-selection-search-input::placeholder {
+  color: white; /* Tailwind's gray-400 */
+}
+
+/* Global CSS or module */
+.ant-input::placeholder {
+  color: #cdc1c1; /* Example: lighter gray */
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 1; /* Prevent fading */
+}
+/* global.css or component css */
+.custom-select .ant-select-selection-placeholder {
+  color: #cdc1c1; /* Example: lighter gray */
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 1;
+}
+
+.default-container {
+  @apply dark:bg-background-dark bg-white dark:text-white text-light rounded-md;
+}
+
+.t-data {
+  @apply py-3  px-4 border-primary/20 text-sm dark:text-[#bdc7f5] border-b text-dark;
+}
+.summary-table tr {
+  @apply dark:hover:bg-[#31354C] hover:bg-[#ebeefa] 
+}

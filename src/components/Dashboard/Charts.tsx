@@ -22,7 +22,7 @@ const Charts = () => {
     //   dailyDiscountsData={dailyDiscountsData} 
     // />
     return (
-        <div className='grid grid-cols-3 gap-5 mt-8'>
+        <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-8'>
             <PropertyStatusPieChart />
             <PropertyByType />
             <PropertyByBuildingDetails />

@@ -10,8 +10,10 @@ import {
     ChevronDown,
     Settings,
     X,
-    CircleDot
+    CircleDot,
+    Dot
 } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router';
 
 interface SidebarItem {
     id: string;
@@ -28,6 +30,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
+    const naviagte = useNavigate();
     const [expandedItems, setExpandedItems] = useState<string[]>(['users']);
     const [isHovered, setIsHovered] = useState(true);
     useEffect(() => {
@@ -42,31 +45,62 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                 : [...prev, itemId]
         );
     };
-
+    const pathname = useLocation().pathname;
     const sidebarItems: SidebarItem[] = [
         {
-            id: 'home',
-            label: 'Home',
+            id: '/',
+            label: 'Dashboard',
             icon: <Home size={18} />,
-            active: true
         },
         {
             id: 'properties',
             label: 'Properties',
             icon: <Building size={18} />,
+            children: [
+                { id: 'property', label: 'Manage Properties', icon: <Dot size={20} /> },
+                { id: 'property/edit-request', label: 'Proprty Edit Request', icon: <Dot size={20} /> },
+            ]
         },
         {
             id: 'billing',
             label: 'Billing',
             icon: <CreditCard size={18} />,
+            children: [
+                {
+                    id: "billing/invoices",
+                    label: 'Tax Invoice',
+                    icon: <Dot size={20} />
+                },
+                {
+                    id: "billing/payments",
+                    label: 'Payments',
+                    icon: <Dot size={20} />
+                }, {
+                    id: "billing/summarys",
+                    label: 'Tax Collection Summary',
+                    icon: <Dot size={20} />
+                }, {
+                    id: "billing/agents",
+                    label: 'Agents',
+                    icon: <Dot size={20} />
+                }, {
+                    id: "billing/agent-float",
+                    label: 'Agent Float',
+                    icon: <Dot size={20} />
+                }, {
+                    id: "billing/commissions",
+                    label: 'Commissions',
+                    icon: <Dot size={20} />
+                }
+            ]
         },
         {
-            id: 'unauthorised',
+            id: 'billing/unauthorized-payments',
             label: 'Unauthorised Payments',
             icon: <div className="w-4 h-4 border border-current rounded-sm" />,
         },
         {
-            id: 'authorised',
+            id: 'billing/authorised',
             label: 'Authorised Payments',
             icon: <div className="w-4 h-4 border border-current rounded-sm bg-current/20" />,
         },
@@ -74,13 +108,36 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
             id: 'locations',
             label: 'Locations',
             icon: <MapPin size={18} />,
+            children: [
+                {
+                    id: 'locations/states',
+                    label: 'States',
+                    icon: <Dot size={20} />
+                }, {
+                    id: 'locations/regions',
+                    label: 'Regions',
+                    icon: <Dot size={20} />
+                }, {
+                    id: 'locations/districts',
+                    label: 'Districts',
+                    icon: <Dot size={20} />
+                }, {
+                    id: 'locations/villages',
+                    label: 'Villages',
+                    icon: <Dot size={20} />
+                }, {
+                    id: 'locations/branches',
+                    label: 'Branches',
+                    icon: <Dot size={20} />
+                },
+            ]
         },
         {
             id: 'users',
             label: 'Users',
             icon: <Users size={18} />,
             children: [
-                { id: 'list', label: 'List', icon: null, active: true }
+                { id: 'users/list', label: 'List', icon: <Dot size={20} /> }
             ]
         },
         {
@@ -94,15 +151,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
         const isExpanded = expandedItems.includes(item.id);
         const hasChildren = item.children && item.children.length > 0;
         const showExpanded = isHovered
-
+        const active = item.id.startsWith('/') ? pathname === item.id : `/${item.id}` === pathname;
+        const naviageteTo = () => {
+            if (item.children) {
+                return;
+            }
+            naviagte(item.id)
+        }
         return (
-            <div key={item.id}>
+            <div key={item.id}
+                onClick={naviageteTo}
+            >
                 <div
-                    className={`flex items-center justify-between cursor-pointer transition-all duration-200 ${item.active
+                    className={`flex items-center justify-between cursor-pointer transition-all duration-200 ${active
                         ? 'to-[#A096F5]  bg-linear-to-r from-[#7468F0]  text-white'
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                         } ${level > 0
-                            ? `py-2 ${showExpanded ? 'pl-12 pr-4' : 'pl-4 pr-2'} text-sm`
+                            ? `py-2 ${showExpanded ? 'pl-8 pr-4' : 'pl-4 pr-2'} text-sm`
                             : `py-3 ${showExpanded ? 'px-4' : 'px-3'}`
                         } ${level === 0 ? 'mx-2 rounded-lg' : ''
                         }`}
@@ -116,7 +181,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                         )}
                         {
                             isHovered && <span
-                                className={`text-sm transition-all duration-200 ${level > 0 ? 'text-xs' : ''
+                                className={`text-sm transition-all duration-200 ${level > 0 ? 'text-sm' : ''
                                     } ${showExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
                                     }`}
                             >
@@ -131,7 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                     )}
                 </div>
 
-                {hasChildren && isExpanded && showExpanded && (
+                {isHovered && hasChildren && isExpanded && showExpanded && (
                     <div>
                         {item.children?.map(child => renderSidebarItem(child, level + 1))}
                     </div>
