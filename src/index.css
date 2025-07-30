@@ -61,3 +61,10 @@ select:focus {
 .summary-table tr {
   @apply dark:hover:bg-[#31354C] hover:bg-[#ebeefa] 
 }
+
+/* Hide Scrollbar  */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}

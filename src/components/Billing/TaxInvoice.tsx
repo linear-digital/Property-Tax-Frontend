@@ -65,7 +65,7 @@ const TaxInvoice = () => {
             <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
                 <Sheet fontSize={10} />   Download Excel
             </button>
-            <h4 className="text-lg dark:text-white text-dark mt-5">
+            <h4 className="text-lg dark:text-white text-dark my-5">
                 Tax Invoices
             </h4>
             <Table
