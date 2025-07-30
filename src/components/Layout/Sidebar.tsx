@@ -144,6 +144,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
             id: 'roles',
             label: 'Roles & Permissions',
             icon: <Shield size={18} />,
+            children: [
+                { id: 'roles', label: 'Roles', icon: <Dot size={20} /> }, { id: 'roles/permissions', label: 'Permissions', icon: <Dot size={20} /> }
+            ]
         }
     ];
 
@@ -197,7 +200,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                 </div>
 
                 {isHovered && hasChildren && isExpanded && showExpanded && (
-                    <div>
+                    <div className='mt-2'>
                         {item.children?.map(child => renderSidebarItem(child, level + 1))}
                     </div>
                 )}

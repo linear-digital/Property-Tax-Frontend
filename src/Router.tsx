@@ -24,6 +24,8 @@ import AddDistrict from "./components/Locations/Modal/AddDistrict";
 import AddVillage from "./components/Locations/Modal/AddVillage";
 import AddBranch from "./components/Locations/Modal/AddBranch";
 import Users from "./components/Users/Users";
+import Roles from "./components/Roles/Roles";
+import CreateRole from "./components/Roles/CreateRole";
 
 
 const router = createBrowserRouter([
@@ -138,6 +140,22 @@ const router = createBrowserRouter([
           {
             path: 'list',
             element: <Users />
+          }
+        ]
+      },
+      {
+        path: 'roles',
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <Roles />
+          },{
+            path: '*',
+            element: <Roles />
+          }, {
+            path: 'create',
+            element: <CreateRole />
           }
         ]
       }
