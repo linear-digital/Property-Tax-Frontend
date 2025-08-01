@@ -10,7 +10,7 @@ const PropertyMap = ({ properties }: { properties: any[] }) => {
     : [0, 0]; // fallback to [0, 0] if properties is empty
 
   return (
-    <MapContainer center={defaultCenter} zoom={16} style={{ height: '500px', width: '100%', marginTop: '20px' }}>
+    <MapContainer center={defaultCenter} zoom={16} style={{ height: '500px', width: '100%', marginTop: '20px', zIndex: 0 }}>
       <TileLayer
         attribution='&copy; OpenStreetMap contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'

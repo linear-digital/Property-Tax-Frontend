@@ -38,7 +38,7 @@ export const TextArea = ({ placeholder, label, onChange, value }: { placeholder?
         </div>
     );
 }
-export const Date = ({ placeholder, label, onChange, value, type }: { placeholder?: string, label?: string, onChange?: any, value?: any, type?: string, defaultValue?: any }) => {
+export const Date = ({ placeholder, label, onChange, value }: { placeholder?: string, label?: string, onChange?: any, value?: any, type?: string, defaultValue?: any }) => {
     return (
         <div className="flex flex-col w-full">
             <label htmlFor={label} className='text-sm text-gray-600 dark:text-gray-300 mb-1'>
@@ -46,7 +46,6 @@ export const Date = ({ placeholder, label, onChange, value, type }: { placeholde
             </label>
             <DatePicker
                 defaultValue={value}
-                type={type ? type : "text"}
                 value={value}
                 size="large"
                 name={label}

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Search, Menu, Sun, Moon, Grid3X3, User } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 
 interface HeaderProps {
@@ -11,13 +13,43 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) => {
   const { isDark, toggleTheme } = useTheme();
+  const [openSearch, setOpenSearch] = React.useState(false);
   useEffect(() => {
     // Update the dark mode state when the component mounts
     setIsDarkMode(isDark);
   }, [isDark]);
+
+  // press CTRl + / for search
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === '/' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        setOpenSearch(!openSearch);
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [openSearch]);
   return (
-    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[1000] shadow-md rounded-md">
+    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[1000] shadow-md rounded-md overflow-hidden">
       <div className="flex items-center justify-between">
+        {
+          openSearch && <div className="absolute dark:bg-dark bg-white w-full h-full left-0 top-0 z-50">
+            <input
+              type="text"
+              autoFocus
+              placeholder='Search Anything...'
+              className='h-full w-full px-5 text-white text-sm bg-transparent'
+            />
+            <button
+              onClick={() => setOpenSearch(false)}
+              className='text-white absolute right-4 top-1/2 transform -translate-y-1/2'>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+        }
         <div className="flex items-center space-x-4 flex-1">
           {/* Mobile Menu Button */}
           {
@@ -31,12 +63,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
 
           {/* Search */}
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
-            {/* <input
-              type="text"
-              placeholder="Search (Ctrl+/)"
-              className="w-full bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors"
-            /> */}
+            <Search
+              onClick={() => setOpenSearch(!openSearch)}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" size={18} />
           </div>
         </div>
 

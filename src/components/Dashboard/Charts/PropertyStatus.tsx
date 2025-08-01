@@ -98,7 +98,7 @@ const PropertyByType: React.FC = () => {
   };
 
   return (
-    <div className='p-4 bg-white rounded-md'>
+    <div className='p-4 bg-white rounded-md w-full'>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );

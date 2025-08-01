@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 
 const PropertyByType: React.FC = () => {
-    const chartData = [
+  const chartData = [
     { name: 'Jan', y: 5645.00 },
     { name: 'Feb', y: 6662.00 },
     { name: 'Mar', y: 35098.00 },
@@ -118,11 +118,11 @@ const PropertyByType: React.FC = () => {
     },
   };
 
-    return (
-        <div className='col-span-3 p-4 bg-white rounded-md'>
-            <HighchartsReact highcharts={Highcharts} options={options} />
-        </div>
-    );
+  return (
+    <div className='lg:col-span-3 md:col-span-2 col-span-1 p-4 bg-white rounded-md'>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  );
 };
 
 export default PropertyByType;

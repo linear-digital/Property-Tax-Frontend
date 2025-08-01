@@ -14,6 +14,7 @@ const Commissions = () => {
                     Agent Commissions
                 </h3>
                 <Table
+                 scroll={{ x: 'max-content' }}
                     columns={[
                         {
                             title: 'Agent Name',

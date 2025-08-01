@@ -17,6 +17,7 @@ const ManageProperties = () => {
             <Table
                 pagination={false}
                 className="mt-5"
+                scroll={{ x: 'max-content' }}
                 columns={[
                     {
                         title: 'Property Code',

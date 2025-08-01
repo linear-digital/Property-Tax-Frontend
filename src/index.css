@@ -1,9 +1,8 @@
 @import "tailwindcss";
-@import 'leaflet/dist/leaflet.css';
-@import 'leaflet-draw/dist/leaflet.draw.css';
+@import "leaflet/dist/leaflet.css";
+@import "leaflet-draw/dist/leaflet.draw.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
-
 
 @theme {
   --color-primary: #7267f0; /* A single color */
@@ -59,7 +58,7 @@ select:focus {
   @apply py-3  px-4 border-primary/20 text-sm dark:text-[#bdc7f5] border-b text-dark;
 }
 .summary-table tr {
-  @apply dark:hover:bg-[#31354C] hover:bg-[#ebeefa] 
+  @apply dark:hover:bg-[#31354C] hover:bg-[#ebeefa];
 }
 
 /* Hide Scrollbar  */
@@ -68,3 +67,4 @@ select:focus {
 ::-webkit-scrollbar {
   width: 5px;
 }
+

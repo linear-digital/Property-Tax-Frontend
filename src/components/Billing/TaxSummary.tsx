@@ -65,7 +65,7 @@ const Result = () => {
             </h3>
         </div>
 
-        <div className="grid grid-cols-4 gap-5 mt-5">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5 mt-5">
             <ReportCard border='border-primary' />
             <ReportCard border='border-accent' />
             <ReportCard border='border-secondary' />

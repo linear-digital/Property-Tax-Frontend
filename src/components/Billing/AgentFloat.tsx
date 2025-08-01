@@ -60,7 +60,9 @@ const AgentFloat = () => {
                     <FontAwesomeIcon icon={faPlus} />  Process Float
                 </div>
             </Button>
-            <Table columns={columns} />
+            <Table columns={columns}
+                scroll={{ x: 'max-content' }}
+            />
             <Modal
                 title="Process Agent Float"
                 open={open} onOk={() => setOpen(false)} onCancel={() => setOpen(false)} footer={false}>

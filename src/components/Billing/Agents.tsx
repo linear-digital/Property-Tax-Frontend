@@ -17,6 +17,7 @@ const Agents = () => {
                 </span>
             </Button>
             <Table
+                scroll={{ x: 'max-content' }}
                 columns={[
                     {
                         title: 'Name',
@@ -61,8 +62,8 @@ const Agents = () => {
                     <Input label='Initial Float Balance' type='number' />
                     <div>
                         <Button type="primary">
-                        Submit
-                    </Button>
+                            Submit
+                        </Button>
                     </div>
                 </form>
             </Modal>

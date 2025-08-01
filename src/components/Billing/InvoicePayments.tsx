@@ -1,9 +1,8 @@
 import { Button, Table } from 'antd';
-import { SheetIcon } from 'lucide-react';
 import React from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faFileExcel, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const InvoicePayments = ({ page }: { page: string }) => {
 
@@ -76,12 +75,13 @@ const InvoicePayments = ({ page }: { page: string }) => {
             {
                 page === 'payments' &&
                 <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
-                    <SheetIcon />   Download Excel
+                    <FontAwesomeIcon icon={faFileExcel} />   Download Excel
                 </button>
             }
 
 
             <Table
+                scroll={{ x: 'max-content' }}
                 className='mt-5'
                 bordered={false}
                 columns={columns}

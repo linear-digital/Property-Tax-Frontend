@@ -218,7 +218,7 @@ const DailyDifferences: React.FC<DailyDifferencesProps> = React.memo(
         });
 
         return (
-            <div className="col-span-3 p-4 bg-white rounded-md">
+            <div className="lg:col-span-3 md:col-span-2 col-span-1 p-4 bg-white rounded-md">
                 <HighchartsReact highcharts={Highcharts} options={getChartOptions()} />
             </div>
         );

@@ -8,7 +8,8 @@ const EditRequest = () => {
             <h3 className='text-xl dark:text-white text-dark font-semibold'>Pending Property Edit Requests</h3>
             <RequestFilter />
             <Table
-            className='mt-5'
+                className='mt-5'
+                scroll={{ x: 'max-content' }}
                 columns={[
                     {
                         title: 'Property Code',
