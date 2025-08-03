@@ -1,0 +1,68 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import React, { useEffect } from 'react';
+import { Input } from '../global/InputFeilds';
+import { Button, Checkbox } from 'antd';
+import api, { checkToken } from '../../util/axios.instance';
+import toast from 'react-hot-toast';
+import { errorMessage } from '../../util/errorMessage';
+import { useNavigate } from 'react-router';
+
+const Login = () => {
+    const [info, setInfo] = React.useState({
+        email: '',
+        password: ''
+    })
+    const navigate = useNavigate()
+    useEffect(() => {
+        (
+            async () => {
+                const user = await checkToken();
+                if (user) {
+                    navigate('/')
+                }
+            }
+        )()
+    }, [])
+    const loginUser = async (e: any) => {
+        e.preventDefault();
+        try {
+            const res = await api.post('/user/login', info);
+            console.log(res.data);
+            toast.success(res.data.message);
+        } catch (error) {
+            toast.error(errorMessage(error));
+        }
+    }
+    return (
+        <div className='w-full h-screen   flex justify-center items-center'>
+            <form className='dark:bg-[#2F3349] w-[400px] rounded-lg shadow-xl px-5 pt-6 pb-10 flex flex-col gap-y-4'
+                onSubmit={loginUser}
+            >
+                <img src="/image.png" alt=""
+                    className='w-[100px] h-[100px] mx-auto object-cover rounded-full'
+                />
+                <Input
+                    label='Email Address'
+                    type='email'
+                    value={info.email}
+                    onChange={(e: any) => setInfo({ ...info, email: e.target.value })}
+                    required
+                />
+                <Input
+                    label='Password'
+                    onChange={(e: any) => setInfo({ ...info, password: e.target.value })}
+                    required
+                />
+                <Checkbox>
+                    Remember Me
+                </Checkbox>
+                <Button type='primary' htmlType='submit'>
+                    Login
+                </Button>
+            </form>
+        </div>
+    );
+};
+
+export default Login;

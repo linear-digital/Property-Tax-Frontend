@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { Toaster } from 'react-hot-toast';
 import { ConfigProvider, theme } from 'antd';
+import { UserProvider } from '../../contexts/UserContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 const RootLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(true);
+    const pathname = useLocation().pathname;
     useEffect(() => {
         const handleResize = () => {
             setDeviceWidth(window.innerWidth);
@@ -17,33 +23,46 @@ const RootLayout = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-    return (
-        <ConfigProvider
-            theme={{
-                token: {
-                    // Seed Token
-                    colorPrimary: '#7267F0',
-                    borderRadius: 5,
-                    colorBgBase: isDarkMode ? '#24293C' : '#ffffff', // sets background
-          colorBgContainer: isDarkMode ? '#24293C' : '#ffffff',
-                },
-                algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }}
-        >
-            <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
-                <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}
-                    width={deviceWidth}
-                />
-                <div className="container mx-auto p-4 overflow-y-auto relative">
-                    <Header onMenuClick={() => setSidebarOpen(true)}
-                        setIsDarkMode={setIsDarkMode}
-                        width={deviceWidth}
-                    />
-                    <Outlet />
-                </div>
 
-            </div>
-        </ConfigProvider>
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ConfigProvider
+                theme={{
+                    token: {
+                        // Seed Token
+                        colorPrimary: '#7267F0',
+                        borderRadius: 5,
+                        colorBgBase: isDarkMode ? '#24293C' : '#ffffff', // sets background
+                        colorBgContainer: isDarkMode ? '#24293C' : '#ffffff',
+                    },
+                    algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                }}
+            >
+                <Toaster />
+                {
+                    pathname === '/login' || pathname === '/register' ?
+                        <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
+                            <Outlet />
+                        </div>
+                        :
+                        <UserProvider>
+                            <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
+                                <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}
+                                    width={deviceWidth}
+                                />
+                                <div className="container mx-auto p-4 overflow-y-auto relative">
+                                    <Header onMenuClick={() => setSidebarOpen(true)}
+                                        setIsDarkMode={setIsDarkMode}
+                                        width={deviceWidth}
+                                    />
+                                    <Outlet />
+                                </div>
+
+                            </div>
+                        </UserProvider>
+                }
+            </ConfigProvider>
+        </QueryClientProvider>
     );
 };
 

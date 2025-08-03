@@ -26,6 +26,7 @@ import AddBranch from "./components/Locations/Modal/AddBranch";
 import Users from "./components/Users/Users";
 import Roles from "./components/Roles/Roles";
 import CreateRole from "./components/Roles/CreateRole";
+import Login from "./components/auth/Login";
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
+      },
+      {
+        path: "login",
+        element: <Login />
       },
       {
         path: "property",
@@ -150,9 +155,9 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Roles />
-          },{
-            path: '*',
-            element: <Roles />
+          }, {
+            path: ':id',
+            element: <CreateRole />
           }, {
             path: 'create',
             element: <CreateRole />

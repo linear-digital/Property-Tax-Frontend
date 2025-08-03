@@ -3,9 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Input, Table } from 'antd';
 import React from 'react';
 import CreateNewUser from './CreateNewUser';
+import { useQuery } from '@tanstack/react-query';
+import { fetcher } from '../../util/axios.instance';
 
 const Users = () => {
     const [open, setOpen] = React.useState(false);
+    const { data, isLoading } = useQuery({
+        queryKey: ['users'],
+        queryFn: async () => {
+            const res = await fetcher({
+                path: '/user'
+            })
+            return res
+        }
+    })
     return (
         <div className='py-5'>
             <CreateNewUser
@@ -35,6 +46,8 @@ const Users = () => {
                 </div>
             </div>
             <Table
+                dataSource={data}
+                loading={isLoading}
                 className='mt-5'
                 columns={[
                     {
