@@ -55,7 +55,7 @@ const CreateRole = () => {
     const handleCreateRole = async () => {
         try {
             await fetcher({
-                path: data ? `/role/${id}` : '/role',
+                path: data ? `/role/${id}` : '/role/create',
                 method: data ? 'PUT' : 'POST',
                 body: {
                     name: name,

@@ -4,6 +4,7 @@ import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
 const baseUrl = "http://localhost:4000/api";
+import Cookies from "js-cookie";
 const api = axios.create({
     baseURL: "http://localhost:4000/api",
     withCredentials: true, // ✅ include cookies on all requests
@@ -49,6 +50,10 @@ export const logOut = async () => {
 }
 export const checkToken = async () => {
     try {
+        const token = Cookies.get("token");
+        if (!token) {
+            return null
+        }
         const res = await fetcher({
             path: "/user/me"
         });

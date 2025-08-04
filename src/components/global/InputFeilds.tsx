@@ -44,7 +44,7 @@ type DateProps = CommonProps & {
 
 type SelectInputProps = CommonProps & {
   options: SelectProps['options'];
-  value?: string | number;
+  value?: string | number | string[];
   onChange?: (value: any, option?: any) => void;
   onBlur?: () => void;
   allowClear?: boolean;
@@ -114,7 +114,45 @@ export const Input = ({
     </FieldWrapper>
   );
 };
-
+export const Password = ({
+  label,
+  placeholder,
+  onChange,
+  value,
+  type = "text",
+  required,
+  disabled,
+  className,
+  style,
+  id,
+  name,
+  onBlur,
+  maxLength,
+  minLength,
+  autoFocus,
+}: InputProps) => {
+  return (
+    <FieldWrapper label={label}>
+      <AntInput.Password
+        id={id || label}
+        name={name || label}
+        required={required}
+        value={value}
+        type={type}
+        onChange={onChange}
+        onBlur={onBlur}
+        disabled={disabled}
+        maxLength={maxLength}
+        minLength={minLength}
+        autoFocus={autoFocus}
+        size="large"
+        style={style}
+        placeholder={placeholder || `Enter ${label}`}
+        className={`w-full border border-gray-200 p-[5px] rounded-md dark:text-white bg-white dark:bg-background-dark dark:border-gray-600 text-sm py-2 px-3 ${className || ''}`}
+      />
+    </FieldWrapper>
+  );
+};
 export const TextArea = ({
   label,
   placeholder,

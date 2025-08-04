@@ -101,10 +101,17 @@ const router = createBrowserRouter([
           }, {
             path: 'add-state',
             element: <AddState />
+          },{
+            path: 'states/:id',
+            element: <AddState />
           },
           {
             path: 'regions',
             element: <Regions />
+          },
+          {
+            path: 'regions/:id',
+            element: <AddRegion />
           },
           {
             path: 'add-region',
@@ -112,11 +119,20 @@ const router = createBrowserRouter([
           }, {
             path: 'add-district',
             element: <AddDistrict />
+          },{
+            path: 'districts/:id',
+            element: <AddDistrict />
           }, {
             path: 'add-village',
             element: <AddVillage />
+          },{
+            path: 'villages/:id',
+            element: <AddVillage />
           }, {
             path: 'add-branch',
+            element: <AddBranch />
+          },{
+            path: 'branches/:id',
             element: <AddBranch />
           },
 

@@ -1,4 +1,7 @@
+import type { Role } from "./role";
+
 export interface User {
+    _id: string;
     name: string;
     email: string;
     password: string;
@@ -10,5 +13,6 @@ export interface User {
     district: string;
     village: string;
     branch: string;
-    role: string;
+    roles: Role[];
+    disabled: boolean;
 }

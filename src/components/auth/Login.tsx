@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { Input } from '../global/InputFeilds';
 import { Button, Checkbox } from 'antd';
-import api, { checkToken } from '../../util/axios.instance';
+import  { checkToken, fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useNavigate } from 'react-router';
@@ -27,9 +27,13 @@ const Login = () => {
     const loginUser = async (e: any) => {
         e.preventDefault();
         try {
-            const res = await api.post('/user/login', info);
-            console.log(res.data);
-            toast.success(res.data.message);
+            const res = await fetcher({
+                path: '/user/login',
+                method: "POST",
+                body: info
+            })
+            window.location.pathname = '/'
+            toast.success(res.message);
         } catch (error) {
             toast.error(errorMessage(error));
         }

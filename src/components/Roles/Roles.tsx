@@ -3,10 +3,8 @@ import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Popconfirm, Table } from 'antd';
-import React from 'react';
 import { Link } from 'react-router';
 import { fetcher } from '../../util/axios.instance';
-import type { Role } from '../../types/role';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 
