@@ -14,14 +14,16 @@ type FetcherArgs = {
     path: string;
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: any;
+    params?: any
 };
 
-export const fetcher = async ({ path, method = "GET", body }: FetcherArgs) => {
+export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
     try {
         const response = await api({
             url: baseUrl + path,
             method,
             data: body ? { payload: encrypt(body) } : undefined,
+            params: params ? params : undefined
         });
 
         if (response.data?.payload) {
