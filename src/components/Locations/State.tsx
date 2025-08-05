@@ -8,8 +8,11 @@ import { Link } from 'react-router';
 import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 const Index = () => {
+    const { permissions } = useUser();
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['states'],
         queryFn: async () => {
@@ -30,17 +33,27 @@ const Index = () => {
             toast.error(errorMessage(error))
         }
     }
+    if (!permissions.includes('state-Manage')) {
+        return <NoPermission />
+    }
     return (
         <div className='py-5'>
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl dark:text-white text-dark font-semibold ">States</h1>
-                <Link to={'/locations/add-state'}>
+                <Link to={'/locations/add-state'}
+                    style={{
+                        display: permissions.includes('state-create') ? 'block' : 'none'
+                    }}
+                >
                     <Button
                         size='large' type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                         <FontAwesomeIcon icon={faPlus} />  Add New State</Button>
                 </Link>
             </div>
             <Table
+            style={{
+                display: permissions.includes('state-view') ? 'block' : 'none'
+            }}
                 bordered
                 className='mt-5'
                 dataSource={data}
@@ -62,15 +75,22 @@ const Index = () => {
                         key: 'actions',
                         render: (text, record: any) => (
                             <div className='flex gap-2'>
-                                <Link to={`/locations/states/${record?._id}`}>
+                                <Link to={`/locations/states/${record?._id}`}
+                                    style={{
+                                        display: permissions.includes('state-edit') ? 'block' : 'none'
+                                    }}
+                                >
                                     <Button type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faPen} />  Edit</Button>
                                 </Link>
                                 <Popconfirm title="Are you sure to delete this state?"
                                     onConfirm={() => deleteState(record?._id)}
+
                                 >
                                     <Button
-
+                                        style={{
+                                            display: permissions.includes('state-delete') ? 'block' : 'none'
+                                        }}
                                         danger type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faTrash} />  Delete</Button>
                                 </Popconfirm>

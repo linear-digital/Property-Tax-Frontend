@@ -8,6 +8,8 @@ import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useQuery } from '@tanstack/react-query';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 const Index = () => {
     const { data, isLoading, refetch } = useQuery({
@@ -30,16 +32,27 @@ const Index = () => {
             toast.error(errorMessage(error))
         }
     }
+    const { permissions } = useUser();
+    if (!permissions.includes('branch-Manage')) {
+        return <NoPermission />
+    }
     return (
         <div className='py-5'>
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl dark:text-white text-dark font-semibold ">Branches</h1>
-                <Link to={'/locations/add-branch'}>
+                <Link to={'/locations/add-branch'}
+                    style={{
+                        display: permissions.includes('branch-create') ? 'block' : 'none'
+                    }}
+                >
                     <Button size='large' type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                         <FontAwesomeIcon icon={faPlus} />  Add New Branch</Button>
                 </Link>
             </div>
             <Table
+                style={{
+                    display: permissions.includes('branch-view') ? 'block' : 'none'
+                }}
                 loading={isLoading}
                 dataSource={data}
                 bordered
@@ -56,9 +69,9 @@ const Index = () => {
                         key: 'code',
                     },
                     {
-                        title: "Actions",
-                        dataIndex: 'actions',
-                        key: 'actions',
+                        title: "Village",
+                        dataIndex: 'village',
+                        key: 'village',
                     },
                     {
                         title: "Actions",
@@ -66,15 +79,21 @@ const Index = () => {
                         key: 'actions',
                         render: (text, record: any) => (
                             <div className='flex gap-2'>
-                                <Link to={`/locations/branches/${record?._id}`}>
+                                <Link to={`/locations/branches/${record?._id}`}
+                                    style={{
+                                        display: permissions.includes('branch-edit') ? 'block' : 'none'
+                                    }}
+                                >
                                     <Button type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faPen} />  Edit</Button>
                                 </Link>
-                                <Popconfirm title="Are you sure to delete this state?"
+                                <Popconfirm title="Are you sure to delete this branch?"
                                     onConfirm={() => deleteVillage(record?._id)}
                                 >
                                     <Button
-
+                                        style={{
+                                            display: permissions.includes('branch-delete') ? 'block' : 'none'
+                                        }}
                                         danger type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faTrash} />  Delete</Button>
                                 </Popconfirm>

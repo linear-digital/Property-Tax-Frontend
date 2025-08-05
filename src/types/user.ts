@@ -15,4 +15,6 @@ export interface User {
     branch: string;
     roles: Role[];
     disabled: boolean;
+    createdAt: string;
+    updatedAt: string;
 }

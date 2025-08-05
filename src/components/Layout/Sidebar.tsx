@@ -11,7 +11,8 @@ import {
     CircleDot,
     Dot
 } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router';
+
+import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCreditCard, faHomeAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -132,7 +133,6 @@ const sidebarItems: SidebarItem[] = [
         }
     ];
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
-    const naviagte = useNavigate();
     const [expandedItems, setExpandedItems] = useState<string[]>(['users']);
     const [isHovered, setIsHovered] = useState(true);
     useEffect(() => {
@@ -157,13 +157,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
         const active = item.id.startsWith('/') ? pathname === item.id : `/${item.id}` === pathname;
         const naviageteTo = () => {
             if (item.children) {
-                return;
+                return "#";
             }
-            naviagte(item.id)
+           return item.id
         }
         return (
-            <div key={item.id}
-                onClick={naviageteTo}
+            <Link to={naviageteTo()} key={item.id}
+                
             >
                 <div
                     className={`flex items-center justify-between cursor-pointer transition-all duration-200 ${active
@@ -204,7 +204,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                         {item.children?.map(child => renderSidebarItem(child, level + 1))}
                     </div>
                 )}
-            </div>
+            </Link>
         );
     };
 

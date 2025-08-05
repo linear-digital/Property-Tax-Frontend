@@ -7,6 +7,10 @@ import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import type { User } from '../../types/user';
+import { useLocation } from '../../contexts/LocationContext';
+import { useFindBranch, useFindDistrict, useFindRegion, useFindVillage } from '../../hooks/locationhooks';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 interface Props {
     open: boolean;
@@ -16,6 +20,8 @@ interface Props {
 }
 
 const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) => {
+    const { states } = useLocation();
+    const { permissions } = useUser();
     const [info, setInfo] = useState({
         name: '',
         email: '',
@@ -29,6 +35,10 @@ const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) 
         branch: '',
         roles: [] as string[],
     });
+    const regions = useFindRegion({ query: info.state });
+    const districts = useFindDistrict({ query: info.region });
+    const villages = useFindVillage({ query: info.district });
+    const branches = useFindBranch({ query: info.village });
     useEffect(() => {
         if (tergetUser) {
             setInfo({
@@ -76,11 +86,6 @@ const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) 
         [roles]
     );
 
-    const addressOptions = useMemo(() => [
-        { value: 'option1', label: 'Option 1' },
-        { value: 'option2', label: 'Option 2' },
-        { value: 'option3', label: 'Option 3' },
-    ], []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -92,22 +97,22 @@ const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) 
         try {
             if (tergetUser) {
                 await fetcher({
-                path: `/user/${tergetUser._id}`,
-                method: 'PUT',
-                body: {
-                    ...info
-                },
-            });
+                    path: `/user/${tergetUser._id}`,
+                    method: 'PUT',
+                    body: {
+                        ...info
+                    },
+                });
             }
             else {
                 await fetcher({
-                path: '/user/create',
-                method: 'POST',
-                body: {
-                    ...info,
-                    password: password.password,
-                },
-            });
+                    path: '/user/create',
+                    method: 'POST',
+                    body: {
+                        ...info,
+                        password: password.password,
+                    },
+                });
             }
             refetch();
             toast.success('User created successfully');
@@ -132,7 +137,9 @@ const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) 
             setMessage({ error: msg, success: '' });
         }
     };
-
+    if (!permissions.includes('user-create') && !permissions.includes('user-edit')) {
+        return <NoPermission />
+    }
     return (
         <Modal
             open={open}
@@ -151,19 +158,39 @@ const CreateNewUser: React.FC<Props> = ({ open, setOpen, refetch, tergetUser }) 
 
                 <InputSelect
                     value={info.state}
-                    label="State" name="state" options={addressOptions} onChange={val => handleSelectChange('state', val)} required />
+                    label="State" name="state" options={states.map(state => ({ value: state.name, label: state.name }))} onChange={val => handleSelectChange('state', val)} required />
                 <InputSelect
                     value={info.region}
-                    label="Region" name="region" options={addressOptions} onChange={val => handleSelectChange('region', val)} required />
+                    label="Region" name="region"
+                    options={regions.map(region => ({
+                        value: region.name,
+                        label: region.name
+                    }))
+                    } onChange={val => handleSelectChange('region', val)} required />
                 <InputSelect
                     value={info.district}
-                    label="District" name="district" options={addressOptions} onChange={val => handleSelectChange('district', val)} required />
+                    label="District" name="district"
+                    options={districts.map(item => ({
+                        value: item.name,
+                        label: item.name
+                    }))}
+                    onChange={val => handleSelectChange('district', val)} required />
                 <InputSelect
                     value={info.village}
-                    label="Village" name="village" options={addressOptions} onChange={val => handleSelectChange('village', val)} required />
+                    label="Village" name="village"
+                    options={villages.map(item => ({
+                        value: item.name,
+                        label: item.name
+                    }))}
+                    onChange={val => handleSelectChange('village', val)} required />
                 <InputSelect
                     value={info.branch}
-                    label="Branch" name="branch" options={addressOptions} onChange={val => handleSelectChange('branch', val)} required />
+                    label="Branch" name="branch"
+                    options={branches.map(item => ({
+                        value: item.name,
+                        label: item.name
+                    }))}
+                    onChange={val => handleSelectChange('branch', val)} required />
 
                 {
                     !tergetUser && <>

@@ -4,8 +4,8 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import { Toaster } from 'react-hot-toast';
 import { ConfigProvider, theme } from 'antd';
-import { UserProvider } from '../../contexts/UserContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import UserLayout from './UserLayout';
 
 const queryClient = new QueryClient();
 const RootLayout = () => {
@@ -45,7 +45,8 @@ const RootLayout = () => {
                             <Outlet />
                         </div>
                         :
-                        <UserProvider>
+                        <UserLayout>
+                        
                             <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
                                 <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}
                                     width={deviceWidth}
@@ -59,7 +60,7 @@ const RootLayout = () => {
                                 </div>
 
                             </div>
-                        </UserProvider>
+                        </UserLayout>
                 }
             </ConfigProvider>
         </QueryClientProvider>

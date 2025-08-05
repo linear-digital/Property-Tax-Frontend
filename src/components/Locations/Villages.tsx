@@ -8,8 +8,11 @@ import { Link } from 'react-router';
 import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 const Index = () => {
+    const { permissions } = useUser();
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['villages'],
         queryFn: async () => {
@@ -30,16 +33,26 @@ const Index = () => {
             toast.error(errorMessage(error))
         }
     }
+    if (!permissions.includes('village-Manage')) {
+        return <NoPermission />
+    }
     return (
         <div className='py-5'>
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl dark:text-white text-dark font-semibold ">Villages</h1>
-                <Link to={'/locations/add-village'}>
+                <Link to={'/locations/add-village'}
+                    style={{
+                        display: permissions.includes('village-create') ? 'block' : 'none'
+                    }}
+                >
                     <Button size='large' type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                         <FontAwesomeIcon icon={faPlus} />  Add New Village</Button>
                 </Link>
             </div>
             <Table
+                style={{
+                    display: permissions.includes('village-view') ? 'block' : 'none'
+                }}
                 loading={isLoading}
                 dataSource={data}
                 bordered
@@ -54,6 +67,10 @@ const Index = () => {
                         title: "Code",
                         dataIndex: 'code',
                         key: 'code',
+                    }, {
+                        title: "District",
+                        dataIndex: 'district',
+                        key: 'district',
                     },
                     {
                         title: "Actions",
@@ -61,15 +78,21 @@ const Index = () => {
                         key: 'actions',
                         render: (text, record: any) => (
                             <div className='flex gap-2'>
-                                <Link to={`/locations/villages/${record?._id}`}>
+                                <Link to={`/locations/villages/${record?._id}`}
+                                    style={{
+                                        display: permissions.includes('village-edit') ? 'block' : 'none'
+                                    }}
+                                >
                                     <Button type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faPen} />  Edit</Button>
                                 </Link>
-                                <Popconfirm title="Are you sure to delete this state?"
+                                <Popconfirm title="Are you sure to delete this village?"
                                     onConfirm={() => deleteVillage(record?._id)}
                                 >
                                     <Button
-
+                                        style={{
+                                            display: permissions.includes('village-delete') ? 'block' : 'none'
+                                        }}
                                         danger type='primary' className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm">
                                         <FontAwesomeIcon icon={faTrash} />  Delete</Button>
                                 </Popconfirm>

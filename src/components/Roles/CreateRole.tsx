@@ -62,7 +62,7 @@ const CreateRole = () => {
                     permissions: checked
                 }
             });
-            toast.success('Role created successfully');
+            toast.success(`Role ${data ? 'updated' : 'created'} successfully`);
             navigate('/roles');
         } catch (error) {
             toast.error(errorMessage(error) || 'Something went wrong');

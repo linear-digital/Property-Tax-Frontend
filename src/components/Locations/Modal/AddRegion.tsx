@@ -79,7 +79,7 @@ const AddRegion = () => {
         <div className='my-5'>
             <div className="flex items-center justify-between mb-4">
                 <h3 className='text-xl dark:text-white text-dark font-semibold '>
-                    Add New Region
+                    {data ? 'Update Region' : 'Add New Region'}
                 </h3>
                 <Link to={'/locations/regions'} className='text-primary'>
                     <FontAwesomeIcon icon={faArrowLeftLong} />    Back to Regions

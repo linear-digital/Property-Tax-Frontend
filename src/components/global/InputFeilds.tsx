@@ -257,6 +257,7 @@ export const InputSelect = ({
         showSearch={showSearch}
         optionFilterProp={optionFilterProp}
         dropdownRender={dropdownRender}
+        title={label}
         size="large"
         style={style}
         className={`w-full border border-gray-200 rounded-md dark:text-white bg-white dark:bg-background-dark dark:border-gray-600 text-sm ${className || ''}`}

@@ -78,7 +78,7 @@ const AddDistrict = () => {
         <div className='my-5'>
             <div className="flex items-center justify-between mb-4">
                 <h3 className='text-xl dark:text-white text-dark font-semibold '>
-                    Add New District
+                    {data ? 'Update' : 'Add New'} District
                 </h3>
                 <Link to={'/locations/districts'} className='text-primary'>
                     <FontAwesomeIcon icon={faArrowLeftLong} />    Back to Districts

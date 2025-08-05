@@ -78,7 +78,7 @@ const AddVillage = () => {
         <div className='my-5'>
             <div className="flex items-center justify-between mb-4">
                 <h3 className='text-xl dark:text-white text-dark font-semibold '>
-                    Add New Village
+                    {data ? 'Update' : 'Add New'} Village
                 </h3>
                 <Link to={'/locations/villages'} className='text-primary'>
                     <FontAwesomeIcon icon={faArrowLeftLong} />    Back to Villages
