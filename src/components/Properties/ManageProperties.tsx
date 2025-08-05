@@ -2,27 +2,52 @@ import { Plus } from "lucide-react";
 import Filter from "./Filter";
 import { Pagination, Table } from "antd";
 import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "../../util/axios.instance";
 
 
 
 const ManageProperties = () => {
+    const { data: properties = [] } = useQuery({
+        queryKey: ['properties'],
+        queryFn: async () => {
+            const res = await fetcher({
+                path: '/property'
+            })
+            return res
+        }
+    });
+
     return (
         <div className="py-5">
-            <Link to={'/property/create'}>
-                <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer" >
-                    <Plus fontSize={10} />  Add New Property
-                </button>
-            </Link>
+
+            <div className="flex items-center gap-x-4">
+                <Link to={'/property/create'}>
+                    <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer" >
+                        <Plus fontSize={10} />  Add New Property
+                    </button>
+                </Link>
+                <Link to={'/property/create-multiple'}>
+                    <button
+
+                        className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer" >
+                        <Plus fontSize={10} />  Add Property From Excel
+                    </button>
+                </Link>
+
+            </div>
             <Filter />
             <Table
+                dataSource={properties?.data || []}
                 pagination={false}
                 className="mt-5"
+                bordered
                 scroll={{ x: 'max-content' }}
                 columns={[
                     {
                         title: 'Property Code',
-                        dataIndex: 'propertyCode',
-                        key: 'propertyCode',
+                        dataIndex: 'code',
+                        key: 'code',
                     },
                     {
                         title: 'State',
@@ -41,18 +66,18 @@ const ManageProperties = () => {
                     },
                     {
                         title: 'Property Type',
-                        dataIndex: 'propertyType',
-                        key: 'propertyType',
+                        dataIndex: 'property_type',
+                        key: 'property_type',
                     },
                     {
                         title: 'House/Building Details',
-                        dataIndex: 'houseDetails',
-                        key: 'houseDetails',
+                        dataIndex: 'house_building_details',
+                        key: 'house_building_details',
                     },
                     {
                         title: "Property Status",
-                        dataIndex: 'propertyStatus',
-                        key: 'propertyStatus',
+                        dataIndex: 'property_status',
+                        key: 'property_status',
                     },
                     {
                         title: 'Action',

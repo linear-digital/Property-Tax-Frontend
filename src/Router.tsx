@@ -27,6 +27,7 @@ import Users from "./components/Users/Users";
 import Roles from "./components/Roles/Roles";
 import CreateRole from "./components/Roles/CreateRole";
 import Login from "./components/auth/Login";
+import AddPropertyFromExcel from "./components/Properties/AddPropertyFromExcel";
 
 
 const router = createBrowserRouter([
@@ -53,6 +54,9 @@ const router = createBrowserRouter([
           {
             path: "create",
             element: <CreateProperty />
+          },{
+            path: "create-multiple",
+            element: <AddPropertyFromExcel />
           },
           {
             path: "edit-request",
