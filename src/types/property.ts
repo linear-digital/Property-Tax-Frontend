@@ -29,6 +29,8 @@ export interface Property {
   property_direction: string; // Combined directions
   
   // Property Characteristics
+  property_width: number;
+  property_length: number;
   property_size_sm2: number;
   house_building_details: string;
   type_of_villa: string;

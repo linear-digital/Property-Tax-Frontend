@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Plus } from "lucide-react";
 import Filter from "./Filter";
-import { Pagination, Table } from "antd";
+import { Pagination, Popconfirm, Table } from "antd";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "../../util/axios.instance";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { errorMessage } from "../../util/errorMessage";
 
 interface Property {
   _id: string;
@@ -37,16 +40,26 @@ const ManageProperties = () => {
     total: 0,
     pages: 0
   });
-
-  const { data: apiResponse, isLoading } = useQuery<ApiResponse>({
+  const [filters, setFilters] = useState({
+    code: "",
+    state: "",
+    region: "",
+    district: "",
+    village: "",
+    property_type: "",
+    property_status: ""
+  });
+  const { data: apiResponse, isLoading, isFetching, refetch } = useQuery<ApiResponse>({
     queryKey: ['properties', pagination.page, pagination.limit],
     queryFn: async () => {
       const res = await fetcher({
-        path: '/property',
+        path: '/property/all',
+        method: 'POST',
         params: {
           page: pagination.page,
-          limit: pagination.limit
-        }
+          limit: pagination.limit,
+        },
+        body: filters
       });
       return res
     }
@@ -65,7 +78,19 @@ const ManageProperties = () => {
       ...(pageSize && { limit: pageSize })
     }));
   };
-
+  const handleDelete = (id: string) => {
+    try {
+      fetcher({
+        path: `/property/${id}`,
+        method: 'DELETE'
+      }).then(() => {
+        toast.success('Property deleted successfully');
+        refetch();
+      });
+    } catch (error) {
+      toast.error(errorMessage(error));
+    }
+  }
   const columns = [
     {
       title: 'Property Code',
@@ -107,8 +132,16 @@ const ManageProperties = () => {
       key: 'action',
       render: (_: any, record: Property) => (
         <div className="flex items-center gap-x-2">
-          <button className="bg-secondary py-1 px-3 rounded-md text-sm text-white">Edit</button>
-          <button className="bg-error py-1 px-3 rounded-md text-sm text-white">Delete</button>
+          <Link to={`/property/${record._id}`}>
+            <button className="bg-secondary py-1 px-3 rounded-md text-sm text-white cursor-pointer">Edit</button>
+          </Link>
+          <Popconfirm
+            title="Are you sure to delete this property?"
+            onConfirm={() => handleDelete(record._id)}
+          >
+            <button 
+          className="bg-error py-1 px-3 rounded-md text-sm text-white cursor-pointer">Delete</button>
+          </Popconfirm>
         </div>
       ),
     },
@@ -129,7 +162,11 @@ const ManageProperties = () => {
         </Link>
       </div>
 
-      <Filter />
+      <Filter
+        filters={filters}
+        setFilters={setFilters}
+        refetch={refetch}
+      />
 
       <Table
         dataSource={apiResponse?.data || []}
@@ -138,7 +175,7 @@ const ManageProperties = () => {
         className="mt-5"
         bordered
         scroll={{ x: 'max-content' }}
-        loading={isLoading}
+        loading={isLoading || isFetching}
         rowKey="_id"
       />
 

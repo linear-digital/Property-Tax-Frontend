@@ -107,7 +107,7 @@ const AddDistrict = () => {
                     />
                     <TextArea label="Boundaries (GeoJSON)"
                         value={JSON.stringify(GeoJSON)}
-                        onChange={(e: any) => setGeoJSON(e.target.value)}
+                        onChange={(e: any) => setGeoJSON(JSON.parse(e.target.value))}
                     />
                     {/* <Boundery /> */}
                     <MapWithDraw geoJson={GeoJSON} setGeoJson={setGeoJSON} />

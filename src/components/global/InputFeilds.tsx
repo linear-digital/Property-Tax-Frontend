@@ -17,7 +17,7 @@ type CommonProps = {
 
 type InputProps = CommonProps & {
   type?: string;
-  value?: string;
+  value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   maxLength?: number;

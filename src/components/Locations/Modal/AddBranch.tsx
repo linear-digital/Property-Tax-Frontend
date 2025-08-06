@@ -86,9 +86,9 @@ const AddBranch = () => {
             </div>
             <Card
             >
-                <form 
-                onSubmit={handleSubmit}
-                className='flex flex-col gap-y-4 mt-5'>
+                <form
+                    onSubmit={handleSubmit}
+                    className='flex flex-col gap-y-4 mt-5'>
                     <Input label="Branch Name"
                         value={name}
                         onChange={(e: any) => setName(e.target.value)}
@@ -104,7 +104,7 @@ const AddBranch = () => {
                     />
                     <TextArea label="Boundaries (GeoJSON)"
                         value={JSON.stringify(GeoJSON)}
-                        onChange={(e: any) => setGeoJSON(e.target.value)}
+                        onChange={(e: any) => setGeoJSON(JSON.parse(e.target.value))}
                     />
                     {/* <Boundery /> */}
                     <MapWithDraw geoJson={GeoJSON} setGeoJson={setGeoJSON} />

@@ -52,6 +52,9 @@ const router = createBrowserRouter([
             element: <ManageProperties />
           },
           {
+            path: ":id",
+            element: <CreateProperty />
+          },{
             path: "create",
             element: <CreateProperty />
           },{
