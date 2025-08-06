@@ -12,6 +12,7 @@ import { useLocation } from "../../contexts/LocationContext";
 import { useFindBranch, useFindDistrict, useFindRegion, useFindVillage } from "../../hooks/locationhooks";
 import toast from "react-hot-toast";
 import { errorMessage } from "../../util/errorMessage";
+import { useUser } from "../../contexts/UserContext";
 
 const CreateProperty = () => {
     const { id } = useParams();
@@ -140,6 +141,7 @@ const CreateProperty = () => {
     });
 
     const { states } = useLocation();
+    const { user } = useUser();
     const regions = useFindRegion({ query: data.state });
     const districts = useFindDistrict({ query: data.region });
     const villages = useFindVillage({ query: data.district });
@@ -169,10 +171,48 @@ const CreateProperty = () => {
             //     return toast.error('Please fill all required fields');
             // }
             if (id) {
+                /**
+ * Returns an object containing only the differences between oldObj and newObj.
+ * (Only includes fields that exist in oldObj or newObj and have different values.)
+ */
+                function getObjectDifferences<T extends Record<string, any>>(
+                    oldObj: T,
+                    newObj: Partial<T>
+                ): Partial<T> {
+                    const differences: any = {};
+
+                    // Check all keys in both objects
+                    const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
+
+                    allKeys.forEach((key) => {
+                        const oldVal = oldObj[key];
+                        const newVal = newObj[key];
+
+                        // Skip if values are equal (or both undefined)
+                        if (oldVal === newVal) return;
+
+                        // Handle nested objects (recursive comparison)
+                        if (typeof oldVal === "object" && typeof newVal === "object" && oldVal && newVal) {
+                            const nestedDiff = getObjectDifferences(oldVal, newVal);
+                            if (Object.keys(nestedDiff).length > 0) {
+                                differences[key] = nestedDiff as T[Extract<keyof T, string>];
+                            }
+                        } else {
+                            differences[key] = newVal;
+                        }
+                    });
+
+                    return differences;
+                }
                 await fetcher({
-                    path: `/property/${id}`,
-                    method: 'PUT',
-                    body: updatedData
+                    path: `/property/edit-request`,
+                    method: 'POST',
+                    body: {
+                        property_id: id,
+                        user: user?._id,
+                        property_code: updatedData.code,
+                        changes: getObjectDifferences(propertyData as any, updatedData)
+                    }
                 });
                 refetch();
                 toast.success('Property updated successfully');

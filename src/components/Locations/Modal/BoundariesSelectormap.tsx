@@ -70,9 +70,10 @@ const MapWithDraw: React.FC<MapWithDrawProps> = ({ setGeoJson, geoJson }) => {
     return (
         <MapContainer
             center={[45.443153, 4.319253]} // Default fallback center
+
             zoom={6}
             scrollWheelZoom={true}
-            style={{ height: '500px', width: '100%' }}
+            style={{ height: '500px', width: '100%', zIndex: 0 }}
         >
             <TileLayer
                 attribution='&copy; OpenStreetMap contributors'

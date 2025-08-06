@@ -223,6 +223,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                 className={`${(width < 1200 && !isOpen) ? 'hidden' : ''} ${width < 1200 ? 'fixed' : 'relative'} h-screen overflow-y-auto inset-y-0 left-0 z-50 bg-white dark:bg-background-dark border-r  border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
                     } ${isHovered ? 'min-w-[260px]' : 'max-w-16 overflow-hidden'
                     } md:w-auto`}
+                     style={{
+                        zIndex: 999
+                     }}
                 onMouseEnter={() => !isHovered && setIsHovered(true)}
                 onMouseLeave={() => !isHovered && setIsHovered(false)}
             >

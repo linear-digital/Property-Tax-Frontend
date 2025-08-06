@@ -1,10 +1,11 @@
 import React from 'react';
 import StatisticsCard from '../Card/StatisticsCard';
+import type { Property } from '../../types/property';
 
-const Statistics = () => {
+const Statistics = ({properties}: {properties: Property}) => {
     return (
         <div>
-            <StatisticsCard />
+            <StatisticsCard properties={properties}/>
         </div>
     );
 };

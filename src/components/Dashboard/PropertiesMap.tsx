@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // PropertyMap.tsx
 import React from 'react';
-import { MapContainer, TileLayer,  Popup, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import type { Property } from '../../types/property';
 
-const PropertyMap = ({ properties }: { properties: any[] }) => {
+const PropertyMap = ({ properties }: { properties: Property[] }) => {
   const defaultCenter: [number, number] = properties.length > 0
-    ? [properties[0].lat, properties[0].lng]
+    ? [properties[0].latitude, properties[0].longitude]
     : [0, 0]; // fallback to [0, 0] if properties is empty
 
   return (
@@ -18,15 +19,18 @@ const PropertyMap = ({ properties }: { properties: any[] }) => {
 
       {properties.map((prop) => (
         <CircleMarker
-          key={prop.id}
-          center={[prop.lat, prop.lng]}
+          key={prop.latitude}
+          center={[prop.latitude, prop.longitude]}
           radius={6}
-          color={prop.status === 'paid' ? 'green' : 'red'}
+          color={prop.property_status === 'paid' ? 'green' : 'red'}
           fillOpacity={1}
         >
-          <Popup>
-            <strong>{prop.name}</strong><br />
-            Status: {prop.status}
+          <Popup className='text-xs'>
+            <strong>Property Code</strong>: {prop.code} <br />
+            <strong>Address</strong>: {prop.property_address} <br />
+            <strong>Owner</strong>: {prop.owner_name} <br />
+            <strong>Building Details</strong>: {prop.house_building_details}
+
           </Popup>
         </CircleMarker>
       ))}

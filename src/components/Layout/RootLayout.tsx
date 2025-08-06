@@ -35,7 +35,7 @@ const RootLayout = () => {
                         colorBgBase: isDarkMode ? '#24293C' : '#ffffff', // sets background
                         colorBgContainer: isDarkMode ? '#24293C' : '#ffffff',
                     },
-                    algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+                    algorithm: isDarkMode ? theme.darkAlgorithm : theme.defaultAlgorithm
                 }}
             >
                 <Toaster />
@@ -46,7 +46,7 @@ const RootLayout = () => {
                         </div>
                         :
                         <UserLayout>
-                        
+
                             <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
                                 <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)}
                                     width={deviceWidth}

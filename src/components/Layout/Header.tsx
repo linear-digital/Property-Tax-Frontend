@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
     };
   }, [openSearch]);
   return (
-    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[1000] shadow-md rounded-md overflow-hidden">
+    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md overflow-hidden">
       <div className="flex items-center justify-between">
         {
           openSearch && <div className="absolute dark:bg-dark bg-white w-full h-full left-0 top-0 z-50">

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Building, DollarSign, FileText, AlertCircle } from 'lucide-react';
+import type { Property } from '../../types/property';
 
 interface StatisticsCardProps {
     title: string;
@@ -26,11 +28,11 @@ const DashboardCard: React.FC<StatisticsCardProps> = ({ title, value, icon, bgCo
     );
 };
 
-const StatisticsCard: React.FC = () => {
+const StatisticsCard = ({ properties }: { properties: any }) => {
     const cards = [
         {
             title: 'Total Properties',
-            value: '18,671',
+            value: properties.length || 0,
             icon: <Building size={24} />,
             bgColor: 'bg-primary',
             iconBg: 'bg-blue-400/20'
