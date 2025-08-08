@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import moment from 'moment';
-import { Button, Dropdown, Pagination, Table, Tag } from "antd";
+import { Button, Dropdown, Pagination, Table } from "antd";
 import Filter from "./Filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faFileExcel, faFilePdf, faFlag } from "@fortawesome/free-solid-svg-icons";

@@ -37,8 +37,9 @@ export interface BarcodeProps {
 }
 
 export interface InvoiceType {
+  _id?: string;
   invoice_id: string;
-  property_id: Property;
+  property_id: Property | null;
   property_code: string;
   createdAt: string;
   payment_date: string;
