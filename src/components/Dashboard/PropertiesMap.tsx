@@ -17,9 +17,9 @@ const PropertyMap = ({ properties }: { properties: Property[] }) => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
 
-      {properties.map((prop) => (
+      {properties.map((prop, index) => (
         <CircleMarker
-          key={prop.latitude}
+          key={index}
           center={[prop.latitude, prop.longitude]}
           radius={6}
           color={prop.property_status === 'paid' ? 'green' : 'red'}

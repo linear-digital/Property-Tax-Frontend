@@ -1,10 +1,26 @@
 // src/PropertyStatusPieChart.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import type { Property } from '../../../types/property';
 
 
-const PropertyByBuildingDetails: React.FC = () => {
+const PropertyByBuildingDetails = ({ properties }: { properties: Property[] }) => {
+    const propertyuildingDetails = useMemo(() => {
+        const counts = { stores: 0, villas: 0, tin: 0 };
+        properties.forEach(property => {
+            switch (property.house_building_details) {
+                case 'Tin': counts.tin++; break;
+                case 'Stores': counts.stores++; break;
+                case 'Villas': counts.villas++; break;
+            }
+        });
+        return [
+            { name: 'Stores', y: counts.stores },
+            { name: 'Villas', y: counts.villas, },
+            { name: 'Tin', y: counts.tin, },
+        ];
+    }, [properties]);
     const options: Highcharts.Options = {
         chart: {
             type: 'pie',
@@ -20,7 +36,7 @@ const PropertyByBuildingDetails: React.FC = () => {
             }
         },
         tooltip: {
-            pointFormat: '<b>{point.percentage:.1f}%</b>'
+            pointFormat: '<b>{point.y} ({point.percentage:.1f}%)</b>'
         },
         accessibility: {
             point: {
@@ -66,11 +82,7 @@ const PropertyByBuildingDetails: React.FC = () => {
             {
                 name: 'Status',
                 type: 'pie',
-                data: [
-                    { name: 'Stores', y: 2 },
-                    { name: 'Villas', y: 28 },
-                    { name: 'Tin', y: 70 },
-                ]
+                data: propertyuildingDetails
             }
         ],
         responsive: {

@@ -108,7 +108,12 @@ const CreateProperty = () => {
         { value: 'Female', label: 'Female' },
         { value: 'Other', label: 'Other' }
     ];
-
+    const [latLong, setLatLong] = React.useState({
+        latitude: 4.31925300,
+        longitude: 45.44315300,
+        altitude: 0,
+        precision: 0
+    });
     const { data: propertyData, isLoading, refetch } = useQuery({
         queryKey: ['Property', id],
         queryFn: async () => {
@@ -130,15 +135,14 @@ const CreateProperty = () => {
         if (propertyData) {
             setData(propertyData);
             setLatLong({
-                lat: propertyData.latitude || 4.31925300,
-                lng: propertyData.longitude || 45.44315300
+                latitude: propertyData.latitude || 4.31925300,
+                longitude: propertyData.longitude || 45.44315300,
+                altitude: propertyData.altitude || 0,
+                precision: propertyData.precision || 0
             });
         }
     }, [propertyData])
-    const [latLong, setLatLong] = React.useState({
-        lat: 4.31925300,
-        lng: 45.44315300
-    });
+
 
     const { states } = useLocation();
     const { user } = useUser();
@@ -151,9 +155,11 @@ const CreateProperty = () => {
         // Update coordinates before submission
         const updatedData = {
             ...data,
-            latitude: latLong.lat,
-            longitude: latLong.lng,
-            coordinates: `${latLong.lat} ${latLong.lng}`
+            latitude: latLong.latitude,
+            longitude: latLong.longitude,
+            altitude: latLong.altitude,
+            precision: latLong.precision,
+            coordinates: `${latLong.latitude} ${latLong.longitude} ${latLong.altitude} ${latLong.precision}`
         };
 
         try {
@@ -301,23 +307,25 @@ const CreateProperty = () => {
                     {/* Coordinates */}
                     <Input
                         type="number"
-                        value={latLong.lat}
+                        value={latLong.latitude}
                         label="Latitude"
-                        onChange={(e) => setLatLong({ ...latLong, lat: parseFloat(e.target.value) })}
+                        onChange={(e) => setLatLong({ ...latLong, latitude: parseFloat(e.target.value) })}
                     />
                     <Input
                         type="number"
-                        value={latLong.lng}
+                        value={latLong.longitude}
                         label="Longitude"
-                        onChange={(e) => setLatLong({ ...latLong, lng: parseFloat(e.target.value) })}
+                        onChange={(e) => setLatLong({ ...latLong, longitude: parseFloat(e.target.value) })}
                     />
                     <div className="col-span-2 mt-4">
                         <SelectorMap
-                            latLong={[latLong.lat, latLong.lng]}
+                            latLong={[latLong.latitude, latLong.longitude]}
                             setLatLong={(latLong) => {
                                 setLatLong({
-                                    lat: latLong[0],
-                                    lng: latLong[1]
+                                    latitude: latLong[0],
+                                    longitude: latLong[1],
+                                    altitude: data.altitude || Math.floor(Math.random() * 100), // Simulated
+                                    precision: data.precision || Math.floor(Math.random() * 30), // Simulated
                                 });
                             }}
                         />

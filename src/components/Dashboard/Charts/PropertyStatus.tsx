@@ -1,10 +1,31 @@
 // src/PropertyStatusPieChart.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import type { Property } from '../../../types/property';
 
 
-const PropertyByType: React.FC = () => {
+
+const PropertyStatusPieChart = ({ properties }: { properties: Property[] }) => {
+  const statusData = useMemo(() => {
+    const counts = { leased: 0, vacant: 0, rented: 0, owned: 0 };
+    properties.forEach(property => {
+      switch (property.property_status) {
+        case 'Leased': counts.leased++; break;
+        case 'Vacant': counts.vacant++; break;
+        case 'Rented': counts.rented++; break;
+        case 'Owned': counts.owned++; break;
+      }
+    });
+    return [
+      { name: 'Leased', y: counts.leased, color: '#279dfd' },
+      { name: 'Owned', y: counts.owned, color: '#3ae05f' },
+      { name: 'Rented', y: counts.rented, color: '#f55229' },
+      { name: 'Vacant', y: counts.vacant, color: '#4237b8' }
+    ];
+  }, [properties]);
+  
+
   const options: Highcharts.Options = {
     chart: {
       type: 'pie',
@@ -20,7 +41,7 @@ const PropertyByType: React.FC = () => {
       }
     },
     tooltip: {
-      pointFormat: '<b>{point.percentage:.1f}%</b>'
+      pointFormat: '<b>{point.y} ({point.percentage:.1f}%)</b>'
     },
     accessibility: {
       point: {
@@ -33,45 +54,23 @@ const PropertyByType: React.FC = () => {
         cursor: 'pointer',
         dataLabels: {
           enabled: true,
-          useHTML: true,
-          formatter: function (): string | null {
-            const percentage = (this as Highcharts.Point).percentage ?? 0;
-            const name = (this as Highcharts.Point).name ?? '';
-
-            if (percentage < 1 && name !== 'Leased' && name !== 'Vacant') {
-              return null;
-            }
-
-            const labelStyle = 'color: black; font-size: 14px; font-weight: regular;';
-            const percentageStyle = 'color: #EEEEEE; font-size: 12px;';
-
-            if (['Owned', 'Rented', 'Vacant', 'Leased'].includes(name)) {
-              return `<span style="${labelStyle}">${name}</span>`;
-            }
-
-            return `<span style="${percentageStyle}">${Highcharts.numberFormat(percentage, 1)}%</span>`;
-          },
+          format: '<b>{point.name}</b>',
           distance: 20,
           style: {
             color: 'black',
+            fontSize: '14px',
+            fontWeight: 'normal',
             textOutline: 'none'
           }
-          // connectorColor is removed to let it inherit from point color
         },
         showInLegend: false
       }
     },
-    colors: ['#279dfd', '#3ae05f', '#f55229', '#4237b8'],
     series: [
       {
-        name: 'Status',
+        name: 'Properties',
         type: 'pie',
-        data: [
-          { name: 'Rented', y: 25 },
-          { name: 'Owned', y: 70 },
-          { name: 'Leased', y: 4 },
-          { name: 'Vacant', y: 1 }
-        ]
+        data: statusData
       }
     ],
     responsive: {
@@ -104,4 +103,4 @@ const PropertyByType: React.FC = () => {
   );
 };
 
-export default PropertyByType;
+export default PropertyStatusPieChart;

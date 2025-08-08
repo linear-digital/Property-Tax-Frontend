@@ -16,6 +16,7 @@ L.Icon.Default.mergeOptions({
 function MapClickHandler({ setParentLatLong, currentLatLong }: { setParentLatLong: (latLong: [number, number]) => void, currentLatLong: [number, number] | null }) {
     const map = useMapEvents({
         click(e) {
+            console.log(e);
             const newLatLong: [number, number] = [e.latlng.lat, e.latlng.lng];
             setParentLatLong(newLatLong); // Update the parent's state
             // console.log('Clicked Lat:', newLatLong[0], 'Long:', newLatLong[1]); // Keep this for debugging if needed

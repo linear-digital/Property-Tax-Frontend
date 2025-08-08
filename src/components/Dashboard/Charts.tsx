@@ -5,8 +5,9 @@ import PropertyByBuildingDetails from './Charts/PropertyByBuildingDetails';
 import AmountPaidChart from './Charts/TotalPaidAmmountPermonth';
 import DailyPayments from './Charts/DailyPayments';
 import DailyDifferences from './Charts/DailyDifferences';
+import type { Property } from '../../types/property';
 
-const Charts = () => {
+const Charts = ({ properties }: { properties: Property[] }) => {
     // Example data for dailyPaymentsData and dailyDiscountsData
     const dailyPaymentsData = [
         21, 2215, 1298, 388, 601, 316, 14, 242, 777, 1370, 340, 2140, 1391, 455, 428, 509, 776, 35, 206, 1026, 1022, 390, 566, 1130, 703, 1580, 162, 202, 996, 270, 816
@@ -23,9 +24,9 @@ const Charts = () => {
     // />
     return (
         <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-8'>
-            <PropertyStatusPieChart />
-            <PropertyByType />
-            <PropertyByBuildingDetails />
+            <PropertyStatusPieChart properties={properties} />
+            <PropertyByType properties={properties}/>
+            <PropertyByBuildingDetails properties={properties}/>
             <AmountPaidChart />
             <DailyPayments />
             <DailyDifferences dailyDiscountsData={dailyDiscountsData} dailyPaymentsData={dailyPaymentsData} />

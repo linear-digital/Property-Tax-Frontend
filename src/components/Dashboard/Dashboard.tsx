@@ -28,7 +28,7 @@ const Dashboard = () => {
             <Filter />
             <Statistics properties={data?.data || []}/>
             <PropertiesMap properties={data.data || []} />
-            <Charts />
+            <Charts properties={data.data || []}/>
         </div>
     );
 };

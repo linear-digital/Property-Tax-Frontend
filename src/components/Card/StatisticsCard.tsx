@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Building, DollarSign, FileText, AlertCircle } from 'lucide-react';
-import type { Property } from '../../types/property';
+
 
 interface StatisticsCardProps {
     title: string;

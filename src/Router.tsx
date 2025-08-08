@@ -28,6 +28,7 @@ import Roles from "./components/Roles/Roles";
 import CreateRole from "./components/Roles/CreateRole";
 import Login from "./components/auth/Login";
 import AddPropertyFromExcel from "./components/Properties/AddPropertyFromExcel";
+import Invoice from "./components/Billing/Invoice";
 
 
 const router = createBrowserRouter([
@@ -74,6 +75,9 @@ const router = createBrowserRouter([
           {
             path: 'invoices',
             element: <TaxInvoice />
+          },{
+            path: 'invoice/:id',
+            element: <Invoice />
           }, {
             path: 'payments',
             element: <InvoicePayments page="payments" />

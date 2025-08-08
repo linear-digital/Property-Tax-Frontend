@@ -1,10 +1,31 @@
 // src/PropertyStatusPieChart.tsx
-import React from 'react';
+import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import type { Property } from '../../../types/property';
 
 
-const PropertyByType: React.FC = () => {
+const PropertyByType = ({ properties }: { properties: Property[] }) => {
+    const propertyTypes = useMemo(() => {
+        const counts = { commercial: 0, agericultural: 0, mixeduse: 0, residential: 0, oters: 0 };
+        properties.forEach(property => {
+            switch (property.property_type) {
+                case 'Commercial': counts.commercial++; break;
+                case 'Agricultural': counts.agericultural++; break;
+                case 'Mixed Use': counts.mixeduse++; break;
+                case 'Residential': counts.residential++; break;
+                case 'Other': counts.oters++; break;
+            }
+        });
+        return [
+            { name: 'Residential', y: counts.residential, color: '#279dfd' },
+            { name: 'Commercial', y: counts.commercial, color: '#3ae05f' },
+            { name: 'Mixed Use', y: counts.mixeduse, color: '#f55229' },
+            { name: 'Agricultural', y: counts.agericultural, color: '#4237b8' },
+            { name: 'Other', y: counts.oters, color: '#FFC107' }
+        ];
+    }, [properties]);
+
     const options: Highcharts.Options = {
         chart: {
             type: 'pie',
@@ -20,7 +41,7 @@ const PropertyByType: React.FC = () => {
             }
         },
         tooltip: {
-            pointFormat: '<b>{point.percentage:.1f}%</b>'
+            pointFormat: '<b>{point.y} ({point.percentage:.1f}%)</b>'
         },
         accessibility: {
             point: {
@@ -66,13 +87,7 @@ const PropertyByType: React.FC = () => {
             {
                 name: 'Status',
                 type: 'pie',
-                data: [
-                    { name: 'Agricultural', y: 5 },
-                    { name: 'Other', y: 5 },
-                    { name: 'Commercial', y: 25 },
-                    { name: 'Residential', y: 65 },
-                    { name: 'Mixed Use', y: 6 },
-                ]
+                data: propertyTypes
             }
         ],
         responsive: {

@@ -29,7 +29,6 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             const data = await fetcher({
                 path: '/location'
             })
-            console.log(data);
             setStates(data.states || [])
             setRegions(data.regions || [])
             setDistricts(data.districts || [])

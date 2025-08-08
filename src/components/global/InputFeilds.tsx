@@ -35,7 +35,7 @@ type TextAreaProps = CommonProps & {
 };
 
 type DateProps = CommonProps & {
-  value?: Dayjs;
+  value?: Dayjs | null;
   onChange?: any;
   onBlur?: () => void;
   format?: string;
