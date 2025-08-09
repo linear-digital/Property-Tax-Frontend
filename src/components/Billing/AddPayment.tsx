@@ -94,7 +94,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
             const newData = {
                 ...newPaymant,
             }
-            if (user?.agent || user?.roles?.find((role: any) => role.name === "Agent")) {
+            if (user?.agent) {
                 newData.agent = user._id
             }
             await fetcher({
