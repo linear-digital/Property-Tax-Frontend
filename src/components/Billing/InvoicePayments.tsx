@@ -1,26 +1,87 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Dropdown, Modal, Table } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCertificate, faEye, faFile, faFileExcel, faFilePdf, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCertificate, faCheck, faFile, faFileExcel, faFilePdf, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
-import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
+import toast from 'react-hot-toast';
+import { errorMessage } from '../../util/errorMessage';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
-    const { data, isLoading } = useQuery({
-        queryKey: ['invoice-payments'],
-        queryFn: async () => {
-            const data = await fetcher({
-                path: `/payment`
-            })
-            return data
+    const [filters, setFilters] = useState<any>({
+        invoice_number: "",
+        agent: "",
+        payment_method: "",
+        stateDate: "",
+        endDate: "",
+    })
+    const [data, setData] = useState<any>([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [fetch, setFetch] = useState(73)
+    const refetch = () => (
+        setFetch(fetch + 1)
+    )
+    const fetchData = async () => {
+        try {
+            setIsLoading(true)
+            if (page === 'unauthorized') {
+                fetcher({
+                    path: `/payment`,
+                    params: {
+                        authorized: false,
+                        ...filters
+                    }
+                }).then((res: any) => {
+                    setData(res)
+                })
+            }
+            else if (page === 'authorized') {
+                fetcher({
+                    path: `/payment`,
+                    params: {
+                        authorized: true,
+                        ...filters
+                    }
+                }).then((res: any) => {
+                    setData(res)
+                })
+            }
+            else {
+                fetcher({
+                    path: `/payment`,
+                    params: {
+                        ...filters
+                    }
+                }).then((res: any) => {
+                    setData(res)
+                })
+            }
+        } catch (error) {
+            toast.error(errorMessage(error))
         }
-    });
-
+        finally {
+            setIsLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchData()
+    }, [page, fetch])
+    const authorizePayment = async (id: string) => {
+        try {
+            await fetcher({
+                path: `/payment/${id}/authorize`,
+                method: 'PUT',
+            })
+            refetch()
+            toast.success('Payment authorized successfully')
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+    }
     const columns = [
         {
             title: 'Invoice Number',
@@ -77,7 +138,9 @@ const InvoicePayments = ({ page }: { page: string }) => {
             title: 'Agent',
             dataIndex: 'agent',
             key: 'agent',
-            render: (agent: boolean) => agent || "N/A",
+            render: (_: any, record: any) => {
+                return record?.agent?.name || 'N/A'
+            },
         },
         {
             title: "Discounted?",
@@ -96,7 +159,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             title: "Authorized?",
             dataIndex: 'authorized',
             key: 'authorized',
-            render: (discounted: boolean) => discounted ? <button className='bg-green-500 py-[3px] px-4 rounded-md text-xs text-white'>Yes</button> : <button className='bg-primary py-[3px] px-4 rounded-md text-xs text-white'>No</button>,
+            render: (authorized: boolean, record: any) => record?.authorized ? <button className='bg-green-500 py-[3px] px-4 rounded-md text-xs text-white'>Yes</button> : <button className='bg-primary py-[3px] px-4 rounded-md text-xs text-white'>No</button>,
         },
         {
             title: 'Actions',
@@ -112,6 +175,16 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             label: <button>
                                 <FontAwesomeIcon icon={faFile} /> Generate Discount Topup Invoice
                             </button>,
+                            style: {
+                                display: (page === 'unauthorized' || page === 'authorized') ? 'none' : 'block'
+                            }
+                        },
+                        {
+                            key: "5",
+                            type: "divider",
+                            style: {
+                                display: page === 'unauthorized' ? 'none' : 'block'
+                            }
                         },
                         {
                             key: '2',
@@ -119,15 +192,58 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             label: <button>
                                 <FontAwesomeIcon icon={faFilePdf} /> Receipt
                             </button>,
-                        }, {
-                            key: '3',
+                            style: {
+                                display: page === 'unauthorized' ? 'none' : 'block'
+                            }
+                        },
+                        {
+                            key: "5",
+                            type: "divider",
+                            style: {
+                                display: page === 'unauthorized' ? 'none' : 'block'
+                            }
+                        },
+                        {
+                            key: '33',
                             onClick: () => console.log(record),
                             label: <button>
                                 <FontAwesomeIcon icon={faCertificate} /> Tax Certificate
                             </button>,
+                            style: {
+                                display: page === 'unauthorized' ? 'none' : 'block'
+                            }
+                        },
+
+                        {
+                            key: '4',
+                            onClick: () => authorizePayment(record?._id),
+                            label: <button>
+                                <FontAwesomeIcon icon={faCheck} /> Make Authorize
+                            </button>,
+                            style: {
+                                display: page === 'unauthorized' ? 'block' : 'none'
+                            }
+                        },
+                        {
+                            key: "554",
+                            type: "divider",
+                            style: {
+                                display: page === 'unauthorized' ? 'block' : 'none'
+                            }
+                        },
+                        {
+                            key: '434',
+                            onClick: () => console.log(record),
+                            label: <button className='text-red-500'>
+                                <FontAwesomeIcon icon={faBan} /> Reject Payment
+                            </button>,
+                            style: {
+                                display: page === 'unauthorized' ? 'block' : 'none'
+                            }
                         },
                     ],
                 }}
+
             >
                 <Button type='primary'>Action</Button>
             </Dropdown>
@@ -148,7 +264,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     <FontAwesomeIcon icon={faPlus} />  Add Payment
                 </Button>
             }
-            <PaymentFilter />
+            <PaymentFilter refetch={refetch} filters={filters} setFilters={setFilters} />
             {
                 page === 'payments' &&
                 <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
@@ -158,7 +274,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             <Modal open={open} onCancel={() => setOpen(false)} footer={null} title="Add Payment"
                 width={1000}
             >
-                <AddPayment />
+                <AddPayment refetch={refetch} />
             </Modal>
 
             <Table

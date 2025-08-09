@@ -11,13 +11,11 @@ import moment from 'moment';
 
 interface UsersListExcelProps {
     filename?: string;
-    query: any
 }
 
 const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
 
-    filename = 'all-invoice.xlsx',
-    query
+    filename = 'all-payments.xlsx'
 }) => {
     const [loading, setLoading] = React.useState(false);
     const [downloading, setDownloading] = React.useState(false);
@@ -26,8 +24,7 @@ const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
             setLoading(true);
             setDownloading(true);
             const invoices: InvoiceType[] = await fetcher({
-                path: '/invoice?all=true',
-                params: query
+                path: '/invoice/all/invoice'
             })
             setDownloading(false);
             // Prepare worksheet data
@@ -36,13 +33,13 @@ const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
                 [
                     'Invoice Number',
                     'Property Code',
-                    'Annual Tax ($)',
-                    'Admin Fee ($)',
-                    'Total Due ($)',
-                    'Total Over Due ($)',
-                    'Status',
-                    "Agent",
-                    "Due Date",
+                    "Owner Name",
+                    'Amount Paid($)',
+                    'Payment Method',
+                    'Transaction Reference',
+                    'Date Paid',
+                    'Agent',
+                    "Authorized",
                 ],
                 // User data
                 ...invoices.map(inv => [

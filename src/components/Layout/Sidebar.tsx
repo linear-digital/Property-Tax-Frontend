@@ -15,6 +15,7 @@ import {
 import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCreditCard, faHomeAlt } from '@fortawesome/free-solid-svg-icons';
+import { useUser } from '../../contexts/UserContext';
 
 interface SidebarItem {
     id: string;
@@ -22,6 +23,7 @@ interface SidebarItem {
     icon: React.ReactNode;
     children?: SidebarItem[];
     active?: boolean;
+    hidden?: boolean
 }
 
 interface SidebarProps {
@@ -29,7 +31,10 @@ interface SidebarProps {
     onClose: () => void;
     width: number; // Optional prop for width, if needed
 }
-const sidebarItems: SidebarItem[] = [
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
+    const {permissions} = useUser();
+    const sidebarItems: SidebarItem[] = [
         {
             id: '/',
             label: 'Dashboard',
@@ -38,6 +43,7 @@ const sidebarItems: SidebarItem[] = [
         {
             id: 'properties',
             label: 'Properties',
+            hidden: !permissions.includes('property-Manage'),
             icon: <Building size={18} />,
             children: [
                 { id: 'property', label: 'Manage Properties', icon: <Dot size={20} /> },
@@ -52,12 +58,14 @@ const sidebarItems: SidebarItem[] = [
                 {
                     id: "billing/invoices",
                     label: 'Tax Invoice',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                hidden:!permissions.includes('invoice-Manage'),
                 },
                 {
                     id: "billing/payments",
                     label: 'Payments',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                    hidden:!permissions.includes('payment-Manage'),
                 }, {
                     id: "billing/summarys",
                     label: 'Tax Collection Summary',
@@ -65,15 +73,18 @@ const sidebarItems: SidebarItem[] = [
                 }, {
                     id: "billing/agents",
                     label: 'Agents',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                      hidden:!permissions.includes('agent-Manage'),
                 }, {
                     id: "billing/agent-float",
                     label: 'Agent Float',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                      hidden:!permissions.includes('agent-Manage'),
                 }, {
                     id: "billing/commissions",
                     label: 'Commissions',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                        hidden:!permissions.includes('commission-Manage'),
                 }
             ]
         },
@@ -81,13 +92,16 @@ const sidebarItems: SidebarItem[] = [
             id: 'billing/unauthorized-payments',
             label: 'Unauthorised Payments',
             icon: <FontAwesomeIcon icon={faCreditCard} className='text-yellow-500'/>,
+             hidden: !permissions.includes('payment-Manage'),
         },
         {
             id: 'billing/authorised',
             label: 'Authorised Payments',
             icon: <FontAwesomeIcon icon={faCreditCard} className='text-green-500'/>,
+            hidden: !permissions.includes('payment-Manage'),
         },
         {
+            hidden: !permissions.includes('property-Manage'),
             id: 'locations',
             label: 'Locations',
             icon: <MapPin size={18} />,
@@ -95,23 +109,28 @@ const sidebarItems: SidebarItem[] = [
                 {
                     id: 'locations/states',
                     label: 'States',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                    hidden: !permissions.includes('state-Manage')
                 }, {
                     id: 'locations/regions',
                     label: 'Regions',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                     hidden: !permissions.includes('region-Manage')
                 }, {
                     id: 'locations/districts',
                     label: 'Districts',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                     hidden: !permissions.includes('district-Manage')
                 }, {
                     id: 'locations/villages',
                     label: 'Villages',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                     hidden: !permissions.includes('village-Manage')
                 }, {
                     id: 'locations/branches',
                     label: 'Branches',
-                    icon: <Dot size={20} />
+                    icon: <Dot size={20} />,
+                     hidden: !permissions.includes('branch-Manage')
                 },
             ]
         },
@@ -132,7 +151,6 @@ const sidebarItems: SidebarItem[] = [
             ]
         }
     ];
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
     const [expandedItems, setExpandedItems] = useState<string[]>(['users']);
     const [isHovered, setIsHovered] = useState(true);
     useEffect(() => {
@@ -163,7 +181,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
         }
         return (
             <Link to={naviageteTo()} key={item.id}
-                
+                style={{
+                    display: item.hidden ? 'none': "block"
+                }}
             >
                 <div
                     className={`flex items-center justify-between cursor-pointer transition-all duration-200 ${active

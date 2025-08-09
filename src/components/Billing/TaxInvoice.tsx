@@ -11,6 +11,10 @@ import { useNavigate } from 'react-router';
 import InvoicePDFDowload from './InvoicePDFDownload';
 import InvoiceListExcel from './ExportExcel';
 import toast from 'react-hot-toast';
+import { useUser } from '../../contexts/UserContext';
+import { invoicePermissions } from './constants';
+import NoPermission from '../global/NoPermission';
+
 
 
 const TaxInvoice = () => {
@@ -104,7 +108,7 @@ const TaxInvoice = () => {
       key: 'status',
       render: (status: any) => (
         <div>
-          {status === "paid" ? (
+          {status === "Paid" ? (
             <button color="green" className="text-white bg-green-600 px-3 py-[2px] rounded-sm text-xs">Paid</button>
           ) : (
             <button color="green" className="text-white bg-red-600 px-3 py-[2px] rounded-sm text-xs">Not Paid</button>
@@ -180,6 +184,11 @@ const TaxInvoice = () => {
     }));
   };
   const filename = `tax_invoice_${moment().format('YYYY-MM-DD')}.xlsx`;
+  const { permissions } = useUser();
+
+  if (!permissions.includes(invoicePermissions[5])) {
+    return <NoPermission />
+  }
   return (
     <div>
       <Filter
@@ -187,13 +196,20 @@ const TaxInvoice = () => {
         setFilters={setFilters}
         refetch={refetch}
       />
-      <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
-        <FontAwesomeIcon icon={faFileExcel} />  <InvoiceListExcel filename={filename} />
+      <button
+        style={{
+          display: permissions.includes(invoicePermissions[0]) ? 'flex' : 'none'
+        }}
+        className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
+        <FontAwesomeIcon icon={faFileExcel} />  <InvoiceListExcel filename={filename} query={filters} />
       </button>
       <h4 className="text-lg dark:text-white text-dark my-5">
         Tax Invoices
       </h4>
       <Table
+        style={{
+          display: permissions.includes(invoicePermissions[0]) ? 'block' : 'none'
+        }}
         loading={isLoading}
         dataSource={data?.data || []}
         scroll={{ x: 'max-content' }}
@@ -204,6 +220,9 @@ const TaxInvoice = () => {
       />
       <div className="flex justify-end mt-4">
         <Pagination
+          style={{
+            display: permissions.includes(invoicePermissions[0]) ? 'block' : 'none'
+          }}
           total={pagination.total}
           current={pagination.page}
           pageSize={pagination.limit}

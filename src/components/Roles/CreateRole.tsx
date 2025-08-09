@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { faArrowLeftLong } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { Input } from '../global/InputFeilds';
 import permissions from '../../util/permissions';
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, Input as AntInput } from 'antd';
 import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
@@ -28,6 +28,14 @@ const CreateRole = () => {
         },
         enabled: !!id
     })
+     const [search, setSearch] = React.useState<string>('');
+     const filteredPermissions = useMemo(
+        () =>
+            permissions.filter((perm: string) =>
+                perm.toLowerCase().includes(search.toLowerCase())
+            ),
+        [permissions, search]
+    );
     useEffect(() => {
         if (data) {
             setName(data.name || '')
@@ -51,6 +59,7 @@ const CreateRole = () => {
             setChecked([...checked, value]);
         }
     };
+   
     const navigate = useNavigate();
     const handleCreateRole = async () => {
         try {
@@ -69,10 +78,12 @@ const CreateRole = () => {
         }
     };
 
+   
+
     return (
         <div className="my-5">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl dark:text-white text-dark font-semibold">Add New Role</h3>
+                <h3 className="text-xl dark:text-white text-dark font-semibold">{data ? 'Update' : 'Create'} Role</h3>
                 <Link to={'/roles'} className="text-primary">
                     <FontAwesomeIcon icon={faArrowLeftLong} /> Back to Roles
                 </Link>
@@ -84,7 +95,7 @@ const CreateRole = () => {
                     onChange={(e) => setName(e.target.value)}
                 />
 
-                <div className="mt-5">
+                <div className="mt-5 flex items-center justify-between">
                     <Checkbox
                         onChange={handleSelectAll}
                         checked={permissions.length === checked.length}
@@ -92,10 +103,16 @@ const CreateRole = () => {
                     >
                         Select All
                     </Checkbox>
-
+                    <AntInput.Search
+                        allowClear
+                        className='max-w-xl'
+                        placeholder="Search Permissions"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-5">
-                    {permissions.map((perm: string, index: number) => (
+                    {filteredPermissions.map((perm: string, index: number) => (
                         <Checkbox
                             key={index}
                             checked={checked.includes(perm)}

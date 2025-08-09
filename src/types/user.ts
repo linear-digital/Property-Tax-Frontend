@@ -17,4 +17,7 @@ export interface User {
     disabled: boolean;
     createdAt: string;
     updatedAt: string;
+    float_balance: number;
+    agent: boolean;
+    status: string;
 }

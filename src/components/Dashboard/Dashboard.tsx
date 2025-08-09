@@ -21,7 +21,7 @@ const Dashboard = () => {
         }
     })
     if (isLoading) {
-        return <Spin fullscreen/>
+        return <Spin />
     }
     return (
         <div>

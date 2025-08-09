@@ -188,13 +188,6 @@ const AddPropertyFromExcel = () => {
                     >
                         {submitLoading ? 'Submitting...' : `Add ${jsonData.length} Properties to Database`}
                     </Button>
-
-                    <div>
-                        <h2 className="font-semibold mb-2">Data Preview ({jsonData.length} rows)</h2>
-                        <div className="overflow-x-auto max-h-96 border rounded">
-                            {/* Table preview remains the same */}
-                        </div>
-                    </div>
                 </div>
             )}
         </div>

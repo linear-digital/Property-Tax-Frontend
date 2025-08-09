@@ -8,6 +8,7 @@ import { fetcher } from "../../util/axios.instance";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { errorMessage } from "../../util/errorMessage";
+import { useUser } from "../../contexts/UserContext";
 
 interface Property {
   _id: string;
@@ -34,6 +35,7 @@ interface ApiResponse {
 }
 
 const ManageProperties = () => {
+  const { permissions } = useUser();
   const [pagination, setPagination] = useState<PaginationData>({
     page: 1,
     limit: 20,
@@ -132,15 +134,23 @@ const ManageProperties = () => {
       key: 'action',
       render: (_: any, record: Property) => (
         <div className="flex items-center gap-x-2">
-          <Link to={`/property/${record._id}`}>
+          <Link
+            style={{
+              display: !permissions.includes('property-edit') ? 'none' : 'block'
+            }}
+            to={`/property/${record._id}`}>
             <button className="bg-secondary py-1 px-3 rounded-md text-sm text-white cursor-pointer">Edit</button>
           </Link>
           <Popconfirm
+
             title="Are you sure to delete this property?"
             onConfirm={() => handleDelete(record._id)}
           >
-            <button 
-          className="bg-error py-1 px-3 rounded-md text-sm text-white cursor-pointer">Delete</button>
+            <button
+              style={{
+                display: !permissions.includes('property-delete') ? 'none' : 'block'
+              }}
+              className="bg-error py-1 px-3 rounded-md text-sm text-white cursor-pointer">Delete</button>
           </Popconfirm>
         </div>
       ),
@@ -149,7 +159,11 @@ const ManageProperties = () => {
 
   return (
     <div className="py-5">
-      <div className="flex items-center gap-x-4">
+      <div
+        style={{
+          display: !permissions.includes('property-create') ? 'none' : 'flex'
+        }}
+        className="items-center gap-x-4">
         <Link to={'/property/create'}>
           <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer">
             <Plus fontSize={10} /> Add New Property
@@ -169,6 +183,9 @@ const ManageProperties = () => {
       />
 
       <Table
+        style={{
+          display: !permissions.includes('property-list') ? 'none' : 'block'
+        }}
         dataSource={apiResponse?.data || []}
         columns={columns}
         pagination={false}
@@ -179,7 +196,11 @@ const ManageProperties = () => {
         rowKey="_id"
       />
 
-      <div className="flex justify-end mt-4">
+      <div className=" justify-end mt-4"
+        style={{
+          display: !permissions.includes('property-create') ? 'none' : 'flex'
+        }}
+      >
         <Pagination
           total={pagination.total}
           current={pagination.page}

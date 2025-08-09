@@ -9,9 +9,11 @@ import type { Property } from '../../types/property';
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import { useUser } from '../../contexts/UserContext';
 
-const AddPayment = () => {
+const AddPayment = ({ refetch }: { refetch: any }) => {
     const [property, setProperty] = React.useState<string>("");
+    const { user } = useUser();
     const { data, isLoading } = useQuery({
         queryKey: ['properties'],
         queryFn: async () => {
@@ -40,9 +42,10 @@ const AddPayment = () => {
         agent: '',
         dispute: false
     });
-    const [newPaymant, setNewPayment] = useState({
+    const [newPaymant, setNewPayment] = useState<any>({
         property_code: '',
         invoice_id: '',
+        invoice_number: '',
         amount: 0,
         discount: 0,
         paid_amount: 0,
@@ -50,13 +53,13 @@ const AddPayment = () => {
         payment_method: "",
         reference: "",
         payment_date: new Date().toISOString(),
-        agent: "",
-        discounted: false
+        discounted: false,
     })
     useEffect(() => {
         if (invoice) {
             setNewPayment({
                 property_code: invoice.property_code,
+                invoice_number: invoice.invoice_id,
                 invoice_id: invoice?._id as string,
                 amount: (invoice.total_due + invoice.overdue),
                 discount: 0,
@@ -65,12 +68,12 @@ const AddPayment = () => {
                 payment_method: "",
                 reference: "",
                 payment_date: new Date().toISOString(),
-                agent: "",
                 discounted: false
             })
 
         }
     }, [invoice])
+
     const { data: invoices } = useQuery({
         queryKey: ['invoices', property],
         queryFn: async () => {
@@ -88,12 +91,19 @@ const AddPayment = () => {
                 toast.error("Please fill all the fields");
                 return
             }
+            const newData = {
+                ...newPaymant,
+            }
+            if (user?.agent || user?.roles?.find((role: any) => role.name === "Agent")) {
+                newData.agent = user._id
+            }
             await fetcher({
                 path: "/payment/create",
                 method: "POST",
-                body: newPaymant
+                body: newData
             });
             toast.success("Payment created successfully");
+            refetch();
         } catch (error) {
             toast.error(errorMessage(error))
         }
@@ -209,7 +219,7 @@ const AddPayment = () => {
                 }}
             />
             <Button
-            className='self-start'
+                className='self-start'
                 onClick={submitPayment}
                 loading={isLoading}
             >

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { faCheckCircle, faClock, faCoins, faFile, faTag, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
-const SummaryTable = () => {
+const SummaryTable = ({ data }: { data: any }) => {
     return (
         <div className=''>
             <table className='w-full text-white  summary-table'>
@@ -28,10 +29,10 @@ const SummaryTable = () => {
                             /> Total Invoices Generated
                         </td>
                         <td className='t-data text-right border-r'>
-                            $29,231.00
+                            ${data?.totalInvoicesGenerated?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
-                            361
+                            {data?.totalInvoicesGenerated?.count || 0}
                         </td>
                         <td className='t-data text-center border-r'>
                             Total tax levied
@@ -44,10 +45,10 @@ const SummaryTable = () => {
                                 icon={faCheckCircle} /> Total Invoices Paid
                         </td>
                         <td className='t-data text-right border-r'>
-                            $9,835.00
+                            ${data?.paidInvoices?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
-                            352
+                            {data?.paidInvoices?.count}
                         </td>
                         <td className='t-data text-center border-r'>
                             Successfully collected
@@ -60,10 +61,10 @@ const SummaryTable = () => {
                                 icon={faClock} /> Pending Invoices
                         </td>
                         <td className='t-data text-right border-r'>
-                            $639.00
+                            ${data?.pendingInvoices?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
-                            9
+                            {data?.pendingInvoices?.count}
                         </td>
                         <td className='t-data text-center border-r'>
                             Awaiting payment
@@ -76,10 +77,10 @@ const SummaryTable = () => {
                                 icon={faTriangleExclamation} /> Disputed Invoices
                         </td>
                         <td className='t-data text-right border-r'>
-                            $0.00
+                            ${data?.disputedInvoices?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
-                            0
+                            {data?.disputedInvoices?.count}
                         </td>
                         <td className='t-data text-center border-r'>
                             Under review
@@ -92,10 +93,10 @@ const SummaryTable = () => {
                                 icon={faTag} /> Discounted Invoices
                         </td>
                         <td className='t-data text-right border-r'>
-                            $18,828.00
+                            ${data?.discountedInvoices?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
-                            352
+                            {data?.discountedInvoices?.count}
                         </td>
                         <td className='t-data text-center border-r'>
                             Approved discounts
@@ -107,7 +108,7 @@ const SummaryTable = () => {
                                 icon={faCoins} />Total Tax Revenue Collected
                         </td>
                         <td className='t-data text-right border-r'>
-                           $9,835.00
+                            ${data?.paidInvoices?.amount || 0}
                         </td>
                         <td className='t-data text-center border-r'>
                             -

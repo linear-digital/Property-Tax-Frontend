@@ -6,8 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 const EditRequest = () => {
+    const { permissions } = useUser();
     const { data, isLoading, isFetching, refetch } = useQuery({
         queryKey: ['edit-requests'],
         queryFn: async () => {
@@ -28,6 +31,21 @@ const EditRequest = () => {
         } catch (error) {
             toast.error(errorMessage(error))
         }
+    }
+    const rejectEditRequest = async (id: string) => {
+        try {
+            await fetcher({
+                path: `/property/edit-request/${id}`,
+                method: 'DELETE',
+            })
+            refetch()
+            toast.success('Request rejected successfully')
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+    }
+    if (!permissions.includes('property-edit')) {
+        return <NoPermission />
     }
     return (
         <div className='py-5'>
@@ -90,6 +108,7 @@ const EditRequest = () => {
                         render: (_: any, record: any) => (
                             <div className='flex gap-2'>
                                 <Button loading={isFetching} type='primary' size='small' onClick={() => acceptRequest(record?._id)}>Accept</Button>
+                                <Button danger loading={isFetching} type='primary' size='small' onClick={() => rejectEditRequest(record?._id)}>Reject</Button>
                             </div>
                         )
                     }

@@ -3,58 +3,47 @@
 import React from 'react';
 import * as XLSX from 'xlsx';
 
-import type { InvoiceType } from '../../types/invoice';
-import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
-import { errorMessage } from '../../util/errorMessage';
 import moment from 'moment';
+import { fetcher } from '../../../util/axios.instance';
+import { errorMessage } from '../../../util/errorMessage';
 
 interface UsersListExcelProps {
-    filename?: string;
     query: any
 }
 
-const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
-
-    filename = 'all-invoice.xlsx',
+const CommissionsListExcel: React.FC<UsersListExcelProps> = ({
     query
 }) => {
+    const filename = `all-commissions-${moment().format('YYYY-MM-DD')}.xlsx`;
     const [loading, setLoading] = React.useState(false);
     const [downloading, setDownloading] = React.useState(false);
     const exportToExcel = async () => {
         try {
             setLoading(true);
             setDownloading(true);
-            const invoices: InvoiceType[] = await fetcher({
-                path: '/invoice?all=true',
+            const invoices: any = await fetcher({
+                path: '/commission?all=true',
                 params: query
-            })
+            }) || []
             setDownloading(false);
             // Prepare worksheet data
             const worksheetData = [
                 // Headers
                 [
+                    'Agent Name',
                     'Invoice Number',
-                    'Property Code',
-                    'Annual Tax ($)',
-                    'Admin Fee ($)',
-                    'Total Due ($)',
-                    'Total Over Due ($)',
-                    'Status',
-                    "Agent",
-                    "Due Date",
+                    'Commission Amount($)',
+                    'Description ',
+                    'Earned At',
                 ],
                 // User data
-                ...invoices.map(inv => [
-                    inv.invoice_id || '-',
-                    inv.property_id?.code || '-',
-                    inv.tax || '-',
-                    inv.admin_fee || '-',
-                    inv.total_due || '-',
-                    inv.overdue || '-',
-                    inv.status || '-',
-                    inv.agent || 'N/A',
-                    moment(inv.due_date).format('YYYY-MM-DD') || '-',
+                ...invoices.map((inv: any) => [
+                    inv.user?.name || '-',
+                    inv.invoice_number || '-',
+                    inv.amount || '-',
+                    inv.reference || '-',
+                    inv.createdAt || '-',
                 ])
             ];
 
@@ -63,7 +52,7 @@ const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
             const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
             // Add worksheet to workbook
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Invoice List');
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Commission List');
             // add font 
             // Generate Excel file and trigger download
             XLSX.writeFile(workbook, filename, {
@@ -71,7 +60,7 @@ const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
                 type: 'array'
             });
             setLoading(false);
-            toast.success('Invoice list exported successfully');
+            toast.success('Commission list exported successfully');
         } catch (error) {
             setDownloading(false);
             setLoading(false);
@@ -86,10 +75,10 @@ const InvoiceListExcel: React.FC<UsersListExcelProps> = ({
             onClick={exportToExcel}
         >
             {
-                downloading ? "Downloading..." : loading ? 'Generating...' : "Export to Excel"
+                downloading ? "Downloading..." : loading ? 'Generating...' : "Download Excel"
             }
         </button>
     );
 };
 
-export default InvoiceListExcel;
+export default CommissionsListExcel;

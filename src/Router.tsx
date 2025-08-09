@@ -29,6 +29,7 @@ import CreateRole from "./components/Roles/CreateRole";
 import Login from "./components/auth/Login";
 import AddPropertyFromExcel from "./components/Properties/AddPropertyFromExcel";
 import Invoice from "./components/Billing/Invoice";
+import AgentProfile from "./components/Billing/AgentProfile";
 
 
 const router = createBrowserRouter([
@@ -55,10 +56,10 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <CreateProperty />
-          },{
+          }, {
             path: "create",
             element: <CreateProperty />
-          },{
+          }, {
             path: "create-multiple",
             element: <AddPropertyFromExcel />
           },
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
           {
             path: 'invoices',
             element: <TaxInvoice />
-          },{
+          }, {
             path: 'invoice/:id',
             element: <Invoice />
           }, {
@@ -86,13 +87,16 @@ const router = createBrowserRouter([
             element: <InvoicePayments page="unauthorized" />
           }, {
             path: 'authorised',
-            element: <InvoicePayments page="authorised" />
+            element: <InvoicePayments page="authorized" />
           }, {
             path: 'summarys',
             element: <TaxSummary />
           }, {
             path: 'agents',
             element: <Agents />
+          }, {
+            path: 'agents/:id',
+            element: <AgentProfile />
           }, {
             path: 'agent-float',
             element: <AgentFloat />
@@ -112,7 +116,7 @@ const router = createBrowserRouter([
           }, {
             path: 'add-state',
             element: <AddState />
-          },{
+          }, {
             path: 'states/:id',
             element: <AddState />
           },
@@ -130,19 +134,19 @@ const router = createBrowserRouter([
           }, {
             path: 'add-district',
             element: <AddDistrict />
-          },{
+          }, {
             path: 'districts/:id',
             element: <AddDistrict />
           }, {
             path: 'add-village',
             element: <AddVillage />
-          },{
+          }, {
             path: 'villages/:id',
             element: <AddVillage />
           }, {
             path: 'add-branch',
             element: <AddBranch />
-          },{
+          }, {
             path: 'branches/:id',
             element: <AddBranch />
           },
