@@ -8,7 +8,7 @@ import { fetcher } from '../../util/axios.instance';
 import { Spin } from 'antd';
 
 const Dashboard = () => {
-
+    const [dates, setDates] = React.useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
     const { data, isLoading } = useQuery({
         queryKey: ['properties-all'],
         queryFn: async () => {
@@ -20,15 +20,12 @@ const Dashboard = () => {
             return res;
         }
     })
-    if (isLoading) {
-        return <Spin />
-    }
     return (
         <div>
-            <Filter />
-            <Statistics properties={data?.data || []}/>
+            <Filter dates={dates} setDates={setDates}/>
+            <Statistics properties={data?.data || []} />
             <PropertiesMap properties={data.data || []} />
-            <Charts properties={data.data || []}/>
+            <Charts dates={dates} properties={data.data || []} />
         </div>
     );
 };

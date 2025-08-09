@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Building, DollarSign, FileText, AlertCircle } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { fetcher } from '../../util/axios.instance';
 
 
 interface StatisticsCardProps {
@@ -29,6 +31,16 @@ const DashboardCard: React.FC<StatisticsCardProps> = ({ title, value, icon, bgCo
 };
 
 const StatisticsCard = ({ properties }: { properties: any }) => {
+    const { data } = useQuery({
+        queryKey: ['statistics-all'],
+        queryFn: async () => {
+            const res = await fetcher({
+                path: `/property/statisctics`,
+            });
+            return res?.data;
+        }
+    })
+    console.log(data);
     const cards = [
         {
             title: 'Total Properties',
@@ -39,21 +51,21 @@ const StatisticsCard = ({ properties }: { properties: any }) => {
         },
         {
             title: 'Total Payments',
-            value: '$116,543.00',
+            value: `$${data?.toalPayments || 0}`,
             icon: <DollarSign size={24} />,
             bgColor: 'bg-accent',
             iconBg: 'bg-emerald-400/20'
         },
         {
             title: 'Total Discounts',
-            value: '$35,334.00',
+            value: `$${data?.totalDiscount || 0}`,
             icon: <FileText size={24} />,
             bgColor: 'bg-secondary',
             iconBg: 'bg-orange-400/20'
         },
         {
             title: 'Total Bills Due',
-            value: '$206,647.00',
+            value: `$${data?.unpaidInvoices || 0}`,
             icon: <AlertCircle size={24} />,
             bgColor: 'bg-error',
             iconBg: 'bg-red-400/20'

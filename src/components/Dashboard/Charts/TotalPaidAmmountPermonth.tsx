@@ -6,12 +6,12 @@ import { fetcher } from '../../../util/axios.instance';
 import { useQuery } from '@tanstack/react-query';
 
 
-const PropertyByType: React.FC = () => {
+const PropertyByType = ({ dates }: { dates: { year: number, month: number } }) => {
   const { data } = useQuery({
-    queryKey: ['monthly payments'],
+    queryKey: ['monthly payments', dates],
     queryFn: async () => {
       return await fetcher({
-        path: '/invoice/permonth-statistics'
+        path: '/invoice/permonth-statistics',
       })
     },
   })

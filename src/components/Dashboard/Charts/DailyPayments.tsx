@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/PropertyStatusPieChart.tsx
 import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
@@ -6,12 +7,13 @@ import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../../util/axios.instance';
 
 
-const DailyPayments: React.FC = () => {
+const DailyPayments = ({ dates }: { dates: { year: number, month: number } }) => {
     const { data } = useQuery({
-        queryKey: ['daily payments'],
+        queryKey: ['daily payments', dates],
         queryFn: async () => {
             return await fetcher({
-                path: '/invoice/perday-statistics'
+                path: '/invoice/perday-statistics',
+                params: dates
             })
         },
     })
