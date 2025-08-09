@@ -175,16 +175,12 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             label: <button>
                                 <FontAwesomeIcon icon={faFile} /> Generate Discount Topup Invoice
                             </button>,
-                            style: {
-                                display: (page === 'unauthorized' || page === 'authorized') ? 'none' : 'block'
-                            }
+
                         },
                         {
                             key: "5",
                             type: "divider",
-                            style: {
-                                display: page === 'unauthorized' ? 'none' : 'block'
-                            }
+
                         },
                         {
                             key: '2',
@@ -192,16 +188,12 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             label: <button>
                                 <FontAwesomeIcon icon={faFilePdf} /> Receipt
                             </button>,
-                            style: {
-                                display: page === 'unauthorized' ? 'none' : 'block'
-                            }
+
                         },
                         {
                             key: "5",
                             type: "divider",
-                            style: {
-                                display: page === 'unauthorized' ? 'none' : 'block'
-                            }
+
                         },
                         {
                             key: '33',
@@ -210,7 +202,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                                 <FontAwesomeIcon icon={faCertificate} /> Tax Certificate
                             </button>,
                             style: {
-                                display: page === 'unauthorized' ? 'none' : 'block'
+                                display: record?.authorized ? 'block' : 'none'
                             }
                         },
 
@@ -220,27 +212,24 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             label: <button>
                                 <FontAwesomeIcon icon={faCheck} /> Make Authorize
                             </button>,
-                            style: {
-                                display: page === 'unauthorized' ? 'block' : 'none'
-                            }
                         },
-                        {
-                            key: "554",
-                            type: "divider",
-                            style: {
-                                display: page === 'unauthorized' ? 'block' : 'none'
-                            }
-                        },
-                        {
-                            key: '434',
-                            onClick: () => console.log(record),
-                            label: <button className='text-red-500'>
-                                <FontAwesomeIcon icon={faBan} /> Reject Payment
-                            </button>,
-                            style: {
-                                display: page === 'unauthorized' ? 'block' : 'none'
-                            }
-                        },
+                        // {
+                        //     key: "554",
+                        //     type: "divider",
+                        //     style: {
+                        //         display: page === 'unauthorized' ? 'block' : 'none'
+                        //     }
+                        // },
+                        // {
+                        //     key: '434',
+                        //     onClick: () => console.log(record),
+                        //     label: <button className='text-red-500'>
+                        //         <FontAwesomeIcon icon={faBan} /> Reject Payment
+                        //     </button>,
+                        //     style: {
+                        //         display: page === 'unauthorized' ? 'block' : 'none'
+                        //     }
+                        // },
                     ],
                 }}
 

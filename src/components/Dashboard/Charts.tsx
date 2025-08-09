@@ -35,11 +35,7 @@ const Charts = ({ properties }: { properties: Property[] }) => {
             setDailyPaymentsData(payments);
         }
     }, [data])
-    // To use this data in your component, you would pass it as props:
-    // <DailyDifferences 
-    //   dailyPaymentsData={dailyPaymentsData} 
-    //   dailyDiscountsData={dailyDiscountsData} 
-    // />
+
     return (
         <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-8'>
             <PropertyStatusPieChart properties={properties} />

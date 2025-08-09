@@ -12,6 +12,7 @@ import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import moment from 'moment';
+import TaxSummeryListExcel from './BillingTemplate/SummeryExcelExport';
 const TaxSummary = () => {
     const years = Array.from({ length: 10 }, (_, i) => new window.Date().getFullYear() - i).map(year => ({ value: year.toString(), label: year.toString() }));
     const currDate = new Date();
@@ -89,7 +90,7 @@ const TaxSummary = () => {
             </div>
             {
                 result &&
-                <Result dates={{ startDate, endDate }} summary={result} />
+                <Result query={{ startDate, endDate, year }} dates={{ startDate, endDate }} summary={result} />
             }
 
         </div>
@@ -103,15 +104,18 @@ interface ReportCardProps {
         startDate: Date,
         endDate: Date
     },
-    summary: any
+    summary: any,
+    query: any
 }
 
-const Result = ({ dates, summary }: ReportCardProps) => {
-    console.log(summary);
+const Result = ({ dates, summary, query }: ReportCardProps) => {
+
+
     return <div>
+
         <div className="flex items-center gap-x-3">
             <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
-                <FontAwesomeIcon icon={faFileExcel} />  Download Excel
+                <FontAwesomeIcon icon={faFileExcel} />  <TaxSummeryListExcel query={query} />
             </button>
             <button className="bg-error py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
                 <FontAwesomeIcon icon={faFilePdf} />   Download PDF
