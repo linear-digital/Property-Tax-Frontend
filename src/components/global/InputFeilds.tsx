@@ -96,7 +96,7 @@ export const Input = ({
     <FieldWrapper label={label}>
       <AntInput
         id={id || label}
-        name={name || label}
+        name={(name || label)?.toLowerCase()}
         required={required}
         value={value}
         type={type}

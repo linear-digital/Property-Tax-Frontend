@@ -3,6 +3,8 @@ import { Search, Menu, Sun, Moon, Grid3X3, User } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { Button, Popover } from 'antd';
+import { useUser } from '../../contexts/UserContext';
 
 
 interface HeaderProps {
@@ -32,6 +34,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [openSearch]);
+  const { user } = useUser();
   return (
     <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md overflow-hidden">
       <div className="flex items-center justify-between">
@@ -89,12 +92,26 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           </button>
 
           {/* User Avatar */}
-          <button
-            className="w-9 h-9 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
-            title="User menu"
+          <Popover
+            content={
+              <div className="py-2 px-2">
+                <p className="text-sm text-gray-600 dark:text-gray-300">{user?.name}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">{user?.roles.map(role => role.name).join(', ')}</p>
+                <Button type='primary' danger>
+                  Logout
+                </Button>
+              </div>
+            }
+            placement='bottomRight'
+            trigger="click"
           >
-            <User size={18} />
-          </button>
+            <button
+              className="w-9 h-9 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+              title="User menu"
+            >
+              <User size={18} />
+            </button>
+          </Popover>
         </div>
       </div>
     </header>
