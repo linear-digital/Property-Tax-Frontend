@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Button, Popover } from 'antd';
 import { useUser } from '../../contexts/UserContext';
-
+import Cookies from 'js-cookie';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -35,6 +35,10 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
     };
   }, [openSearch]);
   const { user } = useUser();
+  const logOut = () => {
+    Cookies.remove('token')
+    window.location.pathname = "/login"
+  }
   return (
     <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md overflow-hidden">
       <div className="flex items-center justify-between">
@@ -94,10 +98,12 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           {/* User Avatar */}
           <Popover
             content={
-              <div className="py-2 px-2">
+              <div className="py-2 min-w-[200px] flex flex-col">
                 <p className="text-sm text-gray-600 dark:text-gray-300">{user?.name}</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500">{user?.roles.map(role => role.name).join(', ')}</p>
-                <Button type='primary' danger>
+                <Button
+                  onClick={logOut}
+                  danger size='small' className='mt-5'>
                   Logout
                 </Button>
               </div>

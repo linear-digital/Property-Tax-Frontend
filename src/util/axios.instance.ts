@@ -3,10 +3,11 @@ import axios from "axios";
 import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
-const baseUrl = "https://property.genzit.xyz/api";
+const baseUrl = "http://localhost:4000/api";
 import Cookies from "js-cookie";
 const api = axios.create({
-    baseURL: "https://property.genzit.xyz/api",
+    baseURL: "http://localhost:4000/api",
+    withCredentials: true, // ✅ include cookies on all requests
 });
 
 type FetcherArgs = {
@@ -43,10 +44,7 @@ export const fetcher = async ({ path, method = "GET", body, params }: FetcherArg
 };
 export const logOut = async () => {
     try {
-        await fetcher({
-            path: "/user/logout"
-        });
-        window.location.pathname = "/login"
+        Cookies.remove('token')
     } catch (error: any) {
         toast.error(errorMessage(error));
         return null
