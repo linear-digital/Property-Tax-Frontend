@@ -7,7 +7,6 @@ const baseUrl = "https://property.genzit.xyz/api";
 import Cookies from "js-cookie";
 const api = axios.create({
     baseURL: "https://property.genzit.xyz/api",
-    withCredentials: true, // ✅ include cookies on all requests
 });
 
 type FetcherArgs = {
