@@ -63,7 +63,7 @@ export const checkToken = async () => {
         return res
     } catch (error: any) {
         console.error(errorMessage(error));
-        logOut()
+        // logOut()
         return null
     }
 };
