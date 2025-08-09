@@ -5,11 +5,11 @@ import PropertiesMap from './PropertiesMap';
 import Charts from './Charts';
 import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../util/axios.instance';
-import { Spin } from 'antd';
+
 
 const Dashboard = () => {
     const [dates, setDates] = React.useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
-    const { data, isLoading } = useQuery({
+    const { data = {} } = useQuery({
         queryKey: ['properties-all'],
         queryFn: async () => {
             const res = await fetcher({
@@ -22,7 +22,7 @@ const Dashboard = () => {
     })
     return (
         <div>
-            <Filter dates={dates} setDates={setDates}/>
+            <Filter dates={dates} setDates={setDates} />
             <Statistics properties={data?.data || []} />
             <PropertiesMap properties={data.data || []} />
             <Charts dates={dates} properties={data.data || []} />

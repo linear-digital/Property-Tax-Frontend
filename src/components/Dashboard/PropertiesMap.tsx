@@ -21,12 +21,12 @@ const PropertyMap = ({ properties }: { properties: Property[] }) => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
 
-      {properties.map((prop, index) => (
+      {properties.map((prop: any, index) => (
         <CircleMarker
           key={index}
           center={[prop.latitude, prop.longitude]}
           radius={6}
-          color={prop.property_status === 'paid' ? 'green' : 'red'}
+          color={prop.invoices?.status === 'Paid' ? 'green' : 'red'}
           fillOpacity={1}
         >
           <Popup className='text-xs'>
