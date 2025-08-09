@@ -3,10 +3,10 @@ import axios from "axios";
 import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
-const baseUrl = "http://localhost:4000/api";
+const baseUrl = "https://property.genzit.xyz/api";
 import Cookies from "js-cookie";
 const api = axios.create({
-    baseURL: "http://localhost:4000/api",
+    baseURL: "https://property.genzit.xyz/api",
     withCredentials: true, // ✅ include cookies on all requests
 });
 
