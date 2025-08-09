@@ -16,14 +16,17 @@ type FetcherArgs = {
     body?: any;
     params?: any
 };
-
+const token = Cookies.get("token");
 export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
     try {
         const response = await api({
             url: baseUrl + path,
             method,
             data: body ? { payload: encrypt(body) } : undefined,
-            params: params ? params : undefined
+            params: params ? params : undefined,
+            headers: {
+                token: token
+            }
         });
 
         if (response.data?.payload) {

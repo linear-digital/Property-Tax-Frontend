@@ -7,6 +7,7 @@ import  { checkToken, fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useNavigate } from 'react-router';
+import Cookies from 'js-cookie';
 
 const Login = () => {
     const [info, setInfo] = React.useState({
@@ -32,7 +33,7 @@ const Login = () => {
                 method: "POST",
                 body: info
             })
-            window.location.pathname = '/'
+            Cookies.set("token", res.token);
             toast.success(res.message);
         } catch (error) {
             toast.error(errorMessage(error));
