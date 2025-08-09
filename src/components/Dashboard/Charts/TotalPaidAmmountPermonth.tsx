@@ -1,11 +1,21 @@
 // src/PropertyStatusPieChart.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { fetcher } from '../../../util/axios.instance';
+import { useQuery } from '@tanstack/react-query';
 
 
 const PropertyByType: React.FC = () => {
-  const chartData = [
+  const { data } = useQuery({
+    queryKey: ['monthly payments'],
+    queryFn: async () => {
+      return await fetcher({
+        path: '/invoice/permonth-statistics'
+      })
+    },
+  })
+  const [chartData, setChartData] = useState([
     { name: 'Jan', y: 5645.00 },
     { name: 'Feb', y: 6662.00 },
     { name: 'Mar', y: 35098.00 },
@@ -18,7 +28,12 @@ const PropertyByType: React.FC = () => {
     { name: 'Oct', y: 0.00 },
     { name: 'Nov', y: 0.00 },
     { name: 'Dec', y: 0.00 }
-  ];
+  ]);
+  useEffect(() => {
+    if (data) {
+      setChartData(data);
+    }
+  }, [data]);
 
   const options = {
     // ... your chart options ...

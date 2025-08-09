@@ -1,45 +1,59 @@
 // src/PropertyStatusPieChart.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { useQuery } from '@tanstack/react-query';
+import { fetcher } from '../../../util/axios.instance';
 
 
 const DailyPayments: React.FC = () => {
+    const { data } = useQuery({
+        queryKey: ['daily payments'],
+        queryFn: async () => {
+            return await fetcher({
+                path: '/invoice/perday-statistics'
+            })
+        },
+    })
     // Data approximated from the provided image
-    const chartData = [
-        { name: '1', y: 14142.00 },
-        { name: '2', y: 200.00 },   // Very small bar in image
-        { name: '3', y: 8210.00 },
-        { name: '4', y: 8200.00 },
-        { name: '5', y: 8305.00 },
-        { name: '6', y: 8100.00 },
-        { name: '7', y: 8180.00 },
-        { name: '8', y: 100.00 },   // Very small or zero in image
-        { name: '9', y: 4000.00 },
-        { name: '10', y: 2000.00 },
-        { name: '11', y: 100.00 },  // Very small or zero in image
-        { name: '12', y: 200.00 },  // Very small or zero in image
-        { name: '13', y: 7210.00 },
-        { name: '14', y: 8201.00 },
-        { name: '15', y: 8351.00 }, // Appears to be highest
-        { name: '16', y: 8210.00 },
-        { name: '17', y: 8200.00 },
-        { name: '18', y: 9563.00 },
-        { name: '19', y: 8200.00 },
-        { name: '20', y: 8100.00 },
-        { name: '21', y: 8400.00 },
-        { name: '22', y: 8301.00 },
-        { name: '23', y: 8200.00 },
-        { name: '24', y: 8100.00 },
-        { name: '25', y: 8100.00 },
-        { name: '26', y: 100.00 }, // Smaller bars towards end
-        { name: '27', y: 100.00 },
-        { name: '28', y: 100.00 },
-        { name: '29', y: 100.00 },
-        { name: '30', y: 0.00 }, // Assuming 0 for days not clearly visible/with small bars
-        { name: '31', y: 0.00 }
-    ];
-
+    const [chartData, setChartData] = useState([
+        { name: '1', y: 0 },
+        { name: '2', y: 0 },   // Very small bar in image
+        { name: '3', y: 0 },
+        { name: '4', y: 0 },
+        { name: '5', y: 0 },
+        { name: '6', y: 0 },
+        { name: '7', y: 0 },
+        { name: '8', y: 0 },
+        { name: '9', y: 0 },
+        { name: '10', y: 0 },
+        { name: '11', y: 0 },
+        { name: '12', y: 0 },
+        { name: '13', y: 0 },
+        { name: '14', y: 0 },
+        { name: '15', y: 0 },
+        { name: '16', y: 0 },
+        { name: '17', y: 0 },
+        { name: '18', y: 0 },
+        { name: '19', y: 0 },
+        { name: '20', y: 0 },
+        { name: '21', y: 0 },
+        { name: '22', y: 0 },
+        { name: '23', y: 0 },
+        { name: '24', y: 0 },
+        { name: '25', y: 0 },
+        { name: '26', y: 0 },
+        { name: '27', y: 0 },
+        { name: '28', y: 0 },
+        { name: '29', y: 0 },
+        { name: '30', y: 0 },
+        { name: '31', y: 0 },
+    ])
+    useEffect(() => {
+        if (data) {
+            setChartData(data);
+        }
+    }, [data])
     const options = {
         chart: {
             type: 'column',
