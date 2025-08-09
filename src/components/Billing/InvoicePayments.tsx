@@ -3,12 +3,13 @@ import { Button, Dropdown, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faCertificate, faCheck, faFile, faFileExcel, faFilePdf, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCertificate, faCheck, faFile, faFileExcel, faFilePdf, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import InvoiceListExcel from './DownloadInvoicePaymentsExcel';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
@@ -25,6 +26,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
     const refetch = () => (
         setFetch(fetch + 1)
     )
+
     const fetchData = async () => {
         try {
             setIsLoading(true)
@@ -93,6 +95,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             title: 'Property Code',
             dataIndex: 'property_code',
             key: 'property_code',
+            render: (property_code: string, record: any) => record?.property_code?.code,
         },
         {
             title: 'Invoice Amount ($)',
@@ -208,6 +211,9 @@ const InvoicePayments = ({ page }: { page: string }) => {
 
                         {
                             key: '4',
+                            style: {
+                                display: record?.authorized ? 'none' : 'block'
+                            },
                             onClick: () => authorizePayment(record?._id),
                             label: <button>
                                 <FontAwesomeIcon icon={faCheck} /> Make Authorize
@@ -257,7 +263,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             {
                 page === 'payments' &&
                 <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
-                    <FontAwesomeIcon icon={faFileExcel} />   Download Excel
+                    <FontAwesomeIcon icon={faFileExcel} />   <InvoiceListExcel query={filters} />
                 </button>
             }
             <Modal open={open} onCancel={() => setOpen(false)} footer={null} title="Add Payment"

@@ -58,7 +58,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
     useEffect(() => {
         if (invoice) {
             setNewPayment({
-                property_code: invoice.property_code,
+                property_code: property,
                 invoice_number: invoice.invoice_id,
                 invoice_id: invoice?._id as string,
                 amount: (invoice.total_due + invoice.overdue),
@@ -72,7 +72,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
             })
 
         }
-    }, [invoice])
+    }, [invoice, property])
 
     const { data: invoices } = useQuery({
         queryKey: ['invoices', property],
@@ -116,7 +116,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                 onChange={setProperty}
                 options={data?.data?.map((property: Property) => {
                     return {
-                        value: property.code,
+                        value: property._id,
                         label: `${property.code}-${property.owner_name}-${property.owner_phone}`
                     }
                 })}
