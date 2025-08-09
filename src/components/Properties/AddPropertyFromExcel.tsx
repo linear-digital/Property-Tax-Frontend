@@ -78,7 +78,7 @@ const AddPropertyFromExcel = () => {
                                 // Convert to number, default to 0 if conversion fails
                                 obj[key] = isNaN(Number(value)) ? 0 : Number(value);
                             }
-                           
+
                             // Keep other fields as strings
                             else {
                                 obj[key] = String(value);
@@ -127,7 +127,7 @@ const AddPropertyFromExcel = () => {
             });
 
             if (response.data) {
-                toast.success(`${response.data.count || jsonData.length} properties added successfully`);
+                toast.success(`${response.data.count} properties added successfully`);
                 resetConverter();
             } else {
                 throw new Error("No data returned from server");
