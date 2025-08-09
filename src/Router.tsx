@@ -30,6 +30,7 @@ import Login from "./components/auth/Login";
 import AddPropertyFromExcel from "./components/Properties/AddPropertyFromExcel";
 import Invoice from "./components/Billing/Invoice";
 import AgentProfile from "./components/Billing/AgentProfile";
+import DiscountInvoice from "./components/Billing/DiscountInvoice";
 
 
 const router = createBrowserRouter([
@@ -82,7 +83,12 @@ const router = createBrowserRouter([
           }, {
             path: 'payments',
             element: <InvoicePayments page="payments" />
-          }, {
+          }, 
+           {
+            path: 'payments/discounted/:id',
+            element: <DiscountInvoice />
+          },
+          {
             path: 'unauthorized-payments',
             element: <InvoicePayments page="unauthorized" />
           }, {

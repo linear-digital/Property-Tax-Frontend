@@ -3,13 +3,15 @@ import { Button, Dropdown, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCertificate, faCheck, faFile, faFileExcel, faFilePdf, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCertificate, faCheck, faFile, faFileExcel, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import InvoiceListExcel from './DownloadInvoicePaymentsExcel';
+import PaymentReceiptDowload from './BillingTemplate/PaymentReceipt';
+import { Link } from 'react-router';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
@@ -72,8 +74,10 @@ const InvoicePayments = ({ page }: { page: string }) => {
     useEffect(() => {
         fetchData()
     }, [page, fetch])
+    const [loading, setLoading] = useState(false)
     const authorizePayment = async (id: string) => {
         try {
+            setLoading(true)
             await fetcher({
                 path: `/payment/${id}/authorize`,
                 method: 'PUT',
@@ -82,6 +86,9 @@ const InvoicePayments = ({ page }: { page: string }) => {
             toast.success('Payment authorized successfully')
         } catch (error) {
             toast.error(errorMessage(error))
+        }
+        finally {
+            setLoading(false)
         }
     }
     const columns = [
@@ -174,10 +181,15 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     items: [
                         {
                             key: '1',
+                            style: {
+                                display: record?.discounted ? 'block' : "none"
+                            },
                             onClick: () => console.log(record),
-                            label: <button>
+                            label: <Link
+                            to={`/billing/payments/discounted/${record?._id}`}
+                            >
                                 <FontAwesomeIcon icon={faFile} /> Generate Discount Topup Invoice
-                            </button>,
+                            </Link>,
 
                         },
                         {
@@ -187,9 +199,8 @@ const InvoicePayments = ({ page }: { page: string }) => {
                         },
                         {
                             key: '2',
-                            onClick: () => console.log(record),
                             label: <button>
-                                <FontAwesomeIcon icon={faFilePdf} /> Receipt
+                                <PaymentReceiptDowload payment={record} />
                             </button>,
 
                         },
@@ -211,11 +222,12 @@ const InvoicePayments = ({ page }: { page: string }) => {
 
                         {
                             key: '4',
+
                             style: {
                                 display: record?.authorized ? 'none' : 'block'
                             },
                             onClick: () => authorizePayment(record?._id),
-                            label: <button>
+                            label: <button disabled={loading}>
                                 <FontAwesomeIcon icon={faCheck} /> Make Authorize
                             </button>,
                         },

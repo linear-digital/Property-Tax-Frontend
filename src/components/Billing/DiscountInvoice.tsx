@@ -6,24 +6,23 @@ import { useParams } from 'react-router';
 import { Spin } from 'antd';
 import moment from 'moment';
 import type { Property } from '../../types/property';
-import type { InvoiceType } from '../../types/invoice';
 
 
 
-const Invoice = () => {
+const DiscountInvoice = () => {
     const { id } = useParams();
-    const { data: invoice, isLoading } = useQuery({
-        queryKey: ['invoice', id],
+    const { data: payment, isLoading } = useQuery({
+        queryKey: ['payment', id],
         queryFn: async () => {
             const data = await fetcher({
-                path: `/invoice/${id}`
+                path: `/payment/${id}`
             });
             return data;
         },
         enabled: !!id
     })
-    const property: Property = invoice?.property_id || {}
-    const iv: InvoiceType = invoice || {}
+    const property: Property = payment?.property_code || {}
+    const iv: any = payment?.invoice_id || {}
     const invoiceData: InvoiceData = {
         invoiceNumber: iv.invoice_id,
         issueDate: moment(iv.createdAt).format('YYYY-MM-DD'),
@@ -39,9 +38,9 @@ const Invoice = () => {
             landmark: property.landmark,
         },
         tax: {
-            annualTax: iv.tax,
-            adminFee: iv.admin_fee,
-            discount: 0
+            annualTax: 0,
+            adminFee: 0,
+            discount: payment?.discount
         },
         surchargePercentage: 0.05,
         contactEmail: 'XXXX@hotmail.com',
@@ -60,4 +59,4 @@ const Invoice = () => {
     );
 };
 
-export default Invoice;
+export default DiscountInvoice;

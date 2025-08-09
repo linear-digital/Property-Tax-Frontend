@@ -17,6 +17,7 @@ export type PropertyDetails = {
 export type TaxDetails = {
     annualTax: number;
     adminFee: number;
+    discount: number;
 };
 
 export type InvoiceData = {
@@ -102,7 +103,7 @@ const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
                     </div>
                     <div className="grid grid-cols-6 px-4 py-2 font-semibold">
                         <span className='col-span-2'>Total Amount Due</span>
-                        <span className='col-span-4'>${totalDue.toFixed(2)}</span>
+                        <span className='col-span-4'>${data?.tax.discount || totalDue.toFixed(2)}</span>
                     </div>
                 </div>
             </div>
@@ -113,7 +114,7 @@ const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
                 <ul className="list-disc pl-5 text-sm space-y-1">
                     <li>Payment must be made no later than <strong>{data.deadline}</strong>.</li>
                     <li>A {data.surchargePercentage * 100}% surcharge will be applied to overdue payments starting from <strong>{
-                    moment(new Date(dueDate)).format('YYYY-MM-DD')}</strong>.</li>
+                        moment(new Date(dueDate)).format('YYYY-MM-DD')}</strong>.</li>
                 </ul>
             </div>
 
@@ -123,11 +124,11 @@ const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
                 <div className="text-sm divide-y">
                     <div className="grid grid-cols-2 px-4 py-2">
                         <span>Original Amount</span>
-                        <span>${totalDue.toFixed(2)}</span>
+                        <span>${data?.tax.discount || totalDue.toFixed(2)}</span>
                     </div>
                     <div className="grid grid-cols-2 px-4 py-2">
                         <span>Surcharge (5%)</span>
-                        <span>${surcharge.toFixed(2)}</span>
+                        <span>${(data?.tax.discount * data.surchargePercentage) || surcharge.toFixed(2)}</span>
                     </div>
                     <div className="grid grid-cols-2 px-4 py-2 font-semibold">
                         <span>Total Overdue</span>
