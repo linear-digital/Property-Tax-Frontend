@@ -10,6 +10,7 @@ const api = axios.create({
     withCredentials: true, // ✅ include cookies on all requests
 });
 
+
 type FetcherArgs = {
     path: string;
     method?: "GET" | "POST" | "PUT" | "DELETE";
