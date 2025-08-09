@@ -10,7 +10,6 @@ const api = axios.create({
     withCredentials: true, // ✅ include cookies on all requests
 });
 
-
 type FetcherArgs = {
     path: string;
     method?: "GET" | "POST" | "PUT" | "DELETE";
@@ -63,7 +62,7 @@ export const checkToken = async () => {
         return res
     } catch (error: any) {
         console.error(errorMessage(error));
-        // logOut()
+        logOut()
         return null
     }
 };
