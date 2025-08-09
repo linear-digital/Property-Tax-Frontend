@@ -34,6 +34,7 @@ const Login = () => {
                 body: info
             })
             Cookies.set("token", res.token);
+            window.location.pathname = "/"
             toast.success(res.message);
         } catch (error) {
             toast.error(errorMessage(error));
