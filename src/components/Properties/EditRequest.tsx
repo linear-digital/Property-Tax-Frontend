@@ -10,12 +10,19 @@ import { useUser } from '../../contexts/UserContext';
 import NoPermission from '../global/NoPermission';
 
 const EditRequest = () => {
+    const [filters, setFilters] = React.useState({
+        property_code: '',
+        user: '',
+        startDate: '',
+        endDate: ''
+    })
     const { permissions } = useUser();
     const { data, isLoading, isFetching, refetch } = useQuery({
         queryKey: ['edit-requests'],
         queryFn: async () => {
             const res = await fetcher({
-                path: '/property/edit-request'
+                path: '/property/edit-request',
+                params: filters
             })
             return res
         }
@@ -50,7 +57,7 @@ const EditRequest = () => {
     return (
         <div className='py-5'>
             <h3 className='text-xl dark:text-white text-dark font-semibold'>Pending Property Edit Requests</h3>
-            <RequestFilter />
+            <RequestFilter refetch={refetch} filters={filters} setFilters={setFilters} />
             <Table
                 dataSource={data?.data}
                 loading={isLoading}
