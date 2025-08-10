@@ -6,6 +6,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { Button, Popover } from 'antd';
 import { useUser } from '../../contexts/UserContext';
 import Cookies from 'js-cookie';
+import Tools from './Tools';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -88,12 +89,26 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           </button>
 
           {/* Grid Icon */}
-          <button
-            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            title="Grid view"
+          <Popover
+            styles={{
+             body: {
+               padding: 0,
+               overflow: 'hidden'
+             }
+            }}
+            placement="bottomRight"
+            trigger={'click'}
+            content={
+              <Tools />
+            }
           >
-            <Grid3X3 size={20} />
-          </button>
+            <button
+              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="Grid view"
+            >
+              <Grid3X3 size={20} />
+            </button>
+          </Popover>
 
           {/* User Avatar */}
           <Popover
