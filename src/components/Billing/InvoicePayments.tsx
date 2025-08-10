@@ -3,7 +3,7 @@ import { Button, Dropdown, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCertificate, faCheck, faFile, faFileExcel, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faFile, faFileExcel, faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { errorMessage } from '../../util/errorMessage';
 import InvoiceListExcel from './DownloadInvoicePaymentsExcel';
 import PaymentReceiptDowload from './BillingTemplate/PaymentReceipt';
 import { Link } from 'react-router';
+import TaxCertificate from './BillingTemplate/TaxCertificate';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
@@ -186,7 +187,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             },
                             onClick: () => console.log(record),
                             label: <Link
-                            to={`/billing/payments/discounted/${record?._id}`}
+                                to={`/billing/payments/discounted/${record?._id}`}
                             >
                                 <FontAwesomeIcon icon={faFile} /> Generate Discount Topup Invoice
                             </Link>,
@@ -213,7 +214,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             key: '33',
                             onClick: () => console.log(record),
                             label: <button>
-                                <FontAwesomeIcon icon={faCertificate} /> Tax Certificate
+                               <TaxCertificate payment={record || {}} />
                             </button>,
                             style: {
                                 display: record?.authorized ? 'block' : 'none'
@@ -259,6 +260,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
 
     return (
         <div className='py-5'>
+
             <h3 className='text-xl dark:text-white text-dark font-semibold mb-4'>
                 {
                     page === 'unauthorized' ? 'Unauthorized Payments' : page === "authorised" ? 'Authorised Payments' : "Invoice Payments"
