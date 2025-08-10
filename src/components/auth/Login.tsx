@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect } from 'react';
-import { Input } from '../global/InputFeilds';
+import { Input, Password } from '../global/InputFeilds';
 import { Button, Checkbox } from 'antd';
-import  { checkToken, fetcher } from '../../util/axios.instance';
+import { checkToken, fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useNavigate } from 'react-router';
@@ -33,7 +33,7 @@ const Login = () => {
                 method: "POST",
                 body: info
             })
-            Cookies.set("token", res.token);
+            Cookies.set("token", res.token, { expires: new Date(Date.now() + 24 * 60 * 60 * 1000) }); // expires in 1 day
             window.location.pathname = "/"
             toast.success(res.message);
         } catch (error) {
@@ -51,12 +51,15 @@ const Login = () => {
                 <Input
                     label='Email Address'
                     type='email'
+                    name='email'
                     value={info.email}
                     onChange={(e: any) => setInfo({ ...info, email: e.target.value })}
                     required
                 />
-                <Input
+                <Password
                     label='Password'
+                    name='password'
+                    type='password'
                     onChange={(e: any) => setInfo({ ...info, password: e.target.value })}
                     required
                 />

@@ -1,26 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/PropertyStatusPieChart.tsx
-import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import type { Property } from '../../../types/property';
 
 
-const PropertyByBuildingDetails = ({ properties }: { properties: Property[] }) => {
-    const propertyuildingDetails = useMemo(() => {
-        const counts = { stores: 0, villas: 0, tin: 0 };
-        properties.forEach(property => {
-            switch (property.house_building_details) {
-                case 'Tin': counts.tin++; break;
-                case 'Stores': counts.stores++; break;
-                case 'Villas': counts.villas++; break;
-            }
-        });
-        return [
-            { name: 'Stores', y: counts.stores },
-            { name: 'Villas', y: counts.villas, },
-            { name: 'Tin', y: counts.tin, },
-        ];
-    }, [properties]);
+const PropertyByBuildingDetails = ({ properties }: { properties: any }) => {
+    const propertyuildingDetails = properties?.building || [];
     const options: Highcharts.Options = {
         chart: {
             type: 'pie',
@@ -77,7 +62,6 @@ const PropertyByBuildingDetails = ({ properties }: { properties: Property[] }) =
                 showInLegend: false
             }
         },
-        colors: ['#00E272', '#2CAFFE', '#544FC5',],
         series: [
             {
                 name: 'Status',

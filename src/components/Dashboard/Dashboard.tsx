@@ -5,11 +5,12 @@ import PropertiesMap from './PropertiesMap';
 import Charts from './Charts';
 import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../util/axios.instance';
+import { Skeleton } from 'antd';
 
 
 const Dashboard = () => {
     const [dates, setDates] = React.useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
-    const { data = {} } = useQuery({
+    const { data = {}, isLoading } = useQuery({
         queryKey: ['properties-all'],
         queryFn: async () => {
             const res = await fetcher({
@@ -20,12 +21,29 @@ const Dashboard = () => {
             return res;
         }
     })
+    const { data: properties } = useQuery({
+        queryKey: ['properties-dashboard'],
+        queryFn: async () => {
+            const res = await fetcher({
+                path: `/property/dashboard`,
+            });
+            return res;
+        }
+    })
     return (
         <div>
             <Filter dates={dates} setDates={setDates} />
-            <Statistics properties={data?.data || []} />
-            <PropertiesMap properties={data.data || []} />
-            <Charts dates={dates} properties={data.data || []} />
+            <Statistics properties={properties?.total || 0} />
+            {
+                isLoading ? <>
+                    <Skeleton active className='mt-4'/>
+                    <Skeleton active className='my-2'/>
+                    <Skeleton active />
+                </>
+                    :
+                    <PropertiesMap properties={data.data || []} />
+            }
+            <Charts dates={dates} properties={properties} />
         </div>
     );
 };

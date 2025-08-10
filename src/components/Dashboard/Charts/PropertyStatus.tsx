@@ -1,30 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/PropertyStatusPieChart.tsx
-import React, { useMemo } from 'react';
+
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import type { Property } from '../../../types/property';
 
 
 
-const PropertyStatusPieChart = ({ properties }: { properties: Property[] }) => {
-  const statusData = useMemo(() => {
-    const counts = { leased: 0, vacant: 0, rented: 0, owned: 0 };
-    properties.forEach(property => {
-      switch (property.property_status) {
-        case 'Leased': counts.leased++; break;
-        case 'Vacant': counts.vacant++; break;
-        case 'Rented': counts.rented++; break;
-        case 'Owned': counts.owned++; break;
-      }
-    });
-    return [
-      { name: 'Leased', y: counts.leased, color: '#279dfd' },
-      { name: 'Owned', y: counts.owned, color: '#3ae05f' },
-      { name: 'Rented', y: counts.rented, color: '#f55229' },
-      { name: 'Vacant', y: counts.vacant, color: '#4237b8' }
-    ];
-  }, [properties]);
+const PropertyStatusPieChart = ({ properties }: { properties: any }) => {
+
+  const statusData = properties?.status
   
+
 
   const options: Highcharts.Options = {
     chart: {

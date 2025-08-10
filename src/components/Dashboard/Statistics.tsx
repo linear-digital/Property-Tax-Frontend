@@ -1,8 +1,7 @@
 import React from 'react';
 import StatisticsCard from '../Card/StatisticsCard';
-import type { Property } from '../../types/property';
 
-const Statistics = ({properties}: {properties: Property}) => {
+const Statistics = ({properties}: {properties: number}) => {
     return (
         <div>
             <StatisticsCard properties={properties}/>

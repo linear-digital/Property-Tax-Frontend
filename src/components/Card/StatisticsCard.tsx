@@ -40,11 +40,11 @@ const StatisticsCard = ({ properties }: { properties: any }) => {
             return res?.data;
         }
     })
-    console.log(data);
+
     const cards = [
         {
             title: 'Total Properties',
-            value: properties.length || 0,
+            value: properties,
             icon: <Building size={24} />,
             bgColor: 'bg-primary',
             iconBg: 'bg-blue-400/20'

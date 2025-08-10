@@ -6,6 +6,7 @@ import { fetcher } from '../../../util/axios.instance';
 import { useQuery } from '@tanstack/react-query';
 
 
+
 const PropertyByType = ({ dates }: { dates: { year: number, month: number } }) => {
   const { data } = useQuery({
     queryKey: ['monthly payments', dates],
@@ -45,7 +46,7 @@ const PropertyByType = ({ dates }: { dates: { year: number, month: number } }) =
       }
     },
     title: {
-      text: 'Total Amount Paid per Month (2025)',
+      text: `Total Amount Paid per Month (${dates?.year})`,
       align: 'center',
       style: {
         color: 'black',

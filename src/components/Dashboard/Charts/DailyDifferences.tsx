@@ -3,14 +3,16 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { months } from '../../Billing/constants';
 
 interface DailyDifferencesProps {
     dailyPaymentsData?: number[];
     dailyDiscountsData?: number[];
+    dates?: { year: number; month: number };
 }
 
 const DailyDifferences: React.FC<DailyDifferencesProps> = React.memo(
-    ({ dailyPaymentsData = [], dailyDiscountsData = [] }) => {
+    ({ dailyPaymentsData = [], dailyDiscountsData = [], dates }) => {
         if (
             !Array.isArray(dailyPaymentsData) ||
             !Array.isArray(dailyDiscountsData) ||
@@ -37,7 +39,7 @@ const DailyDifferences: React.FC<DailyDifferencesProps> = React.memo(
                 type: 'column',
             },
             title: {
-                text: 'Daily Payments, Discounts, and Differences for July 2025',
+                text: `Daily Payments, Discounts, and Differences for ${months[dates?.month as number]} (${dates?.year})`,
                 align: 'center',
                 style: {
                     color: '#333', // Light text color for title

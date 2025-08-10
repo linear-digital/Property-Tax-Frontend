@@ -44,7 +44,7 @@ const Charts = ({ properties, dates }: { properties: Property[], dates: { year: 
             <PropertyByBuildingDetails properties={properties} />
             <AmountPaidChart dates={dates}/>
             <DailyPayments dates={dates} />
-            <DailyDifferences  dailyDiscountsData={dailyDiscountsData} dailyPaymentsData={dailyPaymentsData} />
+            <DailyDifferences dates={dates}  dailyDiscountsData={dailyDiscountsData} dailyPaymentsData={dailyPaymentsData} />
         </div>
     );
 };

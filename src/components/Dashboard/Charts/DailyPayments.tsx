@@ -5,6 +5,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useQuery } from '@tanstack/react-query';
 import { fetcher } from '../../../util/axios.instance';
+import { months } from '../../Billing/constants';
+
 
 
 const DailyPayments = ({ dates }: { dates: { year: number, month: number } }) => {
@@ -65,7 +67,7 @@ const DailyPayments = ({ dates }: { dates: { year: number, month: number } }) =>
             }
         },
         title: {
-            text: 'Daily Payments for July 2025', // Updated title as per image
+            text: `Daily Payments for ${months[dates?.month as number]} (${dates?.year})`, // Updated title as per image
             align: 'center',
             style: {
                 color: 'black',
