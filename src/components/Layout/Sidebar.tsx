@@ -14,7 +14,7 @@ import {
 
 import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCreditCard, faHomeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faCreditCard, faHomeAlt } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../../contexts/UserContext';
 
 interface SidebarItem {
@@ -38,7 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
         {
             id: '/',
             label: 'Dashboard',
-            icon: <FontAwesomeIcon icon={faHomeAlt}/>,
+            icon: <FontAwesomeIcon icon={faChartPie}/>,
         },
         {
             id: 'properties',
