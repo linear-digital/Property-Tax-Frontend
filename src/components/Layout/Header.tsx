@@ -31,6 +31,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
         event.preventDefault();
         setOpenSearch(!openSearch);
       }
+      if (openSearch) {
+        if (event.key === 'Escape') {
+          setOpenSearch(false);
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => {

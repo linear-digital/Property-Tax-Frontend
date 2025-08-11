@@ -12,15 +12,14 @@ import { errorMessage } from '../../util/errorMessage';
 import { useUser } from '../../contexts/UserContext';
 import NoPermission from '../global/NoPermission';
 import DownloadUserList from './PdfDownload';
-import ViewUser from './ViewUser';
 import UsersListExcel from './DownloadAsExcel';
+import { Link } from 'react-router';
 
 
 const Users = () => {
     const [open, setOpen] = React.useState(false);
     const [user, setUser] = React.useState<User | null>(null);
     const [query, setQuery] = React.useState<string>('');
-    const [viewUser, setViewUser] = React.useState<User | null>(null);
     const { permissions } = useUser();
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['users', query],
@@ -71,13 +70,7 @@ const Users = () => {
     }
     return (
         <div className='py-5'>
-            <ViewUser
-                open={viewUser !== null}
-                setOpen={() => {
-                    setViewUser(null)
-                }}
-                user={viewUser as User}
-            />
+            
             <CreateNewUser
                 refetch={refetch}
                 open={open}
@@ -189,12 +182,10 @@ const Users = () => {
                                                 style: {
                                                     display: permissions.includes('user-view') ? 'block' : 'none'
                                                 },
-                                                onClick: () => {
-                                                    setViewUser(record)
-                                                },
-                                                label: <button>
+                                                
+                                                label: <Link to={`/users/list/${record._id}`}>
                                                     <FontAwesomeIcon icon={faEye} />                                                Show
-                                                </button>,
+                                                </Link>,
                                             },
                                             {
                                                 key: '3',

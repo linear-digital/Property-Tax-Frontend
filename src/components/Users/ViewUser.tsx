@@ -1,15 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Modal, Tag } from 'antd';
+import { Card, Spin, Tag } from 'antd';
 import React from 'react';
-import type { User } from '../../types/user';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router';
+import { fetcher } from '../../util/axios.instance';
 
-const ViewUser = ({ user, open, setOpen }: { user: User, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const ViewUser = () => {
+    const { id } = useParams();
+    const { data: user } = useQuery({
+        queryKey: ['user', id],
+        queryFn: async () => {
+            const res = await fetcher({
+                path: `/user/single/${id}`,
+            })
+            return res
+        },
+        enabled: !!id
+    });
     if (!user) {
-        return null
+        return <Spin fullscreen />
     }
     return (
-        <Modal open={open} onCancel={() => setOpen(false)} footer={null} width={1000}
-            title={"User Details"}
+        <div className='mt-5'>
+            <Card
+            title={user.name}
+            
         >
             <ul>
                 <li>
@@ -24,12 +39,13 @@ const ViewUser = ({ user, open, setOpen }: { user: User, open: boolean, setOpen:
                 <li>
                     <span className='font-semibold'>Designation:</span> {user.designation}
                 </li>
-                
+
                 <li>
                     <span className='font-semibold'>Role:</span> {user.roles.map((role: any) => <Tag key={role._id}>{role.name}</Tag>)}
                 </li>
             </ul>
-        </Modal>
+        </Card>
+        </div>
     );
 };
 
