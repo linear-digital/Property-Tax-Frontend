@@ -44,9 +44,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
   }
   return (
     <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md">
-      {/* {
-        openSearch && <SearchResults query={query} setQuery={setQuery} />
-      } */}
+      {
+        openSearch && <SearchResults query={query}  />
+      }
 
       <div className="flex items-center justify-between">
         {
