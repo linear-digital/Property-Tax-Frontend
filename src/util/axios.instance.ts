@@ -8,7 +8,6 @@ const baseUrl = "https://property.genzit.xyz/api";
 import Cookies from "js-cookie";
 const api = axios.create({
     baseURL: baseUrl,
-    withCredentials: true, // ✅ include cookies on all requests
 });
 
 type FetcherArgs = {
@@ -21,31 +20,61 @@ const token = Cookies.get("token");
 export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
     try {
         const response = await api({
-            url: baseUrl + path,
+            url: path, // ✅ no need to prepend baseUrl since api already has it
             method,
             data: body ? { payload: encrypt(body) } : undefined,
-            params: params ? params : undefined,
+            params: params || undefined,
             headers: {
-                token: token
-            }
+                token: token || ""
+            },
+            validateStatus: (status) => status < 500 // Let 4xx pass for custom handling
         });
 
-        if (response.data?.payload) {
-            return decrypt(response.data.payload);
+        // ✅ Handle 304 Not Modified (return null or cached data)
+        if (response.status === 304) {
+            console.warn(`304 Not Modified: ${path}`);
+            return null;
         }
 
+        // ✅ Decrypt payload if exists
+        if (response.data?.payload) {
+            try {
+                return decrypt(response.data.payload);
+            } catch (decryptErr) {
+                console.error("Decryption failed", decryptErr);
+                return null;
+            }
+        }
+
+        // ✅ Return raw data if no encryption
         return response.data;
     } catch (err: any) {
+        // ✅ If server sent encrypted error
         if (err.response?.data?.payload) {
-            const decryptedError = decrypt(err.response.data.payload);
-            throw decryptedError;
+            try {
+                const decryptedError = decrypt(err.response.data.payload);
+                toast.error(decryptedError.message || "Something went wrong");
+                throw decryptedError;
+            } catch {
+                toast.error("Error decrypting server message");
+                throw err;
+            }
         }
+
+        // ✅ If axios network error or no response
+        if (err.code === "ERR_NETWORK") {
+            toast.error("Network error — please check your internet connection");
+        } else {
+            toast.error(err.message || "Unknown error");
+        }
+
         throw err;
     }
 };
 export const logOut = async () => {
     try {
         Cookies.remove('token')
+        window.location.pathname = "/login"
     } catch (error: any) {
         toast.error(errorMessage(error));
         return null

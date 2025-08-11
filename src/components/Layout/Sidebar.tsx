@@ -14,7 +14,7 @@ import {
 
 import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartPie, faCreditCard, faHomeAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../../contexts/UserContext';
 
 interface SidebarItem {

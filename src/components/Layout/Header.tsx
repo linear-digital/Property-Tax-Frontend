@@ -7,6 +7,7 @@ import { Button, Popover } from 'antd';
 import { useUser } from '../../contexts/UserContext';
 import Cookies from 'js-cookie';
 import Tools from './Tools';
+import SearchResults from './SearchResults';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) => {
+  const [query, setQuery] = React.useState('');
   const { isDark, toggleTheme } = useTheme();
   const [openSearch, setOpenSearch] = React.useState(false);
   useEffect(() => {
@@ -41,11 +43,17 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
     window.location.pathname = "/login"
   }
   return (
-    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md overflow-hidden">
+    <header className="sticky top-0 left-0 right-0 bg-white dark:bg-dark border-b border-gray-200 dark:border-gray-700 px-4 md:px-5 py-3 z-[800] shadow-md rounded-md">
+      {/* {
+        openSearch && <SearchResults query={query} setQuery={setQuery} />
+      } */}
+
       <div className="flex items-center justify-between">
         {
-          openSearch && <div className="absolute dark:bg-dark bg-white w-full h-full left-0 top-0 z-50">
+          openSearch && <div className="absolute dark:bg-dark bg-white w-full h-full left-0 top-0 z-50 rounded-md">
             <input
+            value={query}
+              onChange={(e) => setQuery(e.target.value)}
               type="text"
               autoFocus
               placeholder='Search Anything...'
@@ -53,9 +61,10 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
             />
             <button
               onClick={() => setOpenSearch(false)}
-              className='text-white absolute right-4 top-1/2 transform -translate-y-1/2'>
+              className='dark:text-white text-dark absolute right-4 top-1/2 transform -translate-y-1/2'>
               <FontAwesomeIcon icon={faXmark} />
             </button>
+
           </div>
         }
         <div className="flex items-center space-x-4 flex-1">
@@ -91,10 +100,10 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           {/* Grid Icon */}
           <Popover
             styles={{
-             body: {
-               padding: 0,
-               overflow: 'hidden'
-             }
+              body: {
+                padding: 0,
+                overflow: 'hidden'
+              }
             }}
             placement="bottomRight"
             trigger={'click'}
