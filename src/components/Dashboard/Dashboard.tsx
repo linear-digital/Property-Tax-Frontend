@@ -21,7 +21,7 @@ const Dashboard = () => {
             return res;
         }
     })
-    const { data: properties } = useQuery({
+    const { data: properties, isLoading : isLoading2} = useQuery({
         queryKey: ['properties-dashboard', dates],
         queryFn: async () => {
             const res = await fetcher({
@@ -30,7 +30,9 @@ const Dashboard = () => {
             });
             return res;
         }
-    })
+    });
+    if(isLoading2 || isLoading){
+        return "Loading..."
     return (
         <div>
             <Filter dates={dates} setDates={setDates} />
