@@ -11,21 +11,10 @@ import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useUser } from '../../contexts/UserContext';
 
-const AddPayment = ({ refetch }: { refetch: any }) => {
+const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, properties: any, setOpen: any }) => {
     const [property, setProperty] = React.useState<string>("");
     const { user } = useUser();
-    const { data, isLoading } = useQuery({
-        queryKey: ['properties'],
-        queryFn: async () => {
-            const data = await fetcher({
-                path: "/property/all",
-                method: "POST",
-                body: { all: true }
-            });
-            return data;
-        },
-        refetchOnMount: false
-    });
+
     const [invoice, setInvoice] = React.useState<InvoiceType>({
         _id: '',
         invoice_id: '',
@@ -55,6 +44,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
         payment_date: new Date().toISOString(),
         discounted: false,
     })
+    const [errorFeilds, seterrorFeilds] = useState<any>([])
     useEffect(() => {
         if (invoice) {
             setNewPayment({
@@ -87,15 +77,26 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
     });
     const submitPayment = async () => {
         try {
-            if (!invoice || !property || !newPaymant.invoice_id || !newPaymant.amount || !newPaymant.payment_method || !newPaymant.reference) {
-                toast.error("Please fill all the fields");
-                return
+            const requiredFields: any = {
+                property: property,
+                invoice_id: newPaymant.invoice_id,
+                amount: newPaymant.amount,
+                payment_method: newPaymant.payment_method,
+                reference: newPaymant.reference
+            };
+
+            const errors: any = Object.keys(requiredFields).filter(key => !requiredFields[key]);
+
+            if (errors.length > 0) {
+                seterrorFeilds(errors);
+                toast.error("Please fill all the required fields.");
+                return;
             }
-            const newData = {
-                ...newPaymant,
-            }
+
+            // Rest of your submission logic...
+            const newData = { ...newPaymant };
             if (user?.agent) {
-                newData.agent = user._id
+                newData.agent = user._id;
             }
             await fetcher({
                 path: "/payment/create",
@@ -104,24 +105,34 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
             });
             toast.success("Payment created successfully");
             refetch();
+            setOpen(false);
+            seterrorFeilds([]); // Clear errors on success
         } catch (error) {
-            toast.error(errorMessage(error))
+            toast.error(errorMessage(error));
         }
-    }
+    };
+
     return (
         <div className='flex flex-col gap-4'>
             <InputSelect
                 label='Select Property'
+                
                 value={property}
                 onChange={setProperty}
-                options={data?.data?.map((property: Property) => {
+                options={data?.data?.filter((property: any) =>
+  property.invoices.some((invoice: any) => invoice.status === "Not Paid")
+).map((property: Property) => {
                     return {
+                        key: property._id,
                         value: property._id,
                         label: `${property.code}-${property.owner_name}-${property.owner_phone}`
                     }
                 })}
-                loading={isLoading}
+                loading={!data}
             />
+            {
+                errorFeilds.includes("property") && <p className='text-red-500 text-sm'>Please select an invoice</p>
+            }
             <InputSelect
                 label='Select Invoice'
                 options={invoices?.map((invoice: InvoiceType) => {
@@ -133,8 +144,11 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                 onChange={(e) => {
                     setInvoice(invoices?.find((invoice: InvoiceType) => invoice.invoice_id === e))
                 }}
-                loading={isLoading}
+                loading={!invoices}
             />
+            {
+                errorFeilds.includes("property") && <p className='text-red-500 text-sm'>Please select a property</p>
+            }
             <Input
                 label='Invoice Amount'
                 value={`$${invoice?.total_due}`}
@@ -204,6 +218,9 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                     setNewPayment({ ...newPaymant, payment_method: e })
                 }}
             />
+            {
+                errorFeilds.includes("payment_method") && <span className='text-red-500'>Please select payment method</span>
+            }
             <Input
                 label='Reference'
                 value={newPaymant.reference}
@@ -211,6 +228,9 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                     setNewPayment({ ...newPaymant, reference: e.target.value })
                 }}
             />
+            {
+                errorFeilds.includes("reference") && <span className='text-red-500'>Please enter reference</span>
+            }
             <DateInput
                 label="Payment Date"
                 value={dayjs(newPaymant.payment_date)}
@@ -221,7 +241,6 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
             <Button
                 className='self-start'
                 onClick={submitPayment}
-                loading={isLoading}
             >
                 Submit Payment
             </Button>
