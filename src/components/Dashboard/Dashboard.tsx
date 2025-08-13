@@ -22,10 +22,11 @@ const Dashboard = () => {
         }
     })
     const { data: properties } = useQuery({
-        queryKey: ['properties-dashboard'],
+        queryKey: ['properties-dashboard', dates],
         queryFn: async () => {
             const res = await fetcher({
                 path: `/property/dashboard`,
+                params: dates
             });
             return res;
         }
