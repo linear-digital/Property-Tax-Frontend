@@ -74,7 +74,8 @@ const InvoicePayments = ({ page }: { page: string }) => {
                 fetcher({
                     path: `/payment`,
                     params: {
-                        ...filters
+                        ...filters,
+                        payment_status: 'pending'
                     }
                 }).then((res: any) => {
                     setData(res)
