@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import React from 'react';
+import toast from 'react-hot-toast';
 
 const Filter = ({
     dates,
@@ -10,7 +11,7 @@ const Filter = ({
         year: number,
         month: number
     },
-    refetch:    () => void,
+    refetch: () => void,
     setDates: React.Dispatch<React.SetStateAction<{ year: number, month: number }>>
 }) => {
     const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i);
@@ -59,7 +60,10 @@ const Filter = ({
                 </select>
             </div>
             <Button className='w-full bg-primary' type='primary'
-           onClick={()=> refetch()}
+                onClick={() => {
+                    refetch()
+                    toast.success("Charts Filtered")
+                }}
             >
                 Filter Charts
             </Button>
