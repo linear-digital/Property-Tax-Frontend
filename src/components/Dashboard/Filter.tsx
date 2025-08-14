@@ -3,12 +3,14 @@ import React from 'react';
 
 const Filter = ({
     dates,
-    setDates
+    setDates,
+    refetch
 }: {
     dates: {
         year: number,
         month: number
     },
+    refetch:    () => void,
     setDates: React.Dispatch<React.SetStateAction<{ year: number, month: number }>>
 }) => {
     const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i);
@@ -56,7 +58,9 @@ const Filter = ({
                     }
                 </select>
             </div>
-            <Button className='w-full bg-primary' type='primary'>
+            <Button className='w-full bg-primary' type='primary'
+           onClick={()=> refetch()}
+            >
                 Filter Charts
             </Button>
         </div>
