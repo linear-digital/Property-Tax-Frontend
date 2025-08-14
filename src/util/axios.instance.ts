@@ -84,8 +84,11 @@ export const logOut = async () => {
 export const checkToken = async () => {
     try {
         const token: string = Cookies.get("token") || "";
-        if (token.length < 10) {
+        if (token && token.length < 10) {
             logOut()
+            return null
+        }
+        if (!token) {
             return null
         }
         const res = await fetcher({
