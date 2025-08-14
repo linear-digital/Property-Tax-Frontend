@@ -18,6 +18,7 @@ type FetcherArgs = {
 };
 const token = Cookies.get("token");
 export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
+    const token = Cookies.get("token");
     try {
         const response = await api({
             url: path, // ✅ no need to prepend baseUrl since api already has it
@@ -82,8 +83,9 @@ export const logOut = async () => {
 }
 export const checkToken = async () => {
     try {
-        const token = Cookies.get("token");
-        if (!token) {
+        const token: string = Cookies.get("token") || "";
+        if (token.length < 10) {
+            logOut()
             return null
         }
         const res = await fetcher({
