@@ -65,6 +65,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
               className='h-full w-full px-5 text-white text-sm bg-transparent'
             />
             <button
+              title='Click to close search'
               onClick={() => setOpenSearch(false)}
               className='dark:text-white text-dark absolute right-4 top-1/2 transform -translate-y-1/2'>
               <FontAwesomeIcon icon={faXmark} />
@@ -76,6 +77,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           {/* Mobile Menu Button */}
           {
             width < 1200 && <button
+            title='Click to open menu'
               onClick={onMenuClick}
               className=" text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
             >
@@ -95,6 +97,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
         <div className="flex items-center space-x-3">
           {/* Theme Toggle */}
           <button
+            
             onClick={toggleTheme}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -110,7 +113,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
                 overflow: 'hidden'
               }
             }}
-            placement="bottomRight"
+          
             trigger={'click'}
             content={
               <Tools />
@@ -118,7 +121,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, width, setIsDarkMode }) =>
           >
             <button
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="Grid view"
+              title="Open shortcuts"
             >
               <Grid3X3 size={20} />
             </button>
