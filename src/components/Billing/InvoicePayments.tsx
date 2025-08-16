@@ -246,7 +246,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                         },
                         {
                             key: '2',
-                            label: <button>
+                            label: <button title='Download Payment Receipt'>
                                 <PaymentReceiptDowload payment={record} />
                             </button>,
 
@@ -254,7 +254,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
 
                         {
                             key: '33',
-                            label: <button>
+                            label: <button title='Download Tax Certificate'>
                                 <TaxCertificate payment={record || {}} />
                             </button>,
                             style: {
@@ -323,7 +323,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             <PaymentFilter refetch={refetch} filters={filters} setFilters={setFilters} />
             {
                 page === 'payments' &&
-                <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
+                <button title='Export File to excel formate' className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
                     <FontAwesomeIcon icon={faFileExcel} />   <InvoiceListExcel query={filters} />
                 </button>
             }
