@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { faBuilding, faChartPie, faFileInvoiceDollar, faGear, faUserLock, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import { useNavigate } from 'react-router';
 
 const Tools = () => {
@@ -45,7 +44,7 @@ const Tools = () => {
                     subtitle='Account Settings'
                     icon={faGear}
                 />
-                
+
             </div>
         </div>
     );

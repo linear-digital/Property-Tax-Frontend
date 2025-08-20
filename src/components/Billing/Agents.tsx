@@ -11,9 +11,12 @@ import { errorMessage } from '../../util/errorMessage';
 import type { User } from '../../types/user';
 import EditAgent from './EditAgent';
 import { Link } from 'react-router';
+import { useUser } from '../../contexts/UserContext';
+import NoPermission from '../global/NoPermission';
 
 const Agents = () => {
     const [open, setOpen] = React.useState(false);
+    const {permissions} = useUser();
     const { data: users = [], isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
@@ -27,7 +30,7 @@ const Agents = () => {
         queryKey: ['Agents'],
         queryFn: async () => {
             const data = await fetcher({
-                path: `/user?query=Agent`
+                path: `/user/agents`
             })
             return data
         }
@@ -63,6 +66,9 @@ const Agents = () => {
         } catch (error) {
             toast.error(errorMessage(error))
         }
+    }
+    if (!permissions?.includes('agent-Manage')) {
+        return  <NoPermission />
     }
     return (
         <div className='py-5'>

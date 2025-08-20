@@ -14,6 +14,7 @@ import PaymentReceiptDowload from './BillingTemplate/PaymentReceipt';
 import { Link } from 'react-router';
 import TaxCertificate from './BillingTemplate/TaxCertificate';
 import { useQuery } from '@tanstack/react-query';
+import { useUser } from '../../contexts/UserContext';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
@@ -158,14 +159,14 @@ const InvoicePayments = ({ page }: { page: string }) => {
             dataIndex: 'amount',
             key: 'amount',
             render: (text: string) => `$${text}`,
-             hidden: page === 'authorized'
+            hidden: page === 'authorized'
         },
         {
             title: 'Discount ($',
             dataIndex: 'discount',
             key: 'discount',
             render: (text: string) => `$${text}`,
-             hidden: page === 'authorized'
+            hidden: page === 'authorized'
         },
         {
             title: 'Amount Paid ($)',
@@ -304,7 +305,23 @@ const InvoicePayments = ({ page }: { page: string }) => {
             </Dropdown>
         }
     ];
+    const { user } = useUser();
+    const addPaymentHandler = () => {
+        if (user?.agent) {
+            const floatBalance = user?.float_balance || 0;
+            if (floatBalance < 0) {
+                toast.error("You don't have enough float balance to add a payment");
+                return;
+            }
+            else {
+                setOpen(true);
+            }
+        }
+        else {
+            setOpen(true);
+        }
 
+    }
     return (
         <div className='py-5'>
 
@@ -315,7 +332,9 @@ const InvoicePayments = ({ page }: { page: string }) => {
             </h3>
             {
                 page === 'payments' && <Button type="primary" size="large" className="mb-4"
-                    onClick={() => setOpen(true)}
+                    onClick={() => {
+                        addPaymentHandler()
+                    }}
                 >
                     <FontAwesomeIcon icon={faPlus} />  Add Payment
                 </Button>
@@ -327,7 +346,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     <FontAwesomeIcon icon={faFileExcel} />   <InvoiceListExcel query={filters} />
                 </button>
             }
-            <Modal open={open} onCancel={() => setOpen(false)} footer={null} title="Add Payment"
+            <Modal open={open} centered onCancel={() => setOpen(false)} footer={null} title="Add Payment"
                 width={1000}
                 destroyOnHidden
             >

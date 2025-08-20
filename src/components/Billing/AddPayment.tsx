@@ -116,7 +116,6 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
         <div className='flex flex-col gap-4'>
             <InputSelect
                 label='Select Property'
-                
                 value={property}
                 onChange={setProperty}
                 options={data?.data?.filter((property: any) =>
