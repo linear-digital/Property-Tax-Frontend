@@ -3,7 +3,7 @@ import { Button, Dropdown, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faFile, faFileExcel, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCheck, faFile, faFileExcel, faPlus, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
@@ -13,9 +13,23 @@ import InvoiceListExcel from './DownloadInvoicePaymentsExcel';
 import PaymentReceiptDowload from './BillingTemplate/PaymentReceipt';
 import { Link } from 'react-router';
 import TaxCertificate from './BillingTemplate/TaxCertificate';
+import { useQuery } from '@tanstack/react-query';
+import { useUser } from '../../contexts/UserContext';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
+    const { data: properties } = useQuery({
+        queryKey: ['properties'],
+        queryFn: async () => {
+            const data = await fetcher({
+                path: "/property/all",
+                method: "POST",
+                body: { all: true }
+            });
+            return data;
+        },
+        refetchOnMount: false
+    });
     const [filters, setFilters] = useState<any>({
         invoice_number: "",
         agent: "",
@@ -38,6 +52,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     path: `/payment`,
                     params: {
                         authorized: false,
+                        payment_status: 'unauthorize',
                         ...filters
                     }
                 }).then((res: any) => {
@@ -49,6 +64,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     path: `/payment`,
                     params: {
                         authorized: true,
+                        payment_status: 'Approved',
                         ...filters
                     }
                 }).then((res: any) => {
@@ -59,7 +75,8 @@ const InvoicePayments = ({ page }: { page: string }) => {
                 fetcher({
                     path: `/payment`,
                     params: {
-                        ...filters
+                        ...filters,
+                        payment_status: 'pending'
                     }
                 }).then((res: any) => {
                     setData(res)
@@ -92,6 +109,38 @@ const InvoicePayments = ({ page }: { page: string }) => {
             setLoading(false)
         }
     }
+    const rejectPayment = async (id: string) => {
+        try {
+            setLoading(true)
+            await fetcher({
+                path: `/payment/${id}/unauthorize`,
+                method: 'PUT',
+            })
+            refetch()
+            toast.success('Payment unauthorize successfully')
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+    const regeneratePayment = async (id: string) => {
+        try {
+            setLoading(true)
+            await fetcher({
+                path: `/payment/${id}/regenerate`,
+                method: 'PUT',
+            })
+            refetch()
+            toast.success('Payment unauthorize successfully')
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+        finally {
+            setLoading(false)
+        }
+    }
     const columns = [
         {
             title: 'Invoice Number',
@@ -110,12 +159,14 @@ const InvoicePayments = ({ page }: { page: string }) => {
             dataIndex: 'amount',
             key: 'amount',
             render: (text: string) => `$${text}`,
+            hidden: page === 'authorized'
         },
         {
             title: 'Discount ($',
             dataIndex: 'discount',
             key: 'discount',
             render: (text: string) => `$${text}`,
+            hidden: page === 'authorized'
         },
         {
             title: 'Amount Paid ($)',
@@ -128,6 +179,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
             dataIndex: 'discount',
             key: 'discount',
             render: (text: string) => `$${text}`,
+            hidden: page === 'authorized'
         },
         {
             title: 'Payment Method',
@@ -165,6 +217,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                     </span>
                 }
             </div>,
+            hidden: page === 'authorized'
         },
         {
             title: "Authorized?",
@@ -185,7 +238,6 @@ const InvoicePayments = ({ page }: { page: string }) => {
                             style: {
                                 display: record?.discounted ? 'block' : "none"
                             },
-                            onClick: () => console.log(record),
                             label: <Link
                                 to={`/billing/payments/discounted/${record?._id}`}
                             >
@@ -194,33 +246,22 @@ const InvoicePayments = ({ page }: { page: string }) => {
 
                         },
                         {
-                            key: "5",
-                            type: "divider",
-
-                        },
-                        {
                             key: '2',
-                            label: <button>
+                            label: <button title='Download Payment Receipt'>
                                 <PaymentReceiptDowload payment={record} />
                             </button>,
 
                         },
-                        {
-                            key: "5",
-                            type: "divider",
 
-                        },
                         {
                             key: '33',
-                            onClick: () => console.log(record),
-                            label: <button>
-                               <TaxCertificate payment={record || {}} />
+                            label: <button title='Download Tax Certificate'>
+                                <TaxCertificate payment={record || {}} />
                             </button>,
                             style: {
                                 display: record?.authorized ? 'block' : 'none'
                             }
                         },
-
                         {
                             key: '4',
 
@@ -232,23 +273,30 @@ const InvoicePayments = ({ page }: { page: string }) => {
                                 <FontAwesomeIcon icon={faCheck} /> Make Authorize
                             </button>,
                         },
-                        // {
-                        //     key: "554",
-                        //     type: "divider",
-                        //     style: {
-                        //         display: page === 'unauthorized' ? 'block' : 'none'
-                        //     }
-                        // },
-                        // {
-                        //     key: '434',
-                        //     onClick: () => console.log(record),
-                        //     label: <button className='text-red-500'>
-                        //         <FontAwesomeIcon icon={faBan} /> Reject Payment
-                        //     </button>,
-                        //     style: {
-                        //         display: page === 'unauthorized' ? 'block' : 'none'
-                        //     }
-                        // },
+
+                        {
+                            key: '4454we',
+
+                            style: {
+                                display: record?.payment_status === "unauthorize" ? 'block' : 'none'
+                            },
+                            onClick: () => regeneratePayment(record?._id),
+                            label: <button disabled={loading}
+                                className='text-red-500'
+                            >
+                                <FontAwesomeIcon icon={faRotateBack} /> Regenerate
+                            </button>,
+                        },
+                        {
+                            key: '434',
+                            onClick: () => rejectPayment(record?._id),
+                            label: <button className='text-red-500'>
+                                <FontAwesomeIcon icon={faBan} /> Reject Payment
+                            </button>,
+                            style: {
+                                display: record?.payment_status === 'pending' ? 'block' : 'none'
+                            }
+                        },
                     ],
                 }}
 
@@ -257,7 +305,23 @@ const InvoicePayments = ({ page }: { page: string }) => {
             </Dropdown>
         }
     ];
+    const { user } = useUser();
+    const addPaymentHandler = () => {
+        if (user?.agent) {
+            const floatBalance = user?.float_balance || 0;
+            if (floatBalance < 0) {
+                toast.error("You don't have enough float balance to add a payment");
+                return;
+            }
+            else {
+                setOpen(true);
+            }
+        }
+        else {
+            setOpen(true);
+        }
 
+    }
     return (
         <div className='py-5'>
 
@@ -268,7 +332,9 @@ const InvoicePayments = ({ page }: { page: string }) => {
             </h3>
             {
                 page === 'payments' && <Button type="primary" size="large" className="mb-4"
-                    onClick={() => setOpen(true)}
+                    onClick={() => {
+                        addPaymentHandler()
+                    }}
                 >
                     <FontAwesomeIcon icon={faPlus} />  Add Payment
                 </Button>
@@ -276,17 +342,19 @@ const InvoicePayments = ({ page }: { page: string }) => {
             <PaymentFilter refetch={refetch} filters={filters} setFilters={setFilters} />
             {
                 page === 'payments' &&
-                <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
+                <button title='Export File to excel formate' className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
                     <FontAwesomeIcon icon={faFileExcel} />   <InvoiceListExcel query={filters} />
                 </button>
             }
-            <Modal open={open} onCancel={() => setOpen(false)} footer={null} title="Add Payment"
+            <Modal open={open} centered onCancel={() => setOpen(false)} footer={null} title="Add Payment"
                 width={1000}
+                destroyOnHidden
             >
-                <AddPayment refetch={refetch} />
+                <AddPayment setOpen={setOpen} properties={properties} refetch={refetch} />
             </Modal>
 
             <Table
+                rowKey="_id"
                 size="middle"
                 dataSource={data?.data}
                 loading={isLoading}

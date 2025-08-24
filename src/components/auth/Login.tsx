@@ -33,6 +33,10 @@ const Login = () => {
                 method: "POST",
                 body: info
             })
+            if (!res.token) {
+                toast.error("Invalid Credentials");
+                return;
+            }
             Cookies.set("token", res.token, { expires: new Date(Date.now() + 24 * 60 * 60 * 1000) }); // expires in 1 day
             window.location.pathname = "/"
             toast.success(res.message);

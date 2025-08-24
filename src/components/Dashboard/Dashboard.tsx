@@ -10,7 +10,7 @@ import { Skeleton } from 'antd';
 
 const Dashboard = () => {
     const [dates, setDates] = React.useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
-    const { data = {}, isLoading } = useQuery({
+    const { data , isLoading } = useQuery({
         queryKey: ['properties-all'],
         queryFn: async () => {
             const res = await fetcher({
@@ -21,18 +21,19 @@ const Dashboard = () => {
             return res;
         }
     })
-    const { data: properties } = useQuery({
+    const { data: properties, refetch } = useQuery({
         queryKey: ['properties-dashboard'],
         queryFn: async () => {
             const res = await fetcher({
                 path: `/property/dashboard`,
+                body: dates
             });
             return res;
         }
     })
     return (
         <div>
-            <Filter dates={dates} setDates={setDates} />
+            <Filter refetch={refetch} dates={dates} setDates={setDates} />
             <Statistics properties={properties?.total || 0} />
             {
                 isLoading ? <>
@@ -41,7 +42,7 @@ const Dashboard = () => {
                     <Skeleton active />
                 </>
                     :
-                    <PropertiesMap properties={data.data || []} />
+                    <PropertiesMap properties={data?.data || []} />
             }
             <Charts dates={dates} properties={properties} />
         </div>

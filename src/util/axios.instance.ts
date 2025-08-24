@@ -3,8 +3,13 @@ import axios from "axios";
 import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
+
 const baseUrl = "http://localhost:4000/api";
 // const baseUrl = "https://property.genzit.xyz/api";
+
+// const baseUrl = "http://localhost:4000/api";
+const baseUrl = "https://s1.swstaxpropertypro.com/api";
+
 import Cookies from "js-cookie";
 const api = axios.create({
     baseURL: baseUrl,
@@ -18,6 +23,7 @@ type FetcherArgs = {
 };
 const token = Cookies.get("token");
 export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
+    const token = Cookies.get("token");
     try {
         const response = await api({
             url: path, // ✅ no need to prepend baseUrl since api already has it
@@ -82,7 +88,11 @@ export const logOut = async () => {
 }
 export const checkToken = async () => {
     try {
-        const token = Cookies.get("token");
+        const token: string = Cookies.get("token") || "";
+        if (token && token.length < 10) {
+            logOut()
+            return null
+        }
         if (!token) {
             return null
         }

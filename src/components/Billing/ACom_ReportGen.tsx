@@ -58,7 +58,7 @@ const ACom_ReportGen = ({ filters, agents = [], setFilters, refetch }: Props) =>
                 </Button>
             </div>
             <div className="flex items-center justify-end gap-x-3">
-                <button className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
+                <button title="Export" className="bg-accent py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
                     <FontAwesomeIcon icon={faFileExcel} />  <CommissionsListExcel query={filters}/>
                 </button>
                 <button className="bg-error py-2 px-5 rounded-md text-sm text-white flex items-center gap-x-1 cursor-pointer mt-4">
