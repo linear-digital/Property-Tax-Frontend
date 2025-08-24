@@ -8,7 +8,7 @@ const baseUrl = "http://localhost:4000/api";
 // const baseUrl = "https://property.genzit.xyz/api";
 
 // const baseUrl = "http://localhost:4000/api";
-const baseUrl = "https://s1.swstaxpropertypro.com/api";
+// const baseUrl = "https://s1.swstaxpropertypro.com/api";
 
 import Cookies from "js-cookie";
 const api = axios.create({
@@ -21,7 +21,7 @@ type FetcherArgs = {
     body?: any;
     params?: any
 };
-const token = Cookies.get("token");
+
 export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
     const token = Cookies.get("token");
     try {

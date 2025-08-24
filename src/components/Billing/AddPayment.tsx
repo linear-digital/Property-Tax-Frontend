@@ -12,7 +12,7 @@ import { errorMessage } from '../../util/errorMessage';
 import { useUser } from '../../contexts/UserContext';
 import Waafipay from './Waafipay';
 
-const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, properties: any, setOpen: any }) => {
+const AddPayment = ({ refetch }: { refetch: any }) => {
     const [property, setProperty] = React.useState<string>("");
      const [openWaafipay, setOpenWaafipay] = useState(false);
     const { user } = useUser();
@@ -57,7 +57,6 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
         payment_date: new Date().toISOString(),
         discounted: false,
     })
-    const [errorFeilds, seterrorFeilds] = useState<any>([])
     useEffect(() => {
         if (invoice) {
             setNewPayment({
@@ -90,26 +89,15 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
     });
     const submitPayment = async () => {
         try {
-            const requiredFields: any = {
-                property: property,
-                invoice_id: newPaymant.invoice_id,
-                amount: newPaymant.amount,
-                payment_method: newPaymant.payment_method,
-                reference: newPaymant.reference
-            };
-
-            const errors: any = Object.keys(requiredFields).filter(key => !requiredFields[key]);
-
-            if (errors.length > 0) {
-                seterrorFeilds(errors);
-                toast.error("Please fill all the required fields.");
-                return;
+            if (!invoice || !property || !newPaymant.invoice_id || !newPaymant.amount || !newPaymant.payment_method || !newPaymant.reference) {
+                toast.error("Please fill all the fields");
+                return
             }
-
-            // Rest of your submission logic...
-            const newData = { ...newPaymant };
+            const newData = {
+                ...newPaymant,
+            }
             if (user?.agent) {
-                newData.agent = user._id;
+                newData.agent = user._id
             }
             await fetcher({
                 path: "/payment/create",
@@ -118,11 +106,11 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
             });
             toast.success("Payment created successfully");
             refetch();
-            setOpen(false);
-            seterrorFeilds([]); // Clear errors on success
         } catch (error) {
-            toast.error(errorMessage(error));
+            toast.error(errorMessage(error))
         }
+    }
+   
     return (
         <div className='flex flex-col gap-4'>
             <Waafipay open={openWaafipay} setOpen={setOpenWaafipay} refetch={refetch} payment={newPaymant}/>
@@ -130,20 +118,14 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
                 label='Select Property'
                 value={property}
                 onChange={setProperty}
-                options={data?.data?.filter((property: any) =>
-  property.invoices.some((invoice: any) => invoice.status === "Not Paid")
-).map((property: Property) => {
+                options={data?.data?.map((property: Property) => {
                     return {
-                        key: property._id,
                         value: property._id,
                         label: `${property.code}-${property.owner_name}-${property.owner_phone}`
                     }
                 })}
-                loading={!data}
+                loading={isLoading}
             />
-            {
-                errorFeilds.includes("property") && <p className='text-red-500 text-sm'>Please select an invoice</p>
-            }
             <InputSelect
                 label='Select Invoice'
                 options={invoices?.map((invoice: InvoiceType) => {
@@ -155,11 +137,8 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
                 onChange={(e) => {
                     setInvoice(invoices?.find((invoice: InvoiceType) => invoice.invoice_id === e))
                 }}
-                loading={!invoices}
+                loading={isLoading}
             />
-            {
-                errorFeilds.includes("property") && <p className='text-red-500 text-sm'>Please select a property</p>
-            }
             <Input
                 label='Invoice Amount'
                 value={`$${invoice?.total_due}`}
@@ -229,7 +208,6 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
                     setNewPayment({ ...newPaymant, payment_method: e })
                 }}
             />
-
             <div className="flex items-center gap-x-2">
                 <Input
                     label='Reference'
@@ -246,21 +224,6 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
                     Waafipay
                 </Button>
             </div>
-
-            {
-                errorFeilds.includes("payment_method") && <span className='text-red-500'>Please select payment method</span>
-            }
-            <Input
-                label='Reference'
-                value={newPaymant.reference}
-                onChange={(e) => {
-                    setNewPayment({ ...newPaymant, reference: e.target.value })
-                }}
-            />
-            {
-                errorFeilds.includes("reference") && <span className='text-red-500'>Please enter reference</span>
-            }
-
             <DateInput
                 label="Payment Date"
                 value={dayjs(newPaymant.payment_date)}
@@ -271,6 +234,7 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
             <Button
                 className='self-start'
                 onClick={submitPayment}
+                loading={isLoading}
             >
                 Submit Payment
             </Button>
