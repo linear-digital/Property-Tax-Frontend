@@ -10,7 +10,7 @@ const Waafipay = ({ open, setOpen, refetch, payment }: { open: boolean, setOpen:
     const [accountNumber, setAccountNumber] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     useEffect(() => {
-        if (!description) {
+        if (!description || description === "Payment for Invoice ") {
             setDescription(`Payment for Invoice ${payment?.invoice_number}`);
         }
     }, [payment])
@@ -39,7 +39,9 @@ const Waafipay = ({ open, setOpen, refetch, payment }: { open: boolean, setOpen:
         }
     }
     return (
-        <Modal open={open} onCancel={() => setOpen(false)} footer={null} width={800} centered title="Waafipay Payment">
+        <Modal open={open} onCancel={() => setOpen(false)} footer={null} width={800} centered title="Waafipay Payment"
+        destroyOnHidden
+        >
             <div className="flex flex-col gap-y-3 mt-5">
                 <Input
                     label='Ammount Number'
