@@ -3,8 +3,13 @@ import axios from "axios";
 import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
+
+const baseUrl = "http://localhost:4000/api";
+// const baseUrl = "https://property.genzit.xyz/api";
+
 // const baseUrl = "http://localhost:4000/api";
 const baseUrl = "https://s1.swstaxpropertypro.com/api";
+
 import Cookies from "js-cookie";
 const api = axios.create({
     baseURL: baseUrl,

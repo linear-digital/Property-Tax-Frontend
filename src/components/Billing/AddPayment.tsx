@@ -10,11 +10,24 @@ import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import { useUser } from '../../contexts/UserContext';
+import Waafipay from './Waafipay';
 
 const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, properties: any, setOpen: any }) => {
     const [property, setProperty] = React.useState<string>("");
+     const [openWaafipay, setOpenWaafipay] = useState(false);
     const { user } = useUser();
-
+    const { data, isLoading } = useQuery({
+        queryKey: ['properties'],
+        queryFn: async () => {
+            const data = await fetcher({
+                path: "/property/all",
+                method: "POST",
+                body: { all: true, notpaid: true }
+            });
+            return data;
+        },
+        refetchOnMount: false
+    });
     const [invoice, setInvoice] = React.useState<InvoiceType>({
         _id: '',
         invoice_id: '',
@@ -110,10 +123,9 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
         } catch (error) {
             toast.error(errorMessage(error));
         }
-    };
-
     return (
         <div className='flex flex-col gap-4'>
+            <Waafipay open={openWaafipay} setOpen={setOpenWaafipay} refetch={refetch} payment={newPaymant}/>
             <InputSelect
                 label='Select Property'
                 value={property}
@@ -217,6 +229,24 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
                     setNewPayment({ ...newPaymant, payment_method: e })
                 }}
             />
+
+            <div className="flex items-center gap-x-2">
+                <Input
+                    label='Reference'
+                    value={newPaymant.reference}
+                    onChange={(e) => {
+                        setNewPayment({ ...newPaymant, reference: e.target.value })
+                    }}
+                />
+                <Button 
+                    className='self-end mt-6'
+                    onClick={() => setOpenWaafipay(true)}
+                    disabled={newPaymant.paid_amount <= 0}
+                >
+                    Waafipay
+                </Button>
+            </div>
+
             {
                 errorFeilds.includes("payment_method") && <span className='text-red-500'>Please select payment method</span>
             }
@@ -230,6 +260,7 @@ const AddPayment = ({ refetch, properties: data , setOpen}: { refetch: any, prop
             {
                 errorFeilds.includes("reference") && <span className='text-red-500'>Please enter reference</span>
             }
+
             <DateInput
                 label="Payment Date"
                 value={dayjs(newPaymant.payment_date)}
