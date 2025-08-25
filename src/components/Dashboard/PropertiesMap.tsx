@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // PropertyMap.tsx
-import React from 'react';
 import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Property } from '../../types/property';
-import { Spin } from 'antd';
 
 const PropertyMap = ({ properties }: { properties: Property[] }) => {
   const defaultCenter: [number, number] = properties.length > 0
     ? [properties[0].latitude, properties[0].longitude]
     : [0, 0]; // fallback to [0, 0] if properties is empty
-  if (properties.length === 0) {
-    return <Spin />
-    
-  }
+  
   return (
     <MapContainer center={defaultCenter} zoom={16} style={{ height: '500px', width: '100%', marginTop: '20px', zIndex: 0 }}>
       <TileLayer

@@ -19,7 +19,7 @@ const getBaseUrl = (): string => {
     }
 
     const host = window.location.hostname.split(".")[0];
-    const branch = host !== "localhost" ? branches[host] : "s2";
+    const branch = host !== "localhost" ? branches[host] : "s1";
     return mode === 'development'
         ? "http://localhost:4000/api"
         : `https://${branch}.swstaxpropertypro.com/api`;
