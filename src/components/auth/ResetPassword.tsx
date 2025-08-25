@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect } from 'react';
-import { Input, Password } from '../global/InputFeilds';
-import { Button, Checkbox } from 'antd';
+import {  Password } from '../global/InputFeilds';
+import { Button } from 'antd';
 import { checkToken, fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
@@ -10,12 +10,12 @@ import { useNavigate } from 'react-router';
 import Cookies from 'js-cookie';
 import { useTheme } from '../../contexts/ThemeContext';
 
-const Login = () => {
-    const { branch } = useTheme();
+const ResetPassword = () => {
     const [info, setInfo] = React.useState({
         email: '',
         password: ''
     })
+    const { branch } = useTheme();
     const navigate = useNavigate()
     useEffect(() => {
         (
@@ -33,7 +33,8 @@ const Login = () => {
             const res = await fetcher({
                 path: '/user/login',
                 method: "POST",
-                body: info
+                body: info,
+                
             })
             if (!res.token) {
                 toast.error("Invalid Credentials");
@@ -51,16 +52,8 @@ const Login = () => {
             <form className='dark:bg-[#2F3349] w-[400px] rounded-lg shadow-xl px-5 pt-6 pb-10 flex flex-col gap-y-4'
                 onSubmit={loginUser}
             >
-                <img src={branch?.logo} alt=""
+                <img src={branch.logo} alt=""
                     className='w-[100px] h-[100px] mx-auto object-cover rounded-full'
-                />
-                <Input
-                    label='Email Address'
-                    type='email'
-                    name='email'
-                    value={info.email}
-                    onChange={(e: any) => setInfo({ ...info, email: e.target.value })}
-                    required
                 />
                 <Password
                     label='Password'
@@ -69,15 +62,19 @@ const Login = () => {
                     onChange={(e: any) => setInfo({ ...info, password: e.target.value })}
                     required
                 />
-                <Checkbox>
-                    Remember Me
-                </Checkbox>
+                <Password
+                    label='Confirm Password'
+                    name='confirm_password'
+                    type='password'
+                    onChange={(e: any) => setInfo({ ...info, password: e.target.value })}
+                    required
+                />
                 <Button type='primary' htmlType='submit'>
-                    Login
+                    Update Password
                 </Button>
             </form>
         </div>
     );
 };
 
-export default Login;
+export default ResetPassword;

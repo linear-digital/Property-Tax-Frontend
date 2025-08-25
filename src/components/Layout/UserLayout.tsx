@@ -3,12 +3,13 @@ import { UserProvider } from '../../contexts/UserContext';
 import { LocationProvider } from '../../contexts/LocationContext';
 
 const UserLayout = ({ children }: { children: React.ReactNode }) => {
+
     return (
-        <LocationProvider>
-            <UserProvider>
+        <UserProvider>
+            <LocationProvider>
                 {children}
-            </UserProvider>
-        </LocationProvider>
+            </LocationProvider>
+        </UserProvider>
     );
 };
 

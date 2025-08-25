@@ -16,7 +16,7 @@ import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartPie, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../../contexts/UserContext';
-import { branches } from '../../config/settings';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface SidebarItem {
     id: string;
@@ -34,18 +34,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
-    const [branch, setBranch] = useState({
-        name: "Afgoye",
-        code: "AFG",
-        description: "District Afgoye Municipality Lower Shabelle",
-        state: "Hirshabele State, Somalia",
-        logo: '/logos/afgoye.jpg'
-    });
-    useEffect(()=> {
-        const origin = window.location.origin;
-        const branch = branches.find(b => origin.includes(b.name.toLowerCase())) || branches[0];
-        setBranch(branch);
-    },[])
+    const {branch} = useTheme();
     const {permissions} = useUser();
     const sidebarItems: SidebarItem[] = [
         {

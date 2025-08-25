@@ -30,7 +30,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     )()
   }, [])
   useEffect(() => {
-    if (user) {
+    if (user?.roles) {
       setUserPermissions([
         ...userPermissions,
         ...user.roles.flatMap((role: Role) => role.permissions)

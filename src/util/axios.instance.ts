@@ -3,59 +3,71 @@ import axios from "axios";
 import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
-
-// const baseUrl = "http://localhost:4000/api";
-// const baseUrl = "https://property.genzit.xyz/api";
-
-// const baseUrl = "http://localhost:4000/api";
-const baseUrl = "https://s1.swstaxpropertypro.com/api";
-
 import Cookies from "js-cookie";
+const mode = 'development' // 'development' or 'production'
+// 🔹 Dynamic base URL handling
+const getBaseUrl = (): string => {
+    const host = window.location.hostname.split(".")[0];
+    const branch = host !== "localhost" ? host : "s1";
+    return mode === "development"
+        ? "http://localhost:4000/api"
+        : `https://${branch}.swstaxpropertypro.com/api`;
+};
+
 const api = axios.create({
-    baseURL: baseUrl,
+    baseURL: getBaseUrl(),
 });
+
+
+
+// ✅ Common helper for token
+const getToken = () => Cookies.get("token") || "";
 
 type FetcherArgs = {
     path: string;
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: any;
-    params?: any
+    params?: any;
+    config?: any;
 };
 
-export const fetcher = async ({ path, method = "GET", body, params }: FetcherArgs) => {
-    const token = Cookies.get("token");
+// 🔹 Improved fetcher with generics
+export const fetcher = async <T = any>({
+    path,
+    method = "GET",
+    body,
+    params,
+    config,
+}: FetcherArgs): Promise<T> => {
     try {
-        const response = await api({
-            url: path, // ✅ no need to prepend baseUrl since api already has it
+        const response: any = await api({
+            url: path,
             method,
             data: body ? { payload: encrypt(body) } : undefined,
-            params: params || undefined,
-            headers: {
-                token: token || ""
-            },
-            validateStatus: (status) => status < 500 // Let 4xx pass for custom handling
+            params,
+            headers: { token: getToken() },
+            validateStatus: (status) => status < 500, // Allow 4xx
+            ...config,
         });
 
-        // ✅ Handle 304 Not Modified (return null or cached data)
         if (response.status === 304) {
             console.warn(`304 Not Modified: ${path}`);
-            return null;
+            return Promise.reject(new Error("Not Modified"));
         }
 
-        // ✅ Decrypt payload if exists
+        // ✅ Try decrypt, fallback to raw
         if (response.data?.payload) {
             try {
-                return decrypt(response.data.payload);
-            } catch (decryptErr) {
-                console.error("Decryption failed", decryptErr);
-                return null;
+                return decrypt(response.data.payload) as T;
+            } catch (err) {
+                console.error("Decryption failed:", err);
+                throw new Error("Failed to process server response");
             }
         }
 
-        // ✅ Return raw data if no encryption
-        return response.data;
+        return response.data as T;
     } catch (err: any) {
-        // ✅ If server sent encrypted error
+        // 🔹 Handle encrypted error response
         if (err.response?.data?.payload) {
             try {
                 const decryptedError = decrypt(err.response.data.payload);
@@ -63,50 +75,50 @@ export const fetcher = async ({ path, method = "GET", body, params }: FetcherArg
                 throw decryptedError;
             } catch {
                 toast.error("Error decrypting server message");
-                throw err;
             }
         }
 
-        // ✅ If axios network error or no response
         if (err.code === "ERR_NETWORK") {
-            toast.error("Network error — please check your internet connection");
+            toast.error("Network error — check your internet connection");
         } else {
-            toast.error(err.message || "Unknown error");
+            toast.error(err.message || "Unexpected error");
         }
 
         throw err;
     }
 };
-export const logOut = async () => {
-    try {
-        Cookies.remove('token')
-        window.location.pathname = "/login"
-    } catch (error: any) {
-        toast.error(errorMessage(error));
-        return null
-    }
-}
-export const checkToken = async () => {
-    try {
-        const token: string = Cookies.get("token") || "";
-        if (token && token.length < 10) {
-            logOut()
-            return null
-        }
-        if (!token) {
-            return null
-        }
-        const res = await fetcher({
-            path: "/user/me"
-        });
-        return res
-    } catch (error: any) {
-        console.error(errorMessage(error));
-        logOut()
-        return null
-    }
+
+// 🔹 Centralized logout
+export const logOut = () => {
+    Cookies.remove("token");
+    window.location.replace("/login");
 };
 
+// 🔹 Token check + validation
+export const checkToken = async () => {
+    const token = getToken();
 
+    if (!token) {
+        // logOut();
+        return null;
+    }
+    if (token.length < 10) {
+        logOut();
+        return null;
+    }
+
+    try {
+        // const user = await fetcher({ path: "/user/me" });
+        const res = await api.get("/user/me", {
+            headers: { token },
+        });
+        const data = decrypt(res.data.payload)
+        return data;
+    } catch (error: any) {
+        console.error("Token validation failed:", errorMessage(error));
+        logOut();
+        return null;
+    }
+};
 
 export default api;

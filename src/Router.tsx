@@ -32,6 +32,7 @@ import Invoice from "./components/Billing/Invoice";
 import AgentProfile from "./components/Billing/AgentProfile";
 import DiscountInvoice from "./components/Billing/DiscountInvoice";
 import ViewUser from "./components/Users/ViewUser";
+import ResetPassword from "./components/auth/ResetPassword";
 
 
 const router = createBrowserRouter([
@@ -46,6 +47,9 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />
+      },{
+        path: "reset-password",
+        element: <ResetPassword />
       },
       {
         path: "property",

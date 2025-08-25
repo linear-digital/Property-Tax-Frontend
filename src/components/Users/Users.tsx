@@ -57,6 +57,17 @@ const Users = () => {
             toast.error(errorMessage(error))
         }
     }
+    const resetPassword = async (id: string) => {
+        try {
+            await fetcher({
+                path: `/user/reset/${id}`,
+                method: 'POST'
+            });
+            toast.success('Password reset mail sent Check mail')
+        } catch (error) {
+            toast.error(errorMessage(error))
+        }
+    }
     const date = new Date();
     const filename = `users_list_${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`;
     if (
@@ -201,6 +212,7 @@ const Users = () => {
                                             },
                                             {
                                                 key: '4',
+                                                onClick: () => resetPassword(record._id),
                                                 label: <button>
                                                     <FontAwesomeIcon icon={faKey} />                                                Reset Password
                                                 </button>,

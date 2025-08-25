@@ -30,6 +30,7 @@ const RootLayout = () => {
         document.title = `${branch.name} - Property Tax Management System`;
         document.querySelector("link[rel='icon']")?.setAttribute('href', branch.logo);
         document.querySelector("meta[name='description']")?.setAttribute('content', branch.description);
+        
     },[branch])
     return (
         <QueryClientProvider client={queryClient}>
@@ -47,7 +48,7 @@ const RootLayout = () => {
             >
                 <Toaster />
                 {
-                    pathname === '/login' || pathname === '/register' ?
+                    pathname === '/login' || pathname === '/register' || pathname === '/reset-password' ?
                         <div className='flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900'>
                             <Outlet />
                         </div>
