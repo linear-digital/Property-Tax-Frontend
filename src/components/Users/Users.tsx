@@ -58,15 +58,17 @@ const Users = () => {
         }
     }
     const resetPassword = async (id: string) => {
-        try {
-            await fetcher({
+        toast.promise(
+            fetcher({
                 path: `/user/reset/${id}`,
                 method: 'POST'
-            });
-            toast.success('Password reset mail sent Check mail')
-        } catch (error) {
-            toast.error(errorMessage(error))
-        }
+            }),
+            {
+                loading: 'Sending reset link...',
+                success: 'Reset link sent successfully',
+                error: errorMessage
+            }
+        )
     }
     const date = new Date();
     const filename = `users_list_${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.xlsx`;
@@ -81,7 +83,7 @@ const Users = () => {
     }
     return (
         <div className='py-5'>
-            
+
             <CreateNewUser
                 refetch={refetch}
                 open={open}
@@ -193,7 +195,7 @@ const Users = () => {
                                                 style: {
                                                     display: permissions.includes('user-view') ? 'block' : 'none'
                                                 },
-                                                
+
                                                 label: <Link to={`/users/list/${record._id}`}>
                                                     <FontAwesomeIcon icon={faEye} />                                                Show
                                                 </Link>,

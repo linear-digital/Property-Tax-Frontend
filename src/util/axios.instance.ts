@@ -4,12 +4,23 @@ import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
 import Cookies from "js-cookie";
-const mode = 'development' // 'development' or 'production'
+const mode: string = 'production' // 'development' or 'production'
 // 🔹 Dynamic base URL handling
 const getBaseUrl = (): string => {
+    const branches: any = {
+        "afgoye": "s1",
+        "baidoa": "s2",
+        "lafoole": "s3",
+        "huddur": "s4",
+        "diinsoor": "s5",
+        "baraawe": "s6",
+        "tawakal": "s7",
+        "jowhar": "s8",
+    }
+
     const host = window.location.hostname.split(".")[0];
-    const branch = host !== "localhost" ? host : "s1";
-    return mode === "development"
+    const branch = host !== "localhost" ? branches[host] : "s2";
+    return mode === 'development'
         ? "http://localhost:4000/api"
         : `https://${branch}.swstaxpropertypro.com/api`;
 };
@@ -46,7 +57,6 @@ export const fetcher = async <T = any>({
             data: body ? { payload: encrypt(body) } : undefined,
             params,
             headers: { token: getToken() },
-            validateStatus: (status) => status < 500, // Allow 4xx
             ...config,
         });
 
@@ -71,7 +81,6 @@ export const fetcher = async <T = any>({
         if (err.response?.data?.payload) {
             try {
                 const decryptedError = decrypt(err.response.data.payload);
-                toast.error(decryptedError.message || "Something went wrong");
                 throw decryptedError;
             } catch {
                 toast.error("Error decrypting server message");
@@ -108,12 +117,8 @@ export const checkToken = async () => {
     }
 
     try {
-        // const user = await fetcher({ path: "/user/me" });
-        const res = await api.get("/user/me", {
-            headers: { token },
-        });
-        const data = decrypt(res.data.payload)
-        return data;
+        const user = await fetcher({ path: "/user/me", });
+        return user
     } catch (error: any) {
         console.error("Token validation failed:", errorMessage(error));
         logOut();
