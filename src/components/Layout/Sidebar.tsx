@@ -16,6 +16,7 @@ import { useLocation, Link } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartPie, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useUser } from '../../contexts/UserContext';
+import { branches } from '../../config/settings';
 
 interface SidebarItem {
     id: string;
@@ -33,6 +34,18 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
+    const [branch, setBranch] = useState({
+        name: "Afgoye",
+        code: "AFG",
+        description: "District Afgoye Municipality Lower Shabelle",
+        state: "Hirshabele State, Somalia",
+        logo: '/logos/afgoye.jpg'
+    });
+    useEffect(()=> {
+        const origin = window.location.origin;
+        const branch = branches.find(b => origin.includes(b.name.toLowerCase())) || branches[0];
+        setBranch(branch);
+    },[])
     const {permissions} = useUser();
     const sidebarItems: SidebarItem[] = [
         {
@@ -227,7 +240,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
             </Link>
         );
     };
-
+    
     return (
         <>
             {/* Mobile Overlay */}
@@ -253,15 +266,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                 <div className={`p-4 border-b border-gray-200 dark:border-gray-700 transition-all duration-200 ${isHovered || isOpen ? 'block' : 'hidden '
                     }`}>
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <Building className="text-white" size={20} />
-                            </div>
+                        <Link to={'/'} className="flex items-center space-x-3">
+                            <img 
+                                    src={branch.logo} 
+                                    className='object-cover rounded-full w-[42px] h-[42px] object-center'
+                                    alt={branch.name} 
+                                />
                             <h1 className={`text-gray-900 dark:text-white font-semibold text-lg transition-all duration-200 ${isHovered ? 'block' : 'hidden -translate-x-2'
                                 }`}>
-                                Property Tax
+                                {branch.name}
                             </h1>
-                        </div>
+                        </Link>
                         {/* Mobile Close Button */}
                         <button
                             onClick={onClose}

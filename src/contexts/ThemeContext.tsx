@@ -1,8 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { branches } from '../config/settings';
 
 interface ThemeContextType {
   isDark: boolean;
   toggleTheme: () => void;
+  branch: {
+    name: string;
+    code: string;
+    description: string;
+    state: string;
+    logo: string;
+  }
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -12,7 +20,18 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const saved = localStorage.getItem('theme');
     return saved ? saved === 'dark' : true; // Default to dark
   });
-
+  const [branch, setBranch] = useState({
+    name: "Afgoye",
+    code: "AFG",
+    description: "District Afgoye Municipality Lower Shabelle",
+    state: "Hirshabele State, Somalia",
+    logo: '/logos/afgoye.jpg'
+  });
+  useEffect(() => {
+    const origin = window.location.origin;
+    const branch = branches.find(b => origin.includes(b.name.toLowerCase())) || branches[0];
+    setBranch(branch);
+  }, [])
   useEffect(() => {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     if (isDark) {
@@ -25,7 +44,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toggleTheme = () => setIsDark(!isDark);
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDark, toggleTheme, branch }}>
       {children}
     </ThemeContext.Provider>
   );

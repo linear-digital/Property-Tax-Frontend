@@ -6,9 +6,11 @@ import { Toaster } from 'react-hot-toast';
 import { ConfigProvider, theme } from 'antd';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './UserLayout';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const queryClient = new QueryClient();
 const RootLayout = () => {
+    const { branch } = useTheme();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [deviceWidth, setDeviceWidth] = useState(window.innerWidth);
     const [isDarkMode, setIsDarkMode] = useState(true);
@@ -23,7 +25,12 @@ const RootLayout = () => {
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-
+    useEffect(()=> {
+        // change site title based on branch
+        document.title = `${branch.name} - Property Tax Management System`;
+        document.querySelector("link[rel='icon']")?.setAttribute('href', branch.logo);
+        document.querySelector("meta[name='description']")?.setAttribute('content', branch.description);
+    },[branch])
     return (
         <QueryClientProvider client={queryClient}>
             <ConfigProvider

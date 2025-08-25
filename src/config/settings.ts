@@ -1,0 +1,58 @@
+export const branches = [
+    {
+        name: "Afgoye",
+        code: "AFG",
+        description: "District Afgoye Municipality Lower Shabelle",
+        state: "Hirshabele State, Somalia",
+        logo: '/logos/afgoye.png',
+    },
+    {
+        name: "Baidoa",
+        code: "BAI",
+        description: "District Baidoa Municipality, Region Bay",
+        state: "Southwest, Somalia",
+        logo: '/logos/baidoa.jpg',
+    },
+    {
+        name: "Lafoole Area",
+        code: "LAF",
+        description: "Area Lafoole is under Municipality Afgoye",
+        state: "Southwest, Somalia",
+        logo: '/logos/lafoole.jpg',
+    },
+    {
+        name: "Huddur",
+        code: "HUD",
+        description: "District Huddur Municipality, Region Bakool",
+        state: "Southwest, Somalia",
+        logo: '/logos/huddur.jpg',
+    },
+    {
+        name: "Diinsoor",
+        code: "DIN",
+        description: "District Diinsoor Municipality Region Bay",
+        state: "Southwest, Somalia",
+        logo: '/logos/diinsoor.jpg',
+    },
+    {
+        name: "Baraawe",
+        code: "BAR",
+        description: "District Baraawe Municipality Region Lower Shabelle",
+        state: "Southwest, Somalia",
+        logo: '/logos/baraawe.jpg',
+    },
+    {
+        name: "Tawakal Area",
+        code: "TAW",
+        description: "Area Tawakal is under Municipality Afgoye",
+        state: "Southwest, Somalia",
+        logo: '/logos/tawakal.jpg',
+    },
+    {
+        name: "Jowhar",
+        code: "JOW",
+        description: "District Jowhar Municipality Middle Shabelle",
+        state: "Hirshabele State, Somalia",
+        logo: '/logos/jowhar.jpg',
+    },
+];
