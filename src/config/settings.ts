@@ -25,7 +25,7 @@ export const branches = [
         code: "HUD",
         description: "District Huddur Municipality, Region Bakool",
         state: "Southwest, Somalia",
-        logo: '/logos/huddur.jpg',
+        logo: '/logos/huddur.png',
     },
     {
         name: "Diinsoor",
