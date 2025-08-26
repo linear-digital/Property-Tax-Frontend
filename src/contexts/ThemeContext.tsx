@@ -28,10 +28,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     logo: '/logos/afgoye.jpg'
   });
   useEffect(() => {
-    const origin = window.location.origin;
-    const branch = branches.find(b => origin.includes(b.name.toLowerCase())) || branches[0];
-    setBranch(branch);
-  }, [])
+  const host = window.location.hostname; // e.g. "afgoye.swstaxpropertypro.com"
+  const subdomain = host.split(".")[0];  // "afgoye"
+  
+  const matchedBranch = branches.find(
+    (b) => b.name.toLowerCase() === subdomain.toLowerCase()
+  ) || branches[0];
+  
+  setBranch(matchedBranch);
+}, []);
   useEffect(() => {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     if (isDark) {
