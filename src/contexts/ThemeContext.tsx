@@ -32,7 +32,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const subdomain = host.split(".")[0];  // "afgoye"
   
   const matchedBranch = branches.find(
-    (b) => b.name.toLowerCase() === subdomain.toLowerCase()
+    (b) => b.name.toLowerCase().includes(subdomain.toLowerCase())
   ) || branches[0];
   
   setBranch(matchedBranch);
