@@ -53,6 +53,6 @@ export const branches = [
         code: "JOW",
         description: "District Jowhar Municipality Middle Shabelle",
         state: "Hirshabele State, Somalia",
-        logo: '/logos/jowhar.jpg',
+        logo: '/logos/jowhar.png',
     },
 ];
