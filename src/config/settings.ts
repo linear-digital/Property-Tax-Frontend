@@ -18,7 +18,7 @@ export const branches = [
         code: "LAF",
         description: "Area Lafoole is under Municipality Afgoye",
         state: "Southwest, Somalia",
-        logo: '/logos/lafoole.jpg',
+        logo: '/logos/lafole.jpg',
     },
     {
         name: "Huddur",
