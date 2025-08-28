@@ -54,8 +54,8 @@ const Login = () => {
                 <img src={branch?.logo} alt=""
                     className='w-[100px] h-[100px] mx-auto object-cover rounded-full'
                 />
-                <h2 className="text-white text-center text-xl mt-2">{branch?.logo}</h2>
-                <p className="text-sm text-white mt-1 mb-2">{branch?.description} </p>
+                <h2 className="text-white text-center text-xl mt-2">{branch?.name}</h2>
+                <p className="text-sm text-white mt-1 mb-2 text-center">{branch?.description} </p>
                 <Input
                     label='Email Address'
                     type='email'
