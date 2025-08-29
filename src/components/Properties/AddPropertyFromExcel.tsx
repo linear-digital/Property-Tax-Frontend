@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from 'antd';
+import { Button, Table } from 'antd';
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { fetcher } from '../../util/axios.instance';
@@ -148,6 +148,7 @@ const AddPropertyFromExcel = () => {
 
             <div className="mb-4">
                 <input
+                    title='Upload Excel or CSV File'
                     type="file"
                     accept=".xlsx, .xls, .csv"
                     onChange={handleFileUpload}
@@ -190,6 +191,21 @@ const AddPropertyFromExcel = () => {
                     </Button>
                 </div>
             )}
+            {
+                jsonData.length > 0 && <Table
+                    dataSource={jsonData.map((item, index) => ({ key: index, ...item }))}
+                    columns={customKeys.map(key => ({
+                        title: key.replace(/_/g, ' ').toUpperCase(),
+                        dataIndex: key,
+                        key: key,
+                        ellipsis: true,
+                        width: 150,
+                        render: (text) => <span className="dark:text-white text-dark">{text !== null ? text.toString() : 'N/A'}</span>
+                    }))}
+                    scroll={{ x: 'max-content' }}
+                    pagination={{ pageSize: 50 }}
+                />
+            }
         </div>
     );
 };
