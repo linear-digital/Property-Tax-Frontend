@@ -83,7 +83,7 @@ const Filter = ({
                 onChange={(value) => setFilters({ ...filters, property_status: value })}
                 label="Property Status" options={[
                     { value: 'Leased', label: 'Leased' }, 
-                    { value: 'Owned', label: 'Owned' }, 
+                    { value: 'Owner', label: 'Owner' }, 
                     { value: 'Rented', label: 'Rented' },
                     { value: 'Vacant', label: 'Vacant' },
                 ]} />
