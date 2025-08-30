@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Table } from 'antd';
+import { Button, Table, Tabs } from 'antd';
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
+import type { Property } from '../../types/property';
 
 interface ExcelData {
     [key: string]: any;
@@ -16,7 +17,7 @@ const AddPropertyFromExcel = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [submitLoading, setSubmitLoading] = useState<boolean>(false);
-
+    const [duplicates, setDuplicates] = useState<any>([]);
     const customKeys = [
         "state", "region", "district", "village", "zone", "branch",
         "coordinates", "latitude", "longitude", "altitude", "precision",
@@ -89,7 +90,32 @@ const AddPropertyFromExcel = () => {
                     return obj;
                 });
 
-                setJsonData(formattedData);
+
+                const codeMap = new Map<string, ExcelData[]>();
+
+                formattedData.forEach((item) => {
+                    const code = (item.code || "").toString().trim();
+                    if (!code) return; // Skip empty codes
+
+                    if (!codeMap.has(code)) {
+                        codeMap.set(code, [item]);
+                    } else {
+                        codeMap.get(code)?.push(item);
+                    }
+                });
+
+                const newToAdd: ExcelData[] = [];
+                const duplicateEntries: ExcelData[] = [];
+
+                codeMap.forEach((items) => {
+                    if (items.length === 1) {
+                        newToAdd.push(items[0]);
+                    } else {
+                        duplicateEntries.push(...items);
+                    }
+                });
+                setJsonData(newToAdd);
+                setDuplicates(duplicateEntries);
             } catch (err) {
                 setError('Error processing file. Please try again.');
                 console.error('Error converting Excel:', err);
@@ -105,13 +131,17 @@ const AddPropertyFromExcel = () => {
 
         reader.readAsArrayBuffer(file);
     };
-
+    const [responseFromServer, setResponseFromServer] = useState<any>(null);
     const resetConverter = () => {
         setJsonData([]);
         setFileName('');
         setError(null);
     };
-
+    const createInvoice = async () => {
+        await fetcher({
+            path: '/invoice/create',
+        });
+    }
     const handleSubmit = async () => {
         if (jsonData.length === 0) {
             toast.error("No data to submit");
@@ -120,26 +150,87 @@ const AddPropertyFromExcel = () => {
 
         try {
             setSubmitLoading(true);
+            setResponseFromServer(null);
             const response = await fetcher({
                 path: "/property/bulk",
                 method: "POST",
                 body: jsonData
             });
-
-            if (response.data) {
-                toast.success(`${response.data.count} properties added successfully`);
-                resetConverter();
-            } else {
-                throw new Error("No data returned from server");
-            }
+            setResponseFromServer(response);
+            createInvoice();
         } catch (error) {
             console.error("Submission error:", error);
             toast.error(errorMessage(error) || "Failed to add properties");
         } finally {
             setSubmitLoading(false);
+
         }
     };
-
+    const columns: any = [
+        {
+            title: 'Property Info',
+            dataIndex: 'code',
+            key: 'code',
+            render: (_: any, record: Property) => (
+                <ul>
+                    <li>
+                        <strong>Code:</strong> {record.code}
+                    </li>
+                    <li>
+                        <strong>Property Type:</strong> {record.property_type}
+                    </li>
+                    <li>
+                        <strong>House/Building Details :</strong> {record.house_building_details || 'N/A'}
+                    </li>
+                    <li>
+                        <strong>Property Status:</strong> {record.property_status || 'N/A'}
+                    </li>
+                </ul>
+            )
+        },
+        {
+            title: 'Property Location',
+            dataIndex: 'location',
+            key: 'location',
+            render: (_: any, record: Property) => (
+                <ul>
+                    <li>
+                        <strong>State:</strong> {record.state}
+                    </li>
+                    <li>
+                        <strong>Region:</strong> {record.region}
+                    </li>
+                    <li>
+                        <strong>District:</strong> {record.district}
+                    </li>
+                    <li>
+                        <strong>Village:</strong> {record.village || 'N/A'}
+                    </li>
+                </ul>
+            )
+        },
+        {
+            title: 'Owner Info',
+            dataIndex: 'owner_info',
+            key: 'owner_info',
+            render: (_: any, record: Property) => (
+                <ul>
+                    <li>
+                        <strong>Name:</strong> {record.owner_name}
+                    </li>
+                    <li>
+                        <strong>Phone:</strong> {record.owner_phone}
+                    </li>
+                    <li>
+                        <strong>Email:</strong> {record.owner_email || 'N/A'}
+                    </li>
+                    <li>
+                        <strong>NID:</strong> {record.owner_nid || 'N/A'}
+                    </li>
+                </ul>
+            )
+        },
+    ];
     return (
         <div className="p-4 w-full mx-auto dark:bg-dark bg-white min-h-screen my-5 rounded-xl">
             <h1 className="text-xl font-bold mb-4 dark:text-white text-dark">
@@ -178,7 +269,15 @@ const AddPropertyFromExcel = () => {
                     </p>
                 </div>
             )}
-
+            {
+                responseFromServer && (
+                    <div className="mb-4 p-2 bg-green-50 text-green-700 rounded">
+                        <p>Message: {responseFromServer.message}</p>
+                        <p>Properties Added: {responseFromServer.count}</p>
+                        <p>Duplicates Found: {duplicates.length || 0}</p>
+                    </div>
+                )
+            }
             {jsonData.length > 0 && (
                 <div className="space-y-4 dark:text-white text-dark">
                     <Button
@@ -191,21 +290,33 @@ const AddPropertyFromExcel = () => {
                     </Button>
                 </div>
             )}
-            {
-                jsonData.length > 0 && <Table
-                    dataSource={jsonData.map((item, index) => ({ key: index, ...item }))}
-                    columns={customKeys.map(key => ({
-                        title: key.replace(/_/g, ' ').toUpperCase(),
-                        dataIndex: key,
-                        key: key,
-                        ellipsis: true,
-                        width: 150,
-                        render: (text) => <span className="dark:text-white text-dark">{text !== null ? text.toString() : 'N/A'}</span>
-                    }))}
-                    scroll={{ x: 'max-content' }}
-                    pagination={{ pageSize: 50 }}
-                />
-            }
+            <Tabs
+                defaultActiveKey="1"
+                items={[
+                    {
+                        label: `Unique Properties To Add (${jsonData.length})`,
+                        key: '1',
+                        children: <Table
+
+                            dataSource={jsonData.map((item, index) => ({ key: index, ...item }))}
+                            columns={columns}
+                            scroll={{ x: 'max-content' }}
+                            pagination={{ pageSize: 50 }}
+                        />,
+                    },
+                    {
+                        label: `Duplicates (${duplicates.length})`,
+                        key: '2',
+                        children: <Table
+                            dataSource={duplicates.map((item: any, index: number) => ({ key: index, ...item }))}
+                            columns={columns}
+                            scroll={{ x: 'max-content' }}
+                            pagination={{ pageSize: 50 }}
+                        />,
+                    },
+                ]}
+            />
+
         </div>
     );
 };

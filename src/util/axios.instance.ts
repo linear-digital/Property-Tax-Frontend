@@ -4,7 +4,7 @@ import { decrypt, encrypt } from "./encrypt";
 import toast from "react-hot-toast";
 import { errorMessage } from "./errorMessage";
 import Cookies from "js-cookie";
-const mode: string = 'production' // 'development' or 'production'
+const mode: string = 'development' // 'development' or 'production'
 // 🔹 Dynamic base URL handling
 const getBaseUrl = (): string => {
     const branches: any = {
@@ -19,7 +19,7 @@ const getBaseUrl = (): string => {
     }
 
     const host = window.location.hostname.split(".")[0];
-    const branch = host !== "localhost" ? branches[host] : "s1";
+    const branch = host !== "localhost" ? branches[host] : "s3";
     return mode === 'development'
         ? "http://localhost:4000/api"
         : `https://${branch}.swstaxpropertypro.com/api`;

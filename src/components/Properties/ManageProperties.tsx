@@ -9,17 +9,10 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { errorMessage } from "../../util/errorMessage";
 import { useUser } from "../../contexts/UserContext";
+import type { Property } from "../../types/property";
 
-interface Property {
-  _id: string;
-  code: string;
-  state: string;
-  region: string;
-  district: string;
-  property_type: string;
-  house_building_details: string;
-  property_status: string;
-  // Add other properties as needed
+interface Properties extends Property {
+  _id: string; // MongoDB ID
 }
 
 interface PaginationData {
@@ -30,7 +23,7 @@ interface PaginationData {
 }
 
 interface ApiResponse {
-  data: Property[];
+  data: Properties[];
   pagination: PaginationData;
 }
 
@@ -95,44 +88,72 @@ const ManageProperties = () => {
   }
   const columns = [
     {
-      title: 'Property Code',
+      title: 'Property Info',
       dataIndex: 'code',
       key: 'code',
+      render: (_: any, record: Property) => (
+        <ul>
+          <li>
+            <strong>Code:</strong> {record.code}
+          </li>
+          <li>
+            <strong>Property Type:</strong> {record.property_type}
+          </li>
+          <li>
+            <strong>House/Building Details :</strong> {record.house_building_details || 'N/A'}
+          </li>
+          <li>
+            <strong>Property Status:</strong> {record.property_status || 'N/A'}
+          </li>
+        </ul>
+      )
     },
     {
-      title: 'State',
-      dataIndex: 'state',
-      key: 'state',
+      title: 'Property Location',
+      dataIndex: 'location',
+      key: 'location',
+      render: (_: any, record: Property) => (
+        <ul>
+          <li>
+            <strong>State:</strong> {record.state}
+          </li>
+          <li>
+            <strong>Region:</strong> {record.region}
+          </li>
+          <li>
+            <strong>District:</strong> {record.district}
+          </li>
+          <li>
+            <strong>Village:</strong> {record.village || 'N/A'}
+          </li>
+        </ul>
+      )
     },
     {
-      title: 'Region',
-      dataIndex: 'region',
-      key: 'region',
-    },
-    {
-      title: 'District',
-      dataIndex: 'district',
-      key: 'district',
-    },
-    {
-      title: 'Property Type',
-      dataIndex: 'property_type',
-      key: 'property_type',
-    },
-    {
-      title: 'House/Building Details',
-      dataIndex: 'house_building_details',
-      key: 'house_building_details',
-    },
-    {
-      title: "Property Status",
-      dataIndex: 'property_status',
-      key: 'property_status',
+      title: 'Owner Info',
+      dataIndex: 'owner_info',
+      key: 'owner_info',
+      render: (_: any, record: Property) => (
+        <ul>
+          <li>
+            <strong>Name:</strong> {record.owner_name}
+          </li>
+          <li>
+            <strong>Phone:</strong> {record.owner_phone}
+          </li>
+          <li>
+            <strong>Email:</strong> {record.owner_email || 'N/A'}
+          </li>
+          <li>
+            <strong>NID:</strong> {record.owner_nid || 'N/A'}
+          </li>
+        </ul>
+      )
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_: any, record: Property) => (
+      render: (_: any, record: Properties) => (
         <div className="flex items-center gap-x-2">
           <Link
             style={{
