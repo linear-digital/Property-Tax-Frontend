@@ -90,17 +90,19 @@ const TaxInvoice = () => {
       title: 'Admin Fee ($)',
       dataIndex: 'admin_fee',
       key: 'admin_fee',
+      render: (tax: any) => `$${tax || 0}`,
     },
     {
       title: 'Total Due ($)',
       dataIndex: 'total_due',
       key: 'total_due',
+      render: (tax: any) => `$${tax || 0}`,
     },
     {
       title: 'Total Overdue ($)',
       dataIndex: 'overdue',
       key: 'overdue',
-      render: (overdue: any) => overdue || 0,
+     render: (tax: any) => `$${tax || 0}`,
     },
     {
       title: 'Status',
