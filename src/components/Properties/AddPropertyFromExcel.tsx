@@ -6,6 +6,7 @@ import { fetcher } from '../../util/axios.instance';
 import toast from 'react-hot-toast';
 import { errorMessage } from '../../util/errorMessage';
 import type { Property } from '../../types/property';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface ExcelData {
     [key: string]: any;
@@ -18,6 +19,7 @@ const AddPropertyFromExcel = () => {
     const [error, setError] = useState<string | null>(null);
     const [submitLoading, setSubmitLoading] = useState<boolean>(false);
     const [duplicates, setDuplicates] = useState<any>([]);
+    const {branch} = useTheme();
     const customKeys = [
         "state", "region", "district", "village", "zone", "branch",
         "coordinates", "latitude", "longitude", "altitude", "precision",
@@ -140,6 +142,9 @@ const AddPropertyFromExcel = () => {
     const createInvoice = async () => {
         await fetcher({
             path: '/invoice/create',
+            params: {
+                branch: branch.name?.toLowerCase(),
+            }
         });
     }
     const handleSubmit = async () => {
