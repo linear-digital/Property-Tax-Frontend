@@ -2,6 +2,7 @@
 import { MapContainer, TileLayer, Popup, CircleMarker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Property } from '../../types/property';
+import moment from 'moment';
 
 const PropertyMap = ({ properties }: { properties: Property[] }) => {
   // Find the first valid property with lat/lng
@@ -41,8 +42,19 @@ const PropertyMap = ({ properties }: { properties: Property[] }) => {
             <Popup className='text-xs'>
               <strong>Property Code</strong>: {prop.code} <br />
               <strong>Address</strong>: {prop.property_address} <br />
-              <strong>Owner</strong>: {prop.owner_name} <br />
-              <strong>Building Details</strong>: {prop.house_building_details}
+              <strong>Paid Property Tax Year</strong>: {
+                prop?.invoices[1] ? moment(prop.invoices[1]?.payment_date).format('YYYY')
+                  :
+                  "N/A"
+              } <br />
+              <strong>
+                {prop.invoices[0]?.status === 'Paid' ? 'Paid ' : 'Unpaid '}
+                 Property Tax Year</strong>: {
+                prop.invoices[0]?.status === 'Paid' ? moment(prop.invoices[0]?.payment_date).format('YYYY') : moment(prop.invoices[0]?.createdAt).format('YYYY')
+              }
+              <br />
+              <strong>GPS Location:</strong> {prop.latitude}, {prop.longitude}
+
             </Popup>
           </CircleMarker>
         ))}

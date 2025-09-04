@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Property {
   // Location Information
   state: string;
@@ -6,7 +7,7 @@ export interface Property {
   village: string;
   zone: string;
   branch: string;
-
+  invoices: any; // Assuming invoices is an object; adjust type as needed
   // Coordinates
   coordinates: string; // Raw coordinates string (e.g., "2.1450379 45.121262 49.47314453125 3.952")
   latitude: number;    // Extracted from coordinates

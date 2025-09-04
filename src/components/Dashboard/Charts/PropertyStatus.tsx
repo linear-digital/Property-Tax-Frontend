@@ -40,11 +40,11 @@ const PropertyStatusPieChart = ({ properties }: { properties: any }) => {
         cursor: 'pointer',
         dataLabels: {
           enabled: true,
-          format: '<b>{point.name}</b>',
+          format: '<p>{point.name}</p>',
           distance: 20,
           style: {
-            color: 'black',
-            fontSize: '14px',
+            color: '{point.color}',
+            fontSize: '10px',
             fontWeight: 'normal',
             textOutline: 'none'
           }
@@ -59,27 +59,6 @@ const PropertyStatusPieChart = ({ properties }: { properties: any }) => {
         data: statusData
       }
     ],
-    responsive: {
-      rules: [
-        {
-          condition: {
-            maxWidth: 500
-          },
-          chartOptions: {
-            plotOptions: {
-              pie: {
-                dataLabels: {
-                  distance: 10,
-                  style: {
-                    fontSize: '10px'
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
   };
 
   return (

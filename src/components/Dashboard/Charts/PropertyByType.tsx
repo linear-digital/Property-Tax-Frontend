@@ -35,11 +35,11 @@ const PropertyByType = ({ properties }: { properties: any }) => {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>',
+                    format: '<p>{point.name}</p>',
                     distance: 20,
                     style: {
-                        color: 'black',
-                        fontSize: '14px',
+                        color: '{point.color}',
+                        fontSize: '10px',
                         fontWeight: 'normal',
                         textOutline: 'none'
                     }
@@ -47,7 +47,6 @@ const PropertyByType = ({ properties }: { properties: any }) => {
                 showInLegend: false
             }
         },
-        colors: ['#5976ae', '#f55229', '#279dfd', '#4237b8', '#3ae05f'],
         series: [
             {
                 name: 'Status',

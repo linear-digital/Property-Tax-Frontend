@@ -34,30 +34,14 @@ const PropertyByBuildingDetails = ({ properties }: { properties: any }) => {
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    useHTML: true,
-                    formatter: function (): string | null {
-                        const percentage = (this as Highcharts.Point).percentage ?? 0;
-                        const name = (this as Highcharts.Point).name ?? '';
-
-                        if (percentage < 1 && name !== 'Leased' && name !== 'Vacant') {
-                            return null;
-                        }
-
-                        const labelStyle = 'color: black; font-size: 14px; font-weight: regular;';
-                        const percentageStyle = 'color: #EEEEEE; font-size: 12px;';
-
-                        if (["Stores", "Villas", "Tin"].includes(name)) {
-                            return `<span style="${labelStyle}">${name}</span>`;
-                        }
-
-                        return `<span style="${percentageStyle}">${Highcharts.numberFormat(percentage, 1)}%</span>`;
-                    },
+                    format: '<p>{point.name}</p>',
                     distance: 20,
                     style: {
-                        color: 'black',
+                        color: '{point.color}',
+                        fontSize: '10px',
+                        fontWeight: 'normal',
                         textOutline: 'none'
                     }
-                    // connectorColor is removed to let it inherit from point color
                 },
                 showInLegend: false
             }
@@ -69,27 +53,6 @@ const PropertyByBuildingDetails = ({ properties }: { properties: any }) => {
                 data: propertyuildingDetails
             }
         ],
-        responsive: {
-            rules: [
-                {
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        plotOptions: {
-                            pie: {
-                                dataLabels: {
-                                    distance: 10,
-                                    style: {
-                                        fontSize: '10px'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
-        }
     };
 
     return (

@@ -38,13 +38,15 @@ const Charts = ({ properties, dates }: { properties: Property[], dates: { year: 
     }, [data])
 
     return (
-        <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 mt-8'>
-            <PropertyStatusPieChart properties={properties} />
-            <PropertyByType properties={properties} />
+        <div className='flex flex-col gap-5 mt-8'>
+            <div className="col-span-2 grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <PropertyStatusPieChart properties={properties} />
+                <PropertyByType properties={properties} />
+            </div>
             <PropertyByBuildingDetails properties={properties} />
-            <AmountPaidChart dates={dates}/>
+            <AmountPaidChart dates={dates} />
             <DailyPayments dates={dates} />
-            <DailyDifferences dates={dates}  dailyDiscountsData={dailyDiscountsData} dailyPaymentsData={dailyPaymentsData} />
+            <DailyDifferences dates={dates} dailyDiscountsData={dailyDiscountsData} dailyPaymentsData={dailyPaymentsData} />
         </div>
     );
 };
