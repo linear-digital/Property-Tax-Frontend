@@ -259,11 +259,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, width }) => {
                             <img 
                                     src={branch.logo} 
                                     className='object-cover rounded-full w-[42px] h-[42px] object-center'
-                                    alt={branch.name} 
+                                    alt={branch.title} 
                                 />
-                            <h1 className={`text-gray-900 dark:text-white font-semibold text-lg transition-all duration-200 ${isHovered ? 'block' : 'hidden -translate-x-2'
+                            <h1 className={`text-gray-900 dark:text-white font-semibold text-[15px] transition-all duration-200 ${isHovered ? 'block' : 'hidden -translate-x-2'
                                 }`}>
-                                {branch.name}
+                                {branch.title}
                             </h1>
                         </Link>
                         {/* Mobile Close Button */}
