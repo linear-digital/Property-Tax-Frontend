@@ -6,6 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 const PropertyByBuildingDetails = ({ properties }: { properties: any }) => {
     const propertyuildingDetails = properties?.building || [];
+    
     const options: Highcharts.Options = {
         chart: {
             type: 'pie',
