@@ -200,7 +200,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={'/image.png'}
+                        src={data.logoUrl}
                         style={{
                             width: 50,
                             height: 50,

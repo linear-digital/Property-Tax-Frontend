@@ -5,13 +5,15 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 import TaxCertificatePDF from './TaxCertificatePDF';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 
 const TaxCertificate = ({ payment }: { payment: any }) => {
-    console.log(payment);
+    const {branch}= useTheme();
     const property: Property = payment?.property_code as any
 
     const formData: any = {
+        logoUrl: branch?.logo || '',
         payment: payment,
         invoiceNumber: payment?.invoice_id,
         receiptReference: 'TIXRAAC NO. WARSADA LACAGBINTA',
