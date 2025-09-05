@@ -27,7 +27,7 @@ const RootLayout = () => {
     }, []);
     useEffect(()=> {
         // change site title based on branch
-        document.title = `${branch.name} - Property Tax Management System`;
+        document.title = `${branch.title} - Property Tax Management System`;
         document.querySelector("link[rel='icon']")?.setAttribute('href', branch.logo);
         document.querySelector("meta[name='description']")?.setAttribute('content', branch.description);
         
