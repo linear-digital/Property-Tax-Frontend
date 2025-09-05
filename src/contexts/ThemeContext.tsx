@@ -7,6 +7,7 @@ interface ThemeContextType {
   branch: {
     name: string;
     code: string;
+    title: string;
     description: string;
     state: string;
     logo: string;
@@ -20,13 +21,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const saved = localStorage.getItem('theme');
     return saved ? saved === 'dark' : true; // Default to dark
   });
-  const [branch, setBranch] = useState({
-    name: "Afgoye",
-    code: "AFG",
-    description: "District Afgoye Municipality Lower Shabelle",
-    state: "Hirshabele State, Somalia",
-    logo: '/logos/afgoye.jpg'
-  });
+  const [branch, setBranch] = useState(branches[0]);
   useEffect(() => {
   const host = window.location.hostname; // e.g. "afgoye.swstaxpropertypro.com"
   const subdomain = host.split(".")[0];  // "afgoye"
