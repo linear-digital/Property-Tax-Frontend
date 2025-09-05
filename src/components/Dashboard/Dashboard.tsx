@@ -29,7 +29,8 @@ const Dashboard = () => {
                 body: dates
             });
             return res;
-        }
+        },
+        refetchOnWindowFocus: false
     })
     return (
         <div>
