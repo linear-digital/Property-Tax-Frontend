@@ -53,6 +53,7 @@ type SelectInputProps = CommonProps & {
   showSearch?: boolean;
   optionFilterProp?: string;
   dropdownRender?: SelectProps['dropdownRender'];
+  onSearch?: (value: string) => void;
 };
 
 const FieldWrapper = ({
@@ -240,6 +241,7 @@ export const InputSelect = ({
   showSearch = true,
   optionFilterProp = "label",
   dropdownRender,
+  onSearch,
 }: SelectInputProps) => {
   return (
     <FieldWrapper label={label}>
@@ -255,6 +257,7 @@ export const InputSelect = ({
         mode={mode}
         loading={loading}
         showSearch={showSearch}
+        onSearch={onSearch}
         optionFilterProp={optionFilterProp}
         dropdownRender={dropdownRender}
         title={label}

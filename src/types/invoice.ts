@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Property } from "./property";
 
 export interface PropertyDetails {
@@ -19,6 +20,7 @@ export interface TaxCalculation {
 
 export interface InvoiceData {
   invoiceNumber: string;
+  branch: any;
   receiptReference: string;
   issueDate: string;
   propertyDetails: PropertyDetails;

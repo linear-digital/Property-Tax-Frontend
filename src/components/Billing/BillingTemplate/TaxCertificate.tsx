@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import moment from 'moment';
 import type { Property } from '../../../types/property';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCertificate } from '@fortawesome/free-solid-svg-icons';
+import {  PDFViewer } from '@react-pdf/renderer';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 import TaxCertificatePDF from './TaxCertificatePDF';
 import { useTheme } from '../../../contexts/ThemeContext';
 
@@ -13,7 +13,7 @@ const TaxCertificate = ({ payment }: { payment: any }) => {
     const property: Property = payment?.property_code as any
 
     const formData: any = {
-        logoUrl: branch?.logo || '',
+        branch: branch,
         payment: payment,
         invoiceNumber: payment?.invoice_id,
         receiptReference: 'TIXRAAC NO. WARSADA LACAGBINTA',
@@ -33,27 +33,26 @@ const TaxCertificate = ({ payment }: { payment: any }) => {
             administrativeFee: payment?.invoice_id?.admin_fee,
             totalAmount: payment?.invoice_id?.total_due
         },
-        paymentMethod: 'Bank Transfer',
         bankDetails: {
             accountName: 'CANSHUURTA GOBOLKA SHABEELLAHA HOOSE DEGMADA AFGOYE',
             accountNumber: '37517771'
         }
     }
 
-    const filename = `TaxCertificate_${payment?.invoice_id?.invoice_id}.pdf`
+    // const filename = `TaxCertificate_${payment?.invoice_id?.invoice_id}.pdf`
     return (
         <div>
-            <PDFDownloadLink
+            {/* <PDFDownloadLink
                 document={<TaxCertificatePDF data={formData} />}
                 fileName={filename}
             >
                 {({ loading }) =>
                     loading ? 'Generating PDF' : <span className='dark:text-white text-dark'><FontAwesomeIcon icon={faCertificate} /> Tax Certificate </span>
                 }
-            </PDFDownloadLink>
-            {/* <PDFViewer width="100%" height="1000px">
+            </PDFDownloadLink> */}
+            <PDFViewer width="100%" height="1000px">
                 <TaxCertificatePDF data={formData} />
-            </PDFViewer> */}
+            </PDFViewer>
         </div>
     );
 };

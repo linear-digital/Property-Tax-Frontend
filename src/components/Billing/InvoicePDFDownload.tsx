@@ -4,12 +4,16 @@ import type { Property } from '../../types/property';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import TaxInvoiceTemplate from './TaxInvoicePDF';
 import type { InvoiceData, InvoiceType } from '../../types/invoice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilePdf } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const InvoicePDFDowload = ({ invoice }: { invoice: InvoiceType }) => {
-
+    const {branch} = useTheme();
     const property: Property = invoice?.property_id as any
 
     const formData: InvoiceData = {
+        branch: branch,
         invoiceNumber: invoice?.invoice_id,
         receiptReference: 'TIXRAAC NO. WARSADA LACAGBINTA',
         issueDate: moment(invoice?.createdAt).format('YYYY-MM-DD'),
@@ -42,8 +46,9 @@ const InvoicePDFDowload = ({ invoice }: { invoice: InvoiceType }) => {
                 document={<TaxInvoiceTemplate data={formData} />}
                 fileName={filename}
             >
+                
                 {({ loading }) =>
-                    loading ? 'Generating PDF' : <span className='dark:text-white text-dark'>Download Invoice PDF</span>
+                    loading ? 'Generating PDF' : <span className='dark:text-white text-dark'> <FontAwesomeIcon icon={faFilePdf} />  Download Invoice PDF</span>
                 }
             </PDFDownloadLink>
         </div>

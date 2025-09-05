@@ -2,6 +2,7 @@
 // components/PropertyTaxInvoice.tsx
 import moment from 'moment';
 import React from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 // types/invoice.ts
 export type PropertyDetails = {
     ownerName: string;
@@ -39,6 +40,7 @@ interface Props {
 }
 
 const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
+    const {branch}= useTheme();
     const totalDue = data.tax.annualTax + data.tax.adminFee;
     const surcharge = parseFloat((totalDue * data.surchargePercentage).toFixed(2));
     const date = new Date(data.deadline);
@@ -49,14 +51,16 @@ const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
         <div className="max-w-[80%] mx-auto mt-10 p-8 bg-white shadow-md  rounded-md font-sans  dark:bg-dark dark:text-[#B6BEE3] text-dark">
             {/* Header */}
             <div className="text-center mb-6 border-b border-gray-300 pb-4">
-                <h1 className="text-3xl font-semibold text-gray-700 dark:text-[#CFD3EC]">Afgooye District Logo</h1>
+               <div className="flex items-center justify-center ">
+                <img src={branch.logo} alt="" className='w-20 h-20 rounded-full object-cover'/>
+               </div>
                 <h2 className="text-xl font-medium text-gray-600 mt-2 dark:text-[#CFD3EC]">Property Tax Invoice</h2>
             </div>
 
             {/* Invoice Meta */}
             <div className="text-sm mb-6 space-y-1">
                 <p className="font-semibold text-lg">Property Tax Invoice</p>
-                <p className='leading-7 text-sm'><span className='text-base'>Afgooye Municipality</span><br />
+                <p className='leading-7 text-sm'><span className='text-base'>{branch.name} Municipality</span><br />
                     Finance Revenue Dept.<br />
                     District Governor Office:<br />
                     +252-617447777 / +252-616311777<br />
@@ -150,7 +154,7 @@ const PropertyTaxInvoice: React.FC<Props> = ({ data }) => {
             <div className="mt-6">
                 <h3 className="font-medium  mb-2 text-base">Contact Information</h3>
                 <p className="text-sm">
-                    For inquiries, please contact the Afgooye Municipality Tax Office at <br />
+                    For inquiries, please contact the {branch.name} Municipality Tax Office at <br />
                     {data.contactPhone} or email at <a href={`mailto:${data.contactEmail}`} className="text-blue-600 underline">{data.contactEmail}</a>
                 </p>
             </div>

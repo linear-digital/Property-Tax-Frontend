@@ -28,7 +28,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   
   const matchedBranch = branches.find(
     (b) => b.name.toLowerCase().includes(subdomain.toLowerCase())
-  ) || branches[0];
+  ) || branches[1];
   
   setBranch(matchedBranch);
 }, []);

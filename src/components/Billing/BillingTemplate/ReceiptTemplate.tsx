@@ -177,7 +177,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={'/image.png'}
+                        src={data?.branch?.logo}
                         style={{
                             width: 50,
                             height: 50,
@@ -206,7 +206,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                         fontSize: 9,
                         fontWeight: "semibold"
                     }}>
-                        DEGMADA AFGOYE
+                        {data?.branch?.title}
                     </Text>
                     <Text style={styles.referenceText}>
                         WAAXDA XISAABAADKA DAKHLIGA
@@ -229,7 +229,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}>
 
                     {/* <View style={styles.barcodeBox} /> */}
-                   <Text style={{
+                    <Text style={{
                         fontSize: 9,
                         fontWeight: "semibold"
                     }}>
@@ -378,7 +378,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                         ${data.taxCalculation.propertyTax}
                     </Text>
                     <Text style={styles.detailValue}>
-                       ${data.taxCalculation.propertyTax}
+                        ${data.taxCalculation.propertyTax}
                     </Text>
                 </View>
                 <View style={styles.detailRow}>
@@ -434,10 +434,10 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 paddingBottom: 5
             }}>
                 <Text style={{ ...styles.paymentTermsText, fontWeight: 'bold' }}>
-                    Tixraac No. 
+                    Tixraac No.
                 </Text>
                 <Text style={styles.paymentTermsText}>
-                   Transaction Reference: {data.payment?.reference}
+                    Transaction Reference: {data.payment?.reference}
                 </Text>
 
             </View>
@@ -481,7 +481,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                         Barcode
                     </Text>
                     <Text style={styles.paymentTermsText}>
-                        AFGY/EFYTIDDR
+                        {data.branch?.code}/{data?.invoiceNumber}
                     </Text>
                 </View>
             </View>
@@ -494,7 +494,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 FADLAN LA KEEHI:
             </Text>
             <Text style={styles.paymentTermsText}>
-                DEGMADA AFGOYE XAFIISKA HUBINTA CANSHURAHA & XILINTA CABASHADA DADWEYNAHA GOBOLKA SH. HOOSE
+                {data.branch?.title} XAFIISKA HUBINTA CANSHURAHA & XILINTA CABASHADA DADWEYNAHA GOBOLKA SH. HOOSE
             </Text>
             <Text style={styles.paymentTermsText}>
                 MUD. MOHAMED NUR OSMAN (GABOW) +252-615343064 | +252-6644490

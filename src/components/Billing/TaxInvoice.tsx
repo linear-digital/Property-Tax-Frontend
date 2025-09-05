@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Button, Dropdown, Pagination, Table } from "antd";
 import Filter from "./Filter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faFileExcel, faFilePdf, faFlag } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faFileExcel, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
 import { fetcher } from "../../util/axios.instance";
 import { useEffect, useState } from 'react';
@@ -159,9 +159,7 @@ const TaxInvoice = () => {
                 </button>,
               }, {
                 key: '12',
-                label: <button className='flex items-center text-dark dark:text-white'>
-                  <FontAwesomeIcon icon={faFilePdf} /> <InvoicePDFDowload invoice={record} />
-                </button>,
+                label:  <InvoicePDFDowload invoice={record} />,
               }, {
                 key: '123',
                 label: <button

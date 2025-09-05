@@ -12,22 +12,11 @@ import { errorMessage } from '../../util/errorMessage';
 import { useUser } from '../../contexts/UserContext';
 import Waafipay from './Waafipay';
 
-const AddPayment = ({ refetch }: { refetch: any }) => {
+const AddPayment = ({ refetch, setOpen, data, setQuery }: { refetch: any, setOpen: any, data: any, setQuery: any }) => {
     const [property, setProperty] = React.useState<string>("");
-     const [openWaafipay, setOpenWaafipay] = useState(false);
+    const [openWaafipay, setOpenWaafipay] = useState(false);
     const { user } = useUser();
-    const { data, isLoading } = useQuery({
-        queryKey: ['properties'],
-        queryFn: async () => {
-            const data = await fetcher({
-                path: "/property/all",
-                method: "POST",
-                body: { all: true, notpaid: true }
-            });
-            return data;
-        },
-        refetchOnMount: false
-    });
+
     const [invoice, setInvoice] = React.useState<InvoiceType>({
         _id: '',
         invoice_id: '',
@@ -105,26 +94,30 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                 body: newData
             });
             toast.success("Payment created successfully");
+            setOpen(false);
             refetch();
         } catch (error) {
             toast.error(errorMessage(error))
         }
     }
-   
+
     return (
         <div className='flex flex-col gap-4'>
-            <Waafipay open={openWaafipay} setOpen={setOpenWaafipay} refetch={refetch} payment={newPaymant}/>
+            <Waafipay open={openWaafipay} setOpen={setOpenWaafipay} refetch={refetch} payment={newPaymant} />
             <InputSelect
-                label='Select Property'
+                label={`Select Property ${!data ? "(Loading...)" : ""}`}
                 value={property}
+                onSearch={(value) => {
+                    setQuery(value);
+                }}
                 onChange={setProperty}
-                options={data?.data?.map((property: Property) => {
+                options={data?.map((property: Property) => {
                     return {
                         value: property._id,
-                        label: `${property.code}-${property.owner_name}-${property.owner_phone}`
+                        label: `${property.code}-${property.owner_name || "No Name"}-${property.owner_phone || "No Phone"}`,
                     }
                 })}
-                loading={isLoading}
+                loading={!data}
             />
             <InputSelect
                 label='Select Invoice'
@@ -137,7 +130,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                 onChange={(e) => {
                     setInvoice(invoices?.find((invoice: InvoiceType) => invoice.invoice_id === e))
                 }}
-                loading={isLoading}
+                disabled={!invoices}
             />
             <Input
                 label='Invoice Amount'
@@ -216,13 +209,13 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
                         setNewPayment({ ...newPaymant, reference: e.target.value })
                     }}
                 />
-                <Button 
+                {/* <Button 
                     className='self-end mt-6'
                     onClick={() => setOpenWaafipay(true)}
                     disabled={newPaymant.paid_amount <= 0}
                 >
                     Waafipay
-                </Button>
+                </Button> */}
             </div>
             <DateInput
                 label="Payment Date"
@@ -234,7 +227,7 @@ const AddPayment = ({ refetch }: { refetch: any }) => {
             <Button
                 className='self-start'
                 onClick={submitPayment}
-                loading={isLoading}
+                disabled={!data || !invoices}
             >
                 Submit Payment
             </Button>

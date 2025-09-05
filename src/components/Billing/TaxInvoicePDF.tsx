@@ -175,7 +175,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={'/image.png'}
+                        src={data?.branch?.logo}
                         style={{
                             width: 50,
                             height: 50,
@@ -204,7 +204,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     right: 0
                 }}>
                     <Text style={styles.barcodeText}>Barcode</Text>
-                    <Text style={styles.barcodeText}>AFGYEFYTIDDR013862</Text>
+                    <Text style={styles.barcodeText}>{data?.branch?.code}{data?.invoiceNumber}</Text>
                 </View>
             </View>
             <View style={{
@@ -221,7 +221,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                         ...styles.referenceText,
                         fontWeight: "semibold"
                     }}>
-                        DEGMADA AFGOYE
+                        {data.branch?.title}
                     </Text>
                     <Text style={styles.referenceText}>
                         WAAXDA XISAABAADKA DAKHLIGA
@@ -390,10 +390,10 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                         MAGACA MILKIILAHA (OWNER NAME)
                     </Text>
                     <Text style={styles.detailValue}>
-                        $70.00
+                        ${data.taxCalculation.propertyTax.toFixed(2)}
                     </Text>
                     <Text style={styles.detailValue}>
-                        $70.00
+                        ${data.taxCalculation.propertyTax.toFixed(2)}
                     </Text>
                 </View>
                 <View style={styles.detailRow}>
@@ -404,7 +404,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                         Flat Fee $
                     </Text>
                     <Text style={styles.detailValue}>
-                        $1.00
+                        ${data.taxCalculation.administrativeFee.toFixed(2)}
                     </Text>
                 </View>
                 <View style={styles.detailRow}>
@@ -415,7 +415,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
 
                     </Text>
                     <Text style={styles.detailValue}>
-                        $71.00
+                        ${data.taxCalculation.totalAmount.toFixed(2)}
                     </Text>
                 </View>
 
@@ -435,7 +435,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     <Text style={{ fontWeight: 'bold' }}>
                         WAXAA KU BIXIN KARTAA PAYABLE TO:
                     </Text>
-                    <Text><Text style={{ fontWeight: 'semibold' }}>BANK ACCOUNT NAME</Text>: CANSHUURTA GOBOLKA SHABEELEHA HOOSE DEGMADA AFGOYE</Text>
+                    <Text><Text style={{ fontWeight: 'semibold' }}>BANK ACCOUNT NAME</Text>: CANSHUURTA GOBOLKA SHABEELEHA HOOSE {data.branch.title}</Text>
                     <Text>BANK ACCOUNT NUMBER: 37517771</Text>
                     <Text>BANK NAME: SOMALI COMMERCIAL BANK</Text>
                 </View>
@@ -463,7 +463,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     2. CIDI AAN KU BIXIN WAQTIGA LAGU QABTAY WAXAA KU JIRO GUNAYS BOQOKI 5% QIIMA KORAR
                 </Text>
                 <Text style={styles.paymentTermsText}>
-                    A 5% SURCHARGE WILL BE APPLIED TO OVERDUE PAYMENTS STARTING FROM 02/05/2025
+                    A 5% SURCHARGE WILL BE APPLIED TO OVERDUE PAYMENTS STARTING FROM 02/05/{new Date().getFullYear() + 1}
                 </Text>
             </View>
 
@@ -506,7 +506,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                         Barcode
                     </Text>
                     <Text style={styles.paymentTermsText}>
-                        AFGYEFYTIDDR013862
+                        {data.branch?.code}{data?.invoiceNumber}
                     </Text>
                 </View>
             </View>
@@ -519,7 +519,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 FADLAN LA KEEHI:
             </Text>
             <Text style={styles.paymentTermsText}>
-                DEGMADA AFGOYE XAFIISKA HUBINTA CANSHURAHA & XILINTA CABASHADA DADWEYNAHA GOBOLKA SH. HOOSE
+               {data.branch?.title} XAFIISKA HUBINTA CANSHURAHA & XILINTA CABASHADA DADWEYNAHA GOBOLKA SH. HOOSE
             </Text>
             <Text style={styles.paymentTermsText}>
                 MUD. MOHAMED NUR OSMAN (GABOW) +252-615343064 | +252-6644490

@@ -3,7 +3,7 @@ import { Button, Dropdown, Modal, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import PaymentFilter from './PaymentFilter';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faCheck, faFile, faFileExcel, faPlus, faRotateBack } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faCertificate, faCheck, faFile, faFileExcel, faPlus, faRotateBack } from '@fortawesome/free-solid-svg-icons';
 import AddPayment from './AddPayment';
 import { fetcher } from '../../util/axios.instance';
 import moment from 'moment';
@@ -18,17 +18,19 @@ import { useUser } from '../../contexts/UserContext';
 
 const InvoicePayments = ({ page }: { page: string }) => {
     const [open, setOpen] = React.useState(false)
-    const { data: properties } = useQuery({
-        queryKey: ['properties'],
+    const [query, setQuery] = useState("");
+    const { data: properties, refetch: refetchProperties } = useQuery({
+        queryKey: ['properties', query],
         queryFn: async () => {
             const data = await fetcher({
                 path: "/property/all",
                 method: "POST",
-                body: { all: true }
+                body: { notpaid: true, search: query, limit: 50 }
             });
-            return data;
+            return data.data;
         },
-        refetchOnMount: false
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
     });
     const [filters, setFilters] = useState<any>({
         invoice_number: "",
@@ -40,9 +42,10 @@ const InvoicePayments = ({ page }: { page: string }) => {
     const [data, setData] = useState<any>([])
     const [isLoading, setIsLoading] = useState(false)
     const [fetch, setFetch] = useState(73)
-    const refetch = () => (
-        setFetch(fetch + 1)
-    )
+    const refetch = () => {
+        setFetch(fetch + 1);
+        refetchProperties();
+    }
 
     const fetchData = async () => {
         try {
@@ -141,6 +144,8 @@ const InvoicePayments = ({ page }: { page: string }) => {
             setLoading(false)
         }
     }
+    const [openCertificate, setOpenCertificate] = useState(false);
+    const [certificateData, setCertificateData] = useState<any>(null);
     const columns = [
         {
             title: 'Invoice Number',
@@ -247,16 +252,18 @@ const InvoicePayments = ({ page }: { page: string }) => {
                         },
                         {
                             key: '2',
-                            label: <button title='Download Payment Receipt'>
-                                <PaymentReceiptDowload payment={record} />
-                            </button>,
+                            label: <PaymentReceiptDowload payment={record} />,
 
                         },
 
                         {
                             key: '33',
+                            onClick: () => {
+                                setCertificateData(record);
+                                setOpenCertificate(true);
+                            },
                             label: <button title='Download Tax Certificate'>
-                                <TaxCertificate payment={record || {}} />
+                                <FontAwesomeIcon icon={faCertificate} /> Download Tax Certificate
                             </button>,
                             style: {
                                 display: record?.authorized ? 'block' : 'none'
@@ -324,7 +331,17 @@ const InvoicePayments = ({ page }: { page: string }) => {
     }
     return (
         <div className='py-5'>
-
+            <Modal
+                open={openCertificate}
+                onCancel={() => setOpenCertificate(false)}
+                footer={null}
+                width={800}
+                title="Tax Certificate"
+                centered
+                destroyOnHidden
+            >
+                <TaxCertificate payment={certificateData || {}} />
+            </Modal>
             <h3 className='text-xl dark:text-white text-dark font-semibold mb-4'>
                 {
                     page === 'unauthorized' ? 'Unauthorized Payments' : page === "authorised" ? 'Authorised Payments' : "Invoice Payments"
@@ -350,7 +367,7 @@ const InvoicePayments = ({ page }: { page: string }) => {
                 width={1000}
                 destroyOnHidden
             >
-                <AddPayment setOpen={setOpen} properties={properties} refetch={refetch} />
+                <AddPayment setQuery={setQuery} setOpen={setOpen} data={properties} refetch={refetch} />
             </Modal>
 
             <Table

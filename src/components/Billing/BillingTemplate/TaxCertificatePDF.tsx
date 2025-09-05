@@ -200,7 +200,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={data.logoUrl}
+                        src={data.branch.logo}
                         style={{
                             width: 50,
                             height: 50,
@@ -230,7 +230,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                         fontSize: 9,
                         fontWeight: "semibold"
                     }}>
-                        DEGMADA AFGOYE
+                        {data.branch?.title}
                     </Text>
                     <Text style={styles.referenceText}>
                         WAAXDA XISAABAADKA DAKHLIGA
@@ -453,7 +453,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     }}
                 >
                     <Image
-                        src={generateBarcodeBase64(`AFOYE/YTCC/${new Date().getFullYear()}/${data.propertyDetails.propertyCode}`)}
+                        src={generateBarcodeBase64(`${data?.branch?.code}/${new Date().getFullYear()}/${data.propertyDetails.propertyCode}`)}
                         style={{
                             width: 150,
                         }}
@@ -473,7 +473,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 <Text style={{
                     fontWeight: "semibold"
                 }}>
-                    Degmada Afgoye
+                   {data.branch?.title}
                 </Text> Xafiska Hubinta Canshuraha & Xalinta Cabashada Dadweynaha Gobolka Sh. Hoose
                 Mud. Mohamed Nuur Osman (Gabow) +252-615343064 | +252-664490. Email: cabasho@dhismotax.so
             </Text>
