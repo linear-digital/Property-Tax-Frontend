@@ -246,10 +246,10 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data, invoice }) => (
                             ...styles.referenceText,
                             fontWeight: "semibold"
                         }}>
-                            Certificate Ref:
+                            Invoice Ref:
                         </Text>
                         <Text style={styles.referenceText}>
-                            {data?.branch?.name?.toUpperCase()}/YTCC/{new Date().getFullYear()}/{data.propertyDetails.propertyCode}
+                            {data?.branch?.name?.toUpperCase()}/PTI/{new Date().getFullYear()}/{data.propertyDetails.propertyCode}
                         </Text>
                     </View>
 
@@ -469,7 +469,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data, invoice }) => (
                         }}
                     >
                         <Image
-                            src={generateBarcodeBase64(`${data?.branch?.name?.toUpperCase()}/YTCC/${new Date().getFullYear()}/${data?.invoiceNumber}`)}
+                            src={generateBarcodeBase64(`${data?.branch?.name?.toUpperCase()}/PTI/${new Date().getFullYear()}/${data?.invoiceNumber}`)}
                             style={{
                                 width: 150,
                             }}

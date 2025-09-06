@@ -10,6 +10,7 @@ import {
     Image,
 } from '@react-pdf/renderer';
 import moment from 'moment';
+import generateBarcodeBase64 from './BarcodeGenerate';
 
 
 // Register fonts for better text rendering
@@ -28,9 +29,9 @@ const styles = StyleSheet.create({
         lineHeight: 1.2,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginTop: 15,
         borderBottom: '1px solid #000',
     },
@@ -177,7 +178,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={data?.branch?.logo}
+                        src={data.branch.logo}
                         style={{
                             width: 50,
                             height: 50,
@@ -185,9 +186,8 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 </View>
 
                 <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>CADDEYNTA WARQADA LACAGBIXINTA CANSHUURTA</Text>
-
-                    <Text style={styles.headerSubtitle}>Payment Receipt Voucher</Text>
+                    <Text style={styles.headerTitle}> Payment Receipt Voucher
+                    </Text>
                 </View>
             </View>
 
@@ -197,7 +197,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 alignItems: "flex-end",
                 borderBottom: "1px solid #000",
                 paddingBottom: 5,
-                marginTop: 10
+                marginTop: 20
             }}>
                 <View style={styles.barcodeSection}>
 
@@ -206,21 +206,27 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                         fontSize: 9,
                         fontWeight: "semibold"
                     }}>
-                        {data?.branch?.title}
+                        {data.branch?.title}
                     </Text>
-                    <Text style={styles.referenceText}>
-                        WAAXDA XISAABAADKA DAKHLIGA
-                    </Text>
-                    <Text style={{
-                        ...styles.referenceText,
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        XAFIISKA GUDOMIYAHA DEGMADA
-                    </Text>
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Governor Office:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            +252-617955055 | +252-617955055
+                        </Text>
+                    </View>
+
                     <Text style={styles.referenceText}>
-                        +252-617171733 | +252-6644490
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Email: G.Suldan@dhisomtax.so
+                        Email: {data.branch?.name?.toLowerCase()}.taxoffice@swspropertytaxpro.com
                     </Text>
                 </View>
                 <View style={{
@@ -229,23 +235,25 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}>
 
                     {/* <View style={styles.barcodeBox} /> */}
-                    <Text style={{
-                        fontSize: 9,
-                        fontWeight: "semibold"
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        TIXRAAC NO. WARSADA LACAGBINTA
-                    </Text>
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Invoice Ref:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            {data?.branch?.name?.toUpperCase()}/PRV/{new Date().getFullYear()}/{data.propertyDetails.propertyCode}
+                        </Text>
+                    </View>
+
                     <Text style={styles.referenceText}>
-                        Receipt Reference No. MINISTRY OF FINANCE
-                    </Text>
-                    <Text style={{
-                        fontSize: 9,
-                        fontWeight: "semibold"
-                    }}>
-                        TAARIKHDA LA BIXIYEY
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Date of Issue: {data.issueDate}
+                        Payment Date: {moment(data?.payment?.payment_date).format('DD/MM/YYYY')}
                     </Text>
                 </View>
             </View>
@@ -408,42 +416,6 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
             </View>
 
 
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: "flex-start",
-                alignItems: 'center',
-                gap: 4,
-                marginTop: 10
-            }}>
-                <Text style={{ ...styles.paymentTermsText, fontWeight: 'bold' }}>
-                    Qaabka Lacag Bixinta.
-                </Text>
-                <Text style={styles.paymentTermsText}>
-                    Payment Method: {data.payment?.payment_method}
-                </Text>
-
-            </View>
-
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: "flex-start",
-                alignItems: 'center',
-                gap: 4,
-                marginTop: 5,
-                borderBottom: '1px solid #000',
-                paddingBottom: 5
-            }}>
-                <Text style={{ ...styles.paymentTermsText, fontWeight: 'bold' }}>
-                    Tixraac No.
-                </Text>
-                <Text style={styles.paymentTermsText}>
-                    Transaction Reference: {data.payment?.reference}
-                </Text>
-
-            </View>
-
-
-
             <View
                 style={{
                     flexDirection: 'row',
@@ -453,20 +425,15 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}
             >
                 <View>
-                    <Text style={{
-                        ...styles.paymentTermsText,
-                        fontWeight: 'semibold'
-                    }}>
-                        SA SOO SAXDAY:
+                    <Text style={styles.paymentTermsText}>
+                        TAARIKH: {moment().format('MM/DD/YYYY')}
                     </Text>
                     <Text style={styles.paymentTermsText}>
-                        XAFIISKA SHIBILAHA KEER DEGMADADA
+                        Payment Method: {data.payment?.payment_method}
                     </Text>
+
                     <Text style={styles.paymentTermsText}>
-                        LOWER SHABELLE REVENUE OFFICE
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        TEL: 061715540
+                        Transaction Id: {data.payment?.reference}
                     </Text>
                 </View>
 
@@ -474,15 +441,20 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                     flexDirection: 'column',
                     alignItems: 'flex-end'
                 }}>
-                    <Text style={styles.paymentTermsText}>
-                        TAARIKH: {moment().format('MM/DD/YYYY')}
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        Barcode
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        {data.branch?.code}/{data?.invoiceNumber}
-                    </Text>
+
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Image
+                            src={generateBarcodeBase64(`${data?.branch?.name?.toUpperCase()}/PRV/${new Date().getFullYear()}/${data?.propertyDetails.propertyCode}`)}
+                            style={{
+                                width: 150,
+                            }}
+                        />
+                    </View>
                 </View>
             </View>
 

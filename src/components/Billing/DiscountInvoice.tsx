@@ -15,7 +15,7 @@ const DiscountInvoice = () => {
         queryKey: ['payment', id],
         queryFn: async () => {
             const data = await fetcher({
-                path: `/payment/${id}`
+                path: `/payment/single/${id}`
             });
             return data;
         },
