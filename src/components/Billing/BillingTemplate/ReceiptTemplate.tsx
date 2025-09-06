@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
         alignItems: "flex-end"
     },
     headerTitle: {
-        fontSize: 11,
+        fontSize: 13,
         fontWeight: 'bold',
-        marginBottom: 3,
+        marginBottom: 15,
     },
     headerSubtitle: {
         fontSize: 9,
