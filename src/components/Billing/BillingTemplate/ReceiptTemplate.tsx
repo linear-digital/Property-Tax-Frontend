@@ -180,8 +180,8 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                     <Image
                         src={data.branch.logo}
                         style={{
-                            width: 50,
-                            height: 50,
+                            width: 60,
+                            height: 60,
                         }} />
                 </View>
 
@@ -202,12 +202,7 @@ const ReceiptPDFTemplate: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.barcodeSection}>
 
                     {/* <View style={styles.barcodeBox} /> */}
-                    <Text style={{
-                        fontSize: 9,
-                        fontWeight: "semibold"
-                    }}>
-                        {data.branch?.title}
-                    </Text>
+                   
                     <View style={{
                         flexDirection: "row",
                         alignItems: "center",
