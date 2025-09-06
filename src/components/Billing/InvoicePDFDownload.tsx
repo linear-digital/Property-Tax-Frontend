@@ -11,7 +11,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 const InvoicePDFDowload = ({ invoice }: { invoice: InvoiceType }) => {
     const {branch} = useTheme();
     const property: Property = invoice?.property_id as any
-
+    
     const formData: InvoiceData = {
         branch: branch,
         invoiceNumber: invoice?.invoice_id,
@@ -43,7 +43,7 @@ const InvoicePDFDowload = ({ invoice }: { invoice: InvoiceType }) => {
     return (
         <div>
             <PDFDownloadLink
-                document={<TaxInvoiceTemplate data={formData} />}
+                document={<TaxInvoiceTemplate invoice={invoice} data={formData} />}
                 fileName={filename}
             >
                 

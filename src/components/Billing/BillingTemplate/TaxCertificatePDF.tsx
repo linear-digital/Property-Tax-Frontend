@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
         lineHeight: 1.2,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginTop: 15,
         borderBottom: '1px solid #000',
     },
@@ -48,9 +48,9 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     headerTitle: {
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 3,
+        marginBottom: 10,
     },
     headerSubtitle: {
         fontSize: 9,
@@ -179,12 +179,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft: 3,
         paddingRight: 3,
-        fontSize: 8,
+        fontSize: 9,
     },
     tableRowValue2: {
         paddingLeft: 3,
         paddingRight: 3,
-        fontSize: 8,
+        fontSize: 9,
     }
 });
 
@@ -208,10 +208,7 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 </View>
 
                 <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>Shahaadada Canshur Bixinta Sanadlaha</Text>
-                    <Text style={styles.headerSubtitle}>
-                        (Yearly Tax Clearance Certificate)
-                    </Text>
+                    <Text style={styles.headerTitle}>Yearly Tax Clearance Certificate</Text>
                 </View>
             </View>
 
@@ -232,19 +229,25 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     }}>
                         {data.branch?.title}
                     </Text>
-                    <Text style={styles.referenceText}>
-                        WAAXDA XISAABAADKA DAKHLIGA
-                    </Text>
-                    <Text style={{
-                        ...styles.referenceText,
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        XAFIISKA GUDOMIYAHA DEGMADA
-                    </Text>
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Governor Office:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            +252-617955055 | +252-617955055
+                        </Text>
+                    </View>
+
                     <Text style={styles.referenceText}>
-                        +252-617171733 | +252-6644490
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Email: G.Suldan@dhisomtax.so
+                        Email: {data.branch?.name?.toLowerCase()}.taxoffice@swspropertytaxpro.com
                     </Text>
                 </View>
                 <View style={{
@@ -253,56 +256,53 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}>
 
                     {/* <View style={styles.barcodeBox} /> */}
-                    <Text style={{
-                        fontSize: 9,
-                        fontWeight: "semibold"
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        TIXRAAC NO. WARSADA LACAGBINTA
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Receipt Reference No. {data.receiptNumber}
-                    </Text>
-                    <Text style={{
-                        fontSize: 9,
-                        fontWeight: "semibold"
-                    }}>
-                        TAARIKHDA LA BIXIYEY
-                    </Text>
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Certificate Ref:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            {data?.branch?.name?.toUpperCase()}/YTCC/{new Date().getFullYear()}/{data.propertyDetails.propertyCode}
+                        </Text>
+                    </View>
+
                     <Text style={styles.referenceText}>
                         Date of Issue: {data.issueDate}
                     </Text>
                 </View>
             </View>
-            {/* Property Details Section */}
-            <View style={styles.sectionTitle}>
-                <Text>Shahado Caddeyn Canshur Bixiye</Text>
-                <Text style={{
-                    fontSize: 9,
-                    fontWeight: "normal",
-                    marginTop: 4
-                }}>(Certificate of Tax Clearance)</Text>
+            <View style={{
+                ...styles.sectionTitle,
+                marginTop: 8
+            }}>
+                <Text>Property Details</Text>
             </View>
-            <Text style={{
-                fontSize: 10,
-                fontWeight: "normal",
-                marginTop: 5,
-                marginBottom: 10
-            }}>Tani waa caddeynta in Mudne/Marwo <Text style={{
-                fontWeight: "bold"
-            }}>Xamdi Axmed Nuur</Text> Guri/Degan Number (House No.) {data.propertyDetails.propertyCode}
-                si buxda u bixiyey Canshuurta Guri/Darta xisab sanadeedkan {new Date().getFullYear()} Guri/Darta ciwankeedu yahay:</Text>
-
             <View style={{
                 borderBottom: "1px solid #000",
-                paddingBottom: 5
+                paddingBottom: 5,
+                marginTop: 5
             }}>
-
+                <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>
+                        Magaca Milkiilaha (Owner's Name)
+                    </Text>
+                    <Text style={styles.detailValue}>
+                        {data.propertyDetails.ownerName}
+                    </Text>
+                </View>
                 <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>
                         Ciwaanka Guri/Darta (Property Address)
                     </Text>
                     <Text style={styles.detailValue}>
-                        {data.propertyDetails.ownerName}
+                        {data.propertyDetails.location}
                     </Text>
                 </View>
 
@@ -385,48 +385,14 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
             </Table>
 
             <Text style={{
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: "normal",
-                marginTop: 5,
+                marginTop: 15,
                 marginBottom: 10
             }}>
-                Tani waa caddeyn xaqiijinaysa in wax lacagaha ah la xiriiri Canshuurta Guri/Darta oo lagu leeyahay ama ku
-                taagan Guri/Darta manta oo ay taariikhdu tahay _31____/__12___/{new Date().getFullYear()}.
+                This is to certify that Abdirizak Yusuf (ID: 567891234), property code {data.propertyDetails.propertyCode}, located at Waaxda Jabad Gele, {data?.branch?.name} District, and registered as Tin Building (Cariish/ Hut), has fully paid the annual property tax for year ending 2025. Details as follows;
             </Text>
 
-
-
-
-            <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: 15,
-                    alignItems: 'center'
-                }}
-            >
-                <View>
-                    <Text style={{
-                        ...styles.paymentTermsText,
-                        fontWeight: 'semibold'
-                    }}>
-                        Ka Soo Baxday :
-                    </Text>
-                    <Text style={{
-                        ...styles.paymentTermsText,
-                        fontWeight: 'semibold'
-                    }}>
-                        Xafiiska Dhaqliyada Heer Degmo/Gobol
-                    </Text>
-                    <Text style={{
-                        ...styles.paymentTermsText,
-                        fontWeight: 'semibold'
-                    }}>
-                        Magaca: Ibrahim Hassan Ali
-                    </Text>
-
-                </View>
-            </View>
 
             <View style={{
                 flexDirection: 'row',
@@ -434,12 +400,6 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 justifyContent: "space-between",
                 marginTop: 10
             }}>
-                <Text style={{
-                    ...styles.paymentTermsText,
-                    fontWeight: 'semibold'
-                }}>
-                    TEL: 061715540
-                </Text>
                 <Text style={{
                     ...styles.paymentTermsText,
                     fontWeight: 'semibold'
@@ -453,30 +413,13 @@ const TaxCertificatePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     }}
                 >
                     <Image
-                        src={generateBarcodeBase64(`${data?.branch?.code}/${new Date().getFullYear()}/${data.propertyDetails.propertyCode}`)}
+                        src={generateBarcodeBase64(`${data?.branch?.name?.toUpperCase()}/YTCC/${new Date().getFullYear()}/${data.propertyDetails.propertyCode}`)}
                         style={{
                             width: 150,
                         }}
                     />
                 </View>
             </View>
-            <Text style={{
-                ...styles.paymentTermsText,
-                fontWeight: 'semibold',
-                marginTop: 10
-            }}>
-                Fadalan La Xiriir;
-            </Text>
-            <Text style={{
-                fontSize: 10
-            }}>
-                <Text style={{
-                    fontWeight: "semibold"
-                }}>
-                   {data.branch?.title}
-                </Text> Xafiska Hubinta Canshuraha & Xalinta Cabashada Dadweynaha Gobolka Sh. Hoose
-                Mud. Mohamed Nuur Osman (Gabow) +252-615343064 | +252-664490. Email: cabasho@dhismotax.so
-            </Text>
         </Page>
     </Document>
 );

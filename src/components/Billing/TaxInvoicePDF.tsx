@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import {
     Document,
@@ -9,6 +10,8 @@ import {
     Image,
 } from '@react-pdf/renderer';
 import type { InvoiceData } from '../../types/invoice';
+import moment from 'moment';
+import generateBarcodeBase64 from './BillingTemplate/BarcodeGenerate';
 
 // Register fonts for better text rendering
 Font.register({
@@ -26,9 +29,9 @@ const styles = StyleSheet.create({
         lineHeight: 1.2,
     },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginTop: 10,
         // borderBottom: '1px solid #E6E6E6',
     },
@@ -165,9 +168,10 @@ const styles = StyleSheet.create({
 
 interface InvoicePDFProps {
     data: InvoiceData;
+    invoice: any
 }
 
-const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
+const InvoicePDF: React.FC<InvoicePDFProps> = ({ data, invoice }) => (
     <Document>
         <Page size="A4" style={styles.page}>
             {/* Header Section */}
@@ -175,7 +179,7 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 <View style={styles.logo}>
 
                     <Image
-                        src={data?.branch?.logo}
+                        src={data.branch.logo}
                         style={{
                             width: 50,
                             height: 50,
@@ -183,59 +187,47 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 </View>
 
                 <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>Canshuurta</Text>
-                    <Text style={styles.headerTitle}>Guryaha/Daraha</Text>
-                    <Text style={styles.headerSubtitle}>Property Tax</Text>
+                    <Text style={styles.headerTitle}>District {data?.branch?.name} – Property Tax Invoice
+                    </Text>
                 </View>
+            </View>
 
-            </View>
-            <View style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative'
-            }}>
-                <Text style={styles.invoiceTitle}>KhaanSheegad</Text>
-                <Text style={styles.headerSubtitle}>Invoice</Text>
-                <View style={{
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    position: "absolute",
-                    right: 0
-                }}>
-                    <Text style={styles.barcodeText}>Barcode</Text>
-                    <Text style={styles.barcodeText}>{data?.branch?.code}{data?.invoiceNumber}</Text>
-                </View>
-            </View>
             <View style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
                 borderBottom: "1px solid #000",
-                paddingBottom: 5
+                paddingBottom: 5,
+                marginTop: 20
             }}>
                 <View style={styles.barcodeSection}>
 
                     {/* <View style={styles.barcodeBox} /> */}
                     <Text style={{
-                        ...styles.referenceText,
+                        fontSize: 9,
                         fontWeight: "semibold"
                     }}>
                         {data.branch?.title}
                     </Text>
-                    <Text style={styles.referenceText}>
-                        WAAXDA XISAABAADKA DAKHLIGA
-                    </Text>
-                    <Text style={{
-                        ...styles.referenceText,
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        XAFIISKA GUDOMIYAHA DEGMADA
-                    </Text>
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Governor Office:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            +252-617955055 | +252-617955055
+                        </Text>
+                    </View>
+
                     <Text style={styles.referenceText}>
-                        +252-617171733 | +252-6644490
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Email: G.Suldan@dhisomtax.so
+                        Email: {data.branch?.name?.toLowerCase()}.taxoffice@swspropertytaxpro.com
                     </Text>
                 </View>
                 <View style={{
@@ -244,23 +236,28 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}>
 
                     {/* <View style={styles.barcodeBox} /> */}
-                    <Text style={{
-                        ...styles.referenceText,
-                        fontWeight: "semibold"
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 1,
+                        marginBottom: 3
                     }}>
-                        TIXRAAC NO. WARSADA LACAGBINTA
+                        <Text style={{
+                            ...styles.referenceText,
+                            fontWeight: "semibold"
+                        }}>
+                            Certificate Ref:
+                        </Text>
+                        <Text style={styles.referenceText}>
+                            {data?.branch?.name?.toUpperCase()}/YTCC/{new Date().getFullYear()}/{data.propertyDetails.propertyCode}
+                        </Text>
+                    </View>
+
+                    <Text style={styles.referenceText}>
+                        Date of Issue: 01/01/{new Date().getFullYear()}
                     </Text>
                     <Text style={styles.referenceText}>
-                        Receipt Reference No. MINISTRY OF FINANCE
-                    </Text>
-                    <Text style={{
-                        ...styles.referenceText,
-                        fontWeight: "semibold"
-                    }}>
-                        TAARIKHDA LA BIXIYEY
-                    </Text>
-                    <Text style={styles.referenceText}>
-                        Date of Issue: {data.issueDate}
+                        Payment Dedline: {moment(invoice.due_date).format('DD/MM/YYYY')}
                     </Text>
                 </View>
             </View>
@@ -422,25 +419,6 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
 
             </View>
             <View style={styles.sectionTitle}>
-                <Text>QAABKA LACAG BIXINTA</Text>
-                <Text style={{
-                    fontSize: 7,
-                    fontWeight: "normal",
-                    marginTop: 2
-                }}>PAYMENT METHOD</Text>
-            </View>
-            {/* Payment Method Section */}
-            <View style={styles.paymentSection}>
-                <View style={styles.bankDetails}>
-                    <Text style={{ fontWeight: 'bold' }}>
-                        WAXAA KU BIXIN KARTAA PAYABLE TO:
-                    </Text>
-                    <Text><Text style={{ fontWeight: 'semibold' }}>BANK ACCOUNT NAME</Text>: CANSHUURTA GOBOLKA SHABEELEHA HOOSE {data.branch.title}</Text>
-                    <Text>BANK ACCOUNT NUMBER: 37517771</Text>
-                    <Text>BANK NAME: SOMALI COMMERCIAL BANK</Text>
-                </View>
-            </View>
-            <View style={styles.sectionTitle}>
                 <Text>SHURUUDAHA BIXINTA</Text>
                 <Text style={{
                     fontSize: 7,
@@ -451,10 +429,10 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
             {/* Payment Terms */}
             <View style={styles.paymentTerms}>
                 <Text style={styles.paymentTermsText}>
-                    1. WAA IN AAD KU BIXI SAA UGU DANBEYN 01/05/2025
+                    1. WAA IN AAD KU BIXI SAA UGU DANBEYN 01/05/{new Date().getFullYear() + 1}
                 </Text>
                 <Text style={styles.paymentTermsText}>
-                    PAYMENT MUST BE MADE NO LATER THAN 01/05/2025
+                    PAYMENT MUST BE MADE NO LATER THAN 01/05/{new Date().getFullYear() + 1}
                 </Text>
                 <Text style={{
                     ...styles.paymentTermsText,
@@ -466,9 +444,6 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     A 5% SURCHARGE WILL BE APPLIED TO OVERDUE PAYMENTS STARTING FROM 02/05/{new Date().getFullYear() + 1}
                 </Text>
             </View>
-
-
-
             <View
                 style={{
                     flexDirection: 'row',
@@ -478,20 +453,8 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                 }}
             >
                 <View>
-                    <Text style={{
-                        ...styles.paymentTermsText,
-                        fontWeight: 'semibold'
-                    }}>
-                        SA SOO SAXDAY:
-                    </Text>
                     <Text style={styles.paymentTermsText}>
-                        XAFIISKA SHIBILAHA KEER DEGMADADA
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        LOWER SHABELLE REVENUE OFFICE
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        TEL: 061715540
+                        Merchant No. 736734
                     </Text>
                 </View>
 
@@ -499,34 +462,22 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ data }) => (
                     flexDirection: 'column',
                     alignItems: 'flex-end'
                 }}>
-                    <Text style={styles.paymentTermsText}>
-                        TAARIKH: 07/08/2025
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        Barcode
-                    </Text>
-                    <Text style={styles.paymentTermsText}>
-                        {data.branch?.code}{data?.invoiceNumber}
-                    </Text>
+                    <View
+                        style={{
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Image
+                            src={generateBarcodeBase64(`${data?.branch?.name?.toUpperCase()}/YTCC/${new Date().getFullYear()}/${data?.invoiceNumber}`)}
+                            style={{
+                                width: 150,
+                            }}
+                        />
+                    </View>
+
                 </View>
             </View>
-
-            <Text style={{
-                ...styles.paymentTermsText,
-                fontWeight: 'semibold',
-                marginTop: 10
-            }}>
-                FADLAN LA KEEHI:
-            </Text>
-            <Text style={styles.paymentTermsText}>
-               {data.branch?.title} XAFIISKA HUBINTA CANSHURAHA & XILINTA CABASHADA DADWEYNAHA GOBOLKA SH. HOOSE
-            </Text>
-            <Text style={styles.paymentTermsText}>
-                MUD. MOHAMED NUR OSMAN (GABOW) +252-615343064 | +252-6644490
-            </Text>
-            <Text style={styles.paymentTermsText}>
-                Email: cabasho@dhisomtax.so
-            </Text>
         </Page>
     </Document>
 );
